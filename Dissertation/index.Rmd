@@ -1,0 +1,59 @@
+---
+# UW thesis fields
+title: "Emily's Thesis Title"
+author: "Emily Pollock"
+year: "2021?"
+program: "Biological Anthropology"
+chair: "Steven M. Goodreau"
+chairtitle: "Title of my chair"
+signature1: "person 1"
+signature2: "person 2"
+signature3: "person 3"
+abstract: |
+  "Here is my abstract"
+acknowledgments: |
+  "My acknowledgments"
+dedication: |
+  "My dedication"
+# End of UW thesis fields
+knit: "bookdown::render_book"
+site: bookdown::bookdown_site
+output: 
+  huskydown::thesis_pdf: 
+    latex_engine: xelatex
+#  huskydown::thesis_gitbook: default
+#  huskydown::thesis_word: default
+#  huskydown::thesis_epub: default
+bibliography: bib/thesis.bib
+# Download your specific bibliography database file and refer to it in the line above.
+csl: csl/apa.csl
+# Download your specific csl file and refer to it in the line above.
+lot: true
+lof: true
+# space_between_paragraphs: true
+# Delete the # at the beginning of the previous line if you'd like
+# to have a blank new line between each paragraph
+#header-includes:
+#- \usepackage{tikz}
+---
+
+<!--
+Above is the YAML (YAML Ain't Markup Language) header that includes a lot of metadata used to produce the document.  Be careful with spacing in this header!
+
+If you'd like to include a comment that won't be produced in your resulting file enclose it in a block like this.
+-->
+
+<!--
+If you receive a duplicate label error after knitting, make sure to delete the index.Rmd file and then knit again.
+-->
+
+```{r include_packages, include = FALSE}
+# This chunk ensures that the huskydown package is
+# installed and loaded. This huskydown package includes
+# the template files for the thesis.
+if(!require(devtools))
+  install.packages("devtools", repos = "http://cran.rstudio.com")
+if(!require(huskydown))
+  devtools::install_github("benmarwick/huskydown")
+library(huskydown)
+```

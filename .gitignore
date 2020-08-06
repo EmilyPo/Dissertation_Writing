@@ -37,3 +37,10 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+.Rproj.user
+
+# Mac Files
+.DS_Store
+  
+# Example doc 
+Example Thesis/
