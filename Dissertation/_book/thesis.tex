@@ -181,840 +181,222 @@
 
 \chapter*{Introduction}\label{introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-
-texty texty text
-
-\hypertarget{rmd-basics}{\chapter{R Markdown Basics}\label{rmd-basics}}
-
-Here is a brief introduction into using \emph{R Markdown}.
-\emph{Markdown} is a simple formatting syntax for authoring HTML, PDF,
-and MS Word documents. \emph{R Markdown} provides the flexibility of
-\emph{Markdown} with the implementation of \textbf{R} input and output.
-For more details on using \emph{R Markdown} see
-\url{http://rmarkdown.rstudio.com}.
-
-Be careful with your spacing in \emph{Markdown} documents. While
-whitespace largely is ignored, it does at times give \emph{Markdown}
-signals as to how to proceed. As a habit, try to keep everything left
-aligned whenever possible, especially as you type a new paragraph. In
-other words, there is no need to indent basic text in the Rmd document
-(in fact, it might cause your text to do funny things if you do).
-
-\section{Lists}\label{lists}
-
-It's easy to create a list. It can be unordered like
 \begin{itemize}
 \tightlist
 \item
-  Item 1
+  social sciency interest in networks \& disease transmission
 \item
-  Item 2
+  dynamic networks require information about relationship duration
+\item
+  transition to a history of the evolution of epidemic models (ie. from
+  compartmental where everything is basically independent and
+  exponential through to ERGMs where formation can be quite elaborate
+  but we've never spent much time thinking about dissolution)
+\item
+  why doing a bit better on dissolution/duration, especially by age,
+  will be extra important for thinking about certain interventions for
+  certain relatively short-lived infections (e.g.~partner services in
+  chlamydia).
+\item
+  including age in dynamic models may sound straightforward but as we're
+  going to see adds a surprising amount of complexity
 \end{itemize}
-or it can be ordered like
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Item 1
-\item
-  Item 2
-\end{enumerate}
-Notice that I intentionally mislabeled Item 2 as number 4.
-\emph{Markdown} automatically figures this out! You can put any numbers
-in the list and it will create the list. Check it out below.
-
-To create a sublist, just indent the values a bit (at least four spaces
-or a tab). (Here's one case where indentation is key!)
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Item 1
-\item
-  Item 2
-\item
-  Item 3
-  \begin{itemize}
-  \tightlist
-  \item
-    Item 3a
-  \item
-    Item 3b
-  \end{itemize}
-\end{enumerate}
-\section{Line breaks}\label{line-breaks}
-
-Make sure to add white space between lines if you'd like to start a new
-paragraph. Look at what happens below in the outputted document if you
-don't:
-
-Here is the first sentence. Here is another sentence. Here is the last
-sentence to end the paragraph. This should be a new paragraph.
-
-\emph{Now for the correct way:}
-
-Here is the first sentence. Here is another sentence. Here is the last
-sentence to end the paragraph.
-
-This should be a new paragraph.
-
-\hypertarget{r-chunks}{\section{R chunks}\label{r-chunks}}
-
-When you click the \textbf{Knit} button above a document will be
-generated that includes both content as well as the output of any
-embedded \textbf{R} code chunks within the document. You can embed an
-\textbf{R} code chunk like this (\texttt{cars} is a built-in \textbf{R}
-dataset):
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(cars)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-     speed           dist       
- Min.   : 4.0   Min.   :  2.00  
- 1st Qu.:12.0   1st Qu.: 26.00  
- Median :15.0   Median : 36.00  
- Mean   :15.4   Mean   : 42.98  
- 3rd Qu.:19.0   3rd Qu.: 56.00  
- Max.   :25.0   Max.   :120.00  
-\end{verbatim}
-\section{Inline code}\label{inline-code}
-
-If you'd like to put the results of your analysis directly into your
-discussion, add inline code like this:
-\begin{quote}
-The \texttt{cos} of \(2 \pi\) is 1.
-\end{quote}
-Another example would be the direct calculation of the standard
-deviation:
-\begin{quote}
-The standard deviation of \texttt{speed} in \texttt{cars} is 5.2876444.
-\end{quote}
-One last neat feature is the use of the \texttt{ifelse} conditional
-statement which can be used to output text depending on the result of an
-\textbf{R} calculation:
-\begin{quote}
-The standard deviation is less than 6.
-\end{quote}
-Note the use of \texttt{\textgreater{}} here, which signifies a
-quotation environment that will be indented.
-
-As you see with \texttt{\$2\ \textbackslash{}pi\$} above, mathematics
-can be added by surrounding the mathematical text with dollar signs.
-More examples of this are in \protect\hyperlink{math-sci}{Mathematics
-and Science} if you uncomment the code in
-\protect\hyperlink{math}{Math}.
-
-\section{Including plots}\label{including-plots}
-
-You can also embed plots. For example, here is a way to use the base
-\textbf{R} graphics package to produce a plot using the built-in
-\texttt{pressure} dataset:
-
-\includegraphics{thesis_files/figure-latex/pressure-1.pdf}
-
-Note that the \texttt{echo=FALSE} parameter was added to the code chunk
-to prevent printing of the \textbf{R} code that generated the plot.
-There are plenty of other ways to add chunk options. More information is
-available at \url{http://yihui.name/knitr/options/}.
-
-Another useful chunk option is the setting of \texttt{cache=TRUE} as you
-see here. If document rendering becomes time consuming due to long
-computations or plots that are expensive to generate you can use knitr
-caching to improve performance. Later in this file, you'll see a way to
-reference plots created in \textbf{R} or external figures.
-
-\hypertarget{loading-and-exploring-data}{\section{Loading and exploring
-data}\label{loading-and-exploring-data}}
-
-Included in this template is a file called \texttt{flights.csv}. This
-file includes a subset of the larger dataset of information about all
-flights that departed from Seattle and Portland in 2014. More
-information about this dataset and its \textbf{R} package is available
-at \url{http://github.com/ismayc/pnwflights14}. This subset includes
-only Portland flights and only rows that were complete with no missing
-values. Merges were also done with the \texttt{airports} and
-\texttt{airlines} data sets in the \texttt{pnwflights14} package to get
-more descriptive airport and airline names.
-
-We can load in this data set using the following command:
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{flights <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/flights.csv"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-The data is now stored in the data frame called \texttt{flights} in
-\textbf{R}. To get a better feel for the variables included in this
-dataset we can use a variety of functions. Here we can see the
-dimensions (rows by columns) and also the names of the columns.
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{dim}\NormalTok{(flights)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-[1] 52808    16
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{names}\NormalTok{(flights)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
- [1] "month"        "day"          "dep_time"     "dep_delay"    "arr_time"    
- [6] "arr_delay"    "carrier"      "tailnum"      "flight"       "dest"        
-[11] "air_time"     "distance"     "hour"         "minute"       "carrier_name"
-[16] "dest_name"   
-\end{verbatim}
-Another good idea is to take a look at the dataset in table form. With
-this dataset having more than 50,000 rows, we won't explicitly show the
-results of the command here. I recommend you enter the command into the
-Console \textbf{\emph{after}} you have run the \textbf{R} chunks above
-to load the data into \textbf{R}.
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{View}\NormalTok{(flights)}
-\end{Highlighting}
-\end{Shaded}
-While not required, it is highly recommended you use the \texttt{dplyr}
-package to manipulate and summarize your data set as needed. It uses a
-syntax that is easy to understand using chaining operations. Below I've
-created a few examples of using \texttt{dplyr} to get information about
-the Portland flights in 2014. You will also see the use of the
-\texttt{ggplot2} package, which produces beautiful, high-quality
-academic visuals.
-
-We begin by checking to ensure that needed packages are installed and
-then we load them into our current working environment:
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# List of packages required for this analysis}
-\NormalTok{pkg <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"dplyr"}\NormalTok{, }\StringTok{"ggplot2"}\NormalTok{, }\StringTok{"knitr"}\NormalTok{, }\StringTok{"bookdown"}\NormalTok{, }\StringTok{"devtools"}\NormalTok{)}
-\CommentTok{# Check if packages are not installed and assign the}
-\CommentTok{# names of the packages not installed to the variable new.pkg}
-\NormalTok{new.pkg <-}\StringTok{ }\NormalTok{pkg[}\OperatorTok{!}\NormalTok{(pkg }\OperatorTok{%in%}\StringTok{ }\KeywordTok{installed.packages}\NormalTok{())]}
-\CommentTok{# If there are any packages in the list that aren't installed,}
-\CommentTok{# install them}
-\ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(new.pkg))}
-  \KeywordTok{install.packages}\NormalTok{(new.pkg, }\DataTypeTok{repos =} \StringTok{"http://cran.rstudio.com"}\NormalTok{)}
-\CommentTok{# Load packages (huskydown will load all of the packages as well)}
-\KeywordTok{library}\NormalTok{(huskydown)}
-\end{Highlighting}
-\end{Shaded}
-\clearpage
-
-The example we show here does the following:
-\begin{itemize}
-\item
-  Selects only the \texttt{carrier\_name} and \texttt{arr\_delay} from
-  the \texttt{flights} dataset and then assigns this subset to a new
-  variable called \texttt{flights2}.
-\item
-  Using \texttt{flights2}, we determine the largest arrival delay for
-  each of the carriers.
-\end{itemize}
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(dplyr)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-Warning: package 'dplyr' was built under R version 3.6.2
-\end{verbatim}
-\begin{verbatim}
-
-Attaching package: 'dplyr'
-\end{verbatim}
-\begin{verbatim}
-The following objects are masked from 'package:stats':
-
-    filter, lag
-\end{verbatim}
-\begin{verbatim}
-The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{flights2 <-}\StringTok{ }\NormalTok{flights }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{select}\NormalTok{(carrier_name, arr_delay)}
-\NormalTok{max_delays <-}\StringTok{ }\NormalTok{flights2 }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(carrier_name) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{max_arr_delay =} \KeywordTok{max}\NormalTok{(arr_delay, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-`summarise()` ungrouping output (override with `.groups` argument)
-\end{verbatim}
-A useful function in the \texttt{knitr} package for making nice tables
-in \emph{R Markdown} is called \texttt{kable}. It is much easier to use
-than manually entering values into a table by copying and pasting values
-into Excel or LaTeX. This again goes to show how nice reproducible
-documents can be! (Note the use of \texttt{results="asis"}, which will
-produce the table instead of the code to create the table.) The
-\texttt{caption.short} argument is used to include a shorter title to
-appear in the List of Tables.
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(knitr)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-Warning: package 'knitr' was built under R version 3.6.2
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{kable}\NormalTok{(max_delays, }
-      \DataTypeTok{col.names =} \KeywordTok{c}\NormalTok{(}\StringTok{"Airline"}\NormalTok{, }\StringTok{"Max Arrival Delay"}\NormalTok{),}
-      \DataTypeTok{caption =} \StringTok{"Maximum Delays by Airline"}\NormalTok{,}
-      \DataTypeTok{caption.short =} \StringTok{"Max Delays by Airline"}\NormalTok{,}
-      \DataTypeTok{longtable =} \OtherTok{TRUE}\NormalTok{,}
-      \DataTypeTok{booktabs =} \OtherTok{TRUE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{longtable}[t]{lr}
-\caption[Max Delays by Airline]{\label{tab:maxdelays}Maximum Delays by Airline}\\
-\toprule
-Airline & Max Arrival Delay\\
-\midrule
-Alaska Airlines Inc. & 338\\
-American Airlines Inc. & 1539\\
-Delta Air Lines Inc. & 651\\
-Frontier Airlines Inc. & 575\\
-Hawaiian Airlines Inc. & 407\\
-\addlinespace
-JetBlue Airways & 273\\
-SkyWest Airlines Inc. & 421\\
-Southwest Airlines Co. & 694\\
-United Air Lines Inc. & 472\\
-US Airways Inc. & 347\\
-\addlinespace
-Virgin America & 366\\
-\bottomrule
-\end{longtable}
-The last two options make the table a little easier-to-read.
-
-We can further look into the properties of the largest value here for
-American Airlines Inc. To do so, we can isolate the row corresponding to
-the arrival delay of 1539 minutes for American in our original
-\texttt{flights} dataset.
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{flights }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{filter}\NormalTok{(arr_delay }\OperatorTok{==}\StringTok{ }\DecValTok{1539}\NormalTok{, }
-\NormalTok{         carrier_name }\OperatorTok{==}\StringTok{ "American Airlines Inc."}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(month, day, carrier, dest_name, hour, }
-\NormalTok{            minute, carrier_name, arr_delay))}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-  dep_time dep_delay arr_time tailnum flight dest air_time distance
-1     1403      1553     1934  N595AA   1568  DFW      182     1616
-\end{verbatim}
-We see that the flight occurred on March 3rd and departed a little after
-2 PM on its way to Dallas/Fort Worth. Lastly, we show how we can
-visualize the arrival delay of all departing flights from Portland on
-March 3rd against time of departure.
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ggplot2)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-Warning: package 'ggplot2' was built under R version 3.6.2
-\end{verbatim}
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{flights }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{filter}\NormalTok{(month }\OperatorTok{==}\StringTok{ }\DecValTok{3}\NormalTok{, day }\OperatorTok{==}\StringTok{ }\DecValTok{3}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ dep_time, }
-             \DataTypeTok{y =}\NormalTok{ arr_delay)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-\includegraphics{thesis_files/figure-latex/march3plot-1.pdf}
-
-\section{Additional resources}\label{additional-resources}
-\begin{itemize}
-\item
-  \emph{Markdown} Cheatsheet -
-  \url{https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet}
-\item
-  \emph{R Markdown} Reference Guide -
-  \url{https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf}
-\item
-  Introduction to \texttt{dplyr} -
-  \url{https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html}
-\item
-  \texttt{ggplot2} Documentation -
-  \url{http://docs.ggplot2.org/current/}
-\end{itemize}
-\hypertarget{math-sci}{\chapter{Mathematics and
-Science}\label{math-sci}}
-
-\hypertarget{math}{\section{Math}\label{math}}
-
-\TeX~is the best way to typeset mathematics. Donald Knuth designed
-\TeX~when he got frustrated at how long it was taking the typesetters to
-finish his book, which contained a lot of mathematics. One nice feature
-of \emph{R Markdown} is its ability to read LaTeX code directly.
-
-If you are doing a thesis that will involve lots of math, you will want
-to read the following section which has been commented out. If you're
-not going to use math, skip over or delete this next commented section.
-
-\section{Chemistry 101: Symbols}\label{chemistry-101-symbols}
-
-Chemical formulas will look best if they are not italicized. Get around
-math mode's automatic italicizing in LaTeX by using the argument
-\texttt{\$\textbackslash{}mathrm\{formula\ here\}\$}, with your formula
-inside the curly brackets. (Notice the use of the backticks here which
-enclose text that acts as code.)
-
-So, \(\mathrm{Fe_2^{2+}Cr_2O_4}\) is written
-\texttt{\$\textbackslash{}mathrm\{Fe\_2\^{}\{2+\}Cr\_2O\_4\}\$}.
-
-\noindent Exponent or Superscript: \(\mathrm{O^-}\)
-
-\noindent Subscript: \(\mathrm{CH_4}\)
-
-To stack numbers or letters as in \(\mathrm{Fe_2^{2+}}\), the subscript
-is defined first, and then the superscript is defined.
-
-\noindent Bullet: CuCl \(\bullet\) \(\mathrm{7H_{2}O}\)
-
-\noindent Delta: \(\Delta\)
-
-\noindent Reaction Arrows: \(\longrightarrow\) or
-\(\xrightarrow{solution}\)
-
-\noindent Resonance Arrows: \(\leftrightarrow\)
-
-\noindent Reversible Reaction Arrows: \(\rightleftharpoons\)
-
-\subsection{Typesetting reactions}\label{typesetting-reactions}
-
-You may wish to put your reaction in an equation environment, which
-means that LaTeX will place the reaction where it fits and will number
-the equations for you.
-\begin{equation}
-  \mathrm{C_6H_{12}O_6  + 6O_2} \longrightarrow \mathrm{6CO_2 + 6H_2O}
-  \label{eq:reaction}
-\end{equation}
-We can reference this combustion of glucose reaction via Equation
-\eqref{eq:reaction}.
-
-\subsection{Other examples of
-reactions}\label{other-examples-of-reactions}
-
-\(\mathrm{NH_4Cl_{(s)}}\) \(\rightleftharpoons\)
-\(\mathrm{NH_{3(g)}+HCl_{(g)}}\)
-
-\noindent \(\mathrm{MeCH_2Br + Mg}\) \(\xrightarrow[below]{above}\)
-\(\mathrm{MeCH_2\bullet Mg \bullet Br}\)
-
-\section{Physics}\label{physics}
-
-Many of the symbols you will need can be found on the math page
-\url{http://web.reed.edu/cis/help/latex/math.html} and the Comprehensive
-LaTeX Symbol Guide
-(\url{http://mirror.utexas.edu/ctan/info/symbols/comprehensive/symbols-letter.pdf}).
-
-\section{Biology}\label{biology}
-
-You will probably find the resources at
-\url{http://www.lecb.ncifcrf.gov/~toms/latex.html} helpful, particularly
-the links to bsts for various journals. You may also be interested in
-TeXShade for nucleotide typesetting
-(\url{http://homepages.uni-tuebingen.de/beitz/txe.html}). Be sure to
-read the proceeding chapter on graphics and tables.
-
-\hypertarget{ref-labels}{\chapter{Tables, Graphics, References, and
-Labels}\label{ref-labels}}
-
-\hypertarget{tables}{\section{Tables}\label{tables}}
-
-By far the easiest way to present tables in your thesis is to store the
-contents of the table in a CSV or Excel file, then read that file in to
-your R Markdown document as a data frame. Then you can style the table
-with the \texttt{kable} function, or functions in the
-\href{https://cran.r-project.org/web/packages/kableExtra/index.html}{kableExtra}
-pacakge.
-
-In addition to the tables that can be automatically generated from a
-data frame in \textbf{R} that you saw in
-\protect\hyperlink{rmd-basics}{R Markdown Basics} using the
-\texttt{kable} function, you can also create tables using \emph{pandoc}.
-(More information is available at
-\url{http://pandoc.org/README.html\#tables}.) This might be useful if
-you don't have values specifically stored in \textbf{R}, but you'd like
-to display them in table form. Below is an example. Pay careful
-attention to the alignment in the table and hyphens to create the rows
-and columns. Generally I don't recommend this approach of typing the
-table directly into your R Markdown document.
-\begin{longtable}[]{@{}ccc@{}}
-\caption{\label{tab:inher} Correlation of Inheritance Factors for Parents
-and Child}\tabularnewline
-\toprule
-\begin{minipage}[b]{0.29\columnwidth}\centering\strut
-Factors\strut
-\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\centering\strut
-Correlation between Parents \& Child\strut
-\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
-Inherited\strut
-\end{minipage}\tabularnewline
-\midrule
-\endfirsthead
-\toprule
-\begin{minipage}[b]{0.29\columnwidth}\centering\strut
-Factors\strut
-\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\centering\strut
-Correlation between Parents \& Child\strut
-\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
-Inherited\strut
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.29\columnwidth}\centering\strut
-Education\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\centering\strut
--0.49\strut
-\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
-Yes\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.29\columnwidth}\centering\strut
-Socio-Economic Status\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\centering\strut
-0.28\strut
-\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
-Slight\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.29\columnwidth}\centering\strut
-Income\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\centering\strut
-0.08\strut
-\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
-No\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.29\columnwidth}\centering\strut
-Family Size\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\centering\strut
-0.18\strut
-\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
-Slight\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.29\columnwidth}\centering\strut
-Occupational Prestige\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\centering\strut
-0.21\strut
-\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
-Slight\strut
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
-We can also create a link to the table by doing the following: Table
-\ref{tab:inher}. If you go back to
-\protect\hyperlink{loading-and-exploring-data}{Loading and exploring
-data} and look at the \texttt{kable} table, we can create a reference to
-this max delays table too: Table \ref{tab:maxdelays}. The addition of
-the \texttt{(\textbackslash{}\#tab:inher)} option to the end of the
-table caption allows us to then make a reference to Table
-\texttt{\textbackslash{}@ref(tab:label)}. Note that this reference could
-appear anywhere throughout the document after the table has appeared.
-
-\clearpage
-
-\section{Figures}\label{figures}
-
-If your thesis has a lot of figures, \emph{R Markdown} might behave
-better for you than that other word processor. One perk is that it will
-automatically number the figures accordingly in each chapter. You'll
-also be able to create a label for each figure, add a caption, and then
-reference the figure in a way similar to what we saw with tables
-earlier. If you label your figures, you can move the figures around and
-\emph{R Markdown} will automatically adjust the numbering for you. No
-need for you to remember! So that you don't have to get too far into
-LaTeX to do this, a couple \textbf{R} functions have been created for
-you to assist. You'll see their use below.
-
-In the \textbf{R} chunk below, we will load in a picture stored as
-\texttt{uw.png} in our main directory. We then give it the caption of
-``UW logo'', the label of ``uwlogo'', and specify that this is a figure.
-Make note of the different \textbf{R} chunk options that are given in
-the R Markdown file (not shown in the knitted document).
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{include_graphics}\NormalTok{(}\DataTypeTok{path =} \StringTok{"figure/uw.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{figure}
-\centering
-\includegraphics{figure/uw.png}
-\caption{\label{fig:uwlogo}UW logo}
-\end{figure}
-Here is a reference to the UW logo: Figure \ref{fig:uwlogo}. Note the
-use of the \texttt{fig:} code here. By naming the \textbf{R} chunk that
-contains the figure, we can then reference that figure later as done in
-the first sentence here. We can also specify the caption for the figure
-via the R chunk option \texttt{fig.cap}.
-
-\clearpage 
-
-Below we will investigate how to save the output of an \textbf{R} plot
-and label it in a way similar to that done above. Recall the
-\texttt{flights} dataset from Chapter \ref{rmd-basics}. (Note that we've
-shown a different way to reference a section or chapter here.) We will
-next explore a bar graph with the mean flight departure delays by
-airline from Portland for 2014. Note also the use of the \texttt{scale}
-parameter which is discussed on the next page.
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{flights }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(carrier) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{mean_dep_delay =} \KeywordTok{mean}\NormalTok{(dep_delay)) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ carrier, }\DataTypeTok{y =}\NormalTok{ mean_dep_delay)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{position =} \StringTok{"identity"}\NormalTok{, }\DataTypeTok{stat =} \StringTok{"identity"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"red"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{verbatim}
-`summarise()` ungrouping output (override with `.groups` argument)
-\end{verbatim}
-\begin{figure}
-\centering
-\includegraphics{thesis_files/figure-latex/delaysboxplot-1.pdf}
-\caption{\label{fig:delaysboxplot}Mean Delays by Airline}
-\end{figure}
-Here is a reference to this image: Figure \ref{fig:delaysboxplot}.
-
-A table linking these carrier codes to airline names is available at
-\url{https://github.com/ismayc/pnwflights14/blob/master/data/airlines.csv}.
-
-\clearpage
-
-Next, we will explore the use of the \texttt{out.extra} chunk option,
-which can be used to shrink or expand an image loaded from a file by
-specifying \texttt{"scale=\ "}. Here we use the mathematical graph
-stored in the ``subdivision.pdf'' file.
-\begin{figure}
-\includegraphics[scale=0.75]{figure/subdivision} \caption{Subdiv. graph}\label{fig:subd}
-\end{figure}
-Here is a reference to this image: Figure \ref{fig:subd}. Note that
-\texttt{echo=FALSE} is specified so that the \textbf{R} code is hidden
-in the document.
-
-\textbf{More Figure Stuff}
-
-Lastly, we will explore how to rotate and enlarge figures using the
-\texttt{out.extra} chunk option. (Currently this only works in the PDF
-version of the book.)
-\begin{figure}
-\includegraphics[angle=180, scale=1.1]{figure/subdivision} \caption{A Larger Figure, Flipped Upside Down}\label{fig:subd2}
-\end{figure}
-As another example, here is a reference: Figure \ref{fig:subd2}.
-
-\section{Footnotes and Endnotes}\label{footnotes-and-endnotes}
-
-You might want to footnote something.\footnote{footnote text} The
-footnote will be in a smaller font and placed appropriately. Endnotes
-work in much the same way.
-
-\section{Cross-referencing chapters and
-sections}\label{cross-referencing-chapters-and-sections}
-
-The
-\href{https://bookdown.org/yihui/bookdown/cross-references.html}{bookdown
-documentation} is an excellent source for learning how to
-cross-reference in a bookdown project such as a huskydown document. Here
-we only cover the most common uses for a typical thesis. If you want
-something more complex or fancy, please refer to the bookdown
-documentation and seek help from the developers of that package.
-
-By default, all of your chapter and section headers will get an
-auto-generated ID label For example, e.g., \texttt{\#\ Chapter\ 1} will
-have an auto-generated ID \texttt{chapter-1}. Note that the ID label is
-all lower case, and has no spaces. If you have any kind of punctuation
-in your header, such as a colon (:), it will not appear in the ID label.
-Then in your text you can reference chapter one in your Rmd file like
-this: `as discussed in Chapter
-\texttt{\textbackslash{}@ref(chapter-1)}', which will print as `as
-discussed in Chapter 1'
-
-We strongly recommend that you to manually assign ID labels to your
-chapter header to make it easy to cross-reference. For example, at the
-top of the Rmd file for this chapter, you can see:
-
-\texttt{\#\ Tables,\ Graphics,\ References,\ and\ Labels\ \{\#ref-labels\}}
-
-The \texttt{\{\#ref-labels\}} part of this header is the ID label. It
-doesn't show in the output, but is there for us to use for easy
-cross-referencing, because it can be short, and we don't need to change
-it elsewhere our document when we update the chapter header. We can use
-this custom ID label in our Rmd document like this: `as discussed in
-Chapter \texttt{\textbackslash{}@ref(ref-labels)}', which will print as
-`as discussed in Chapter \ref{ref-labels}'. If you need to show custom
-text instead of the chapter number, you use this syntax in your Rmd
-document:
-\texttt{see\ {[}my\ chapter\ about\ labels{]}(\#ref-labels)\ for\ more\ details}
-which will appear as `see \protect\hyperlink{ref-labels}{my chapter
-about labels} for more details'
-
-To cross-reference a specific section in the same chapter, we recommend
-adding a custom ID label to the section header, and using that to
-cross-reference. For example, earlier in this chapter we have a section
-on tables and in the Rmd file we see
-\texttt{\#\#\ Tables\ \{\#tables\}}. We can cross-reference that in the
-text like this `as discussed in the section on
-\texttt{{[}tables{]}(\#tables)}' which will appear as `as discussed in
-the above section on \protect\hyperlink{tables}{tables}'
-
-To cross-reference a section in a different chapter we can use the ID
-label from that section directly. For example, we can write in our Rmd
-document
-\texttt{as\ discussed\ in\ the\ section\ on\ {[}R\ code\ chunks{]}(\#r-chunks)\ in\ Chapter\ \textbackslash{}@ref(rmd-basics)}
-which will appear as `as discussed in the section on
-\protect\hyperlink{r-chunks}{R code chunks} in Chapter
-\ref{rmd-basics}'.
-
-If you prefer to cross-reference by the section number, we can use
-custom ID labels in our Rmd document. For example, to refer to a section
-in our first chapter, we can write in the Rmd document:
-\texttt{as\ discussed\ in\ section\ \textbackslash{}@ref(r-chunks)\ in\ Chapter\ \textbackslash{}@ref(rmd-basics)}.
-This will appear with section and chapter numbers like so: as `as
-discussed in section \ref{r-chunks} in Chapter \ref{rmd-basics}'.
-
-\section{Bibliographies}\label{bibliographies}
-
-Of course you will need to cite things, and you will probably accumulate
-an armful of sources. There are a variety of tools available for
-creating a bibliography database (stored with the .bib extension). In
-addition to BibTeX suggested below, you may want to consider using the
-free and easy-to-use tool called Zotero. Some Zotero documentation is at
-\url{http://libguides.reed.edu/citation/zotero}. In addition, a tutorial
-is available from Middlebury College at
-\url{http://sites.middlebury.edu/zoteromiddlebury/}.
-
-\emph{R Markdown} uses \emph{pandoc} (\url{http://pandoc.org/}) to build
-its bibliographies. One nice caveat of this is that you won't have to do
-a second compile to load in references as standard LaTeX requires. To
-cite references in your thesis (after creating your bibliography
-database), place the reference name inside square brackets and precede
-it by the ``at'' symbol. For example, here's a reference to a book about
-worrying: (Molina \& Borkovec, 1994). This \texttt{Molina1994} entry
-appears in a file called \texttt{thesis.bib} in the \texttt{bib} folder.
-This bibliography database file was created by a program called BibTeX.
-You can call this file something else if you like (look at the YAML
-header in the main .Rmd file) and, by default, is to placed in the
-\texttt{bib} folder.
-
-For more information about BibTeX and bibliographies, see
-(\url{http://web.reed.edu/cis/help/latex/index.html})\footnote{Reed~College
-  (2007)}. There are three pages on this topic: \emph{bibtex} (which
-talks about using BibTeX, at
-\url{http://web.reed.edu/cis/help/latex/bibtex.html}),
-\emph{bibtexstyles} (about how to find and use the bibliography style
-that best suits your needs, at
-\url{http://web.reed.edu/cis/help/latex/bibtexstyles.html}) and
-\emph{bibman} (which covers how to make and maintain a bibliography by
-hand, without BibTeX, at
-\url{http://web.reed.edu/cis/help/latex/bibman.html}). The last page
-will not be useful unless you have only a few sources.
-
-If you look at the YAML header at the top of the main .Rmd file you can
-see that we can specify the style of the bibliography by referencing the
-appropriate csl file. You can download a variety of different style
-files at \url{https://www.zotero.org/styles}. Make sure to download the
-file into the csl folder.
-
-\textbf{Tips for Bibliographies}
+Anthropologists have long recognized the importance of social
+connections and behavioral variation among humans and our nonhuman
+primate relatives. Indeed, the ability for us to participate in distinct
+but potentially interlocking complex social networks has fueled our
+evolution as a species and made our uniquely elaborate life possible.
+Network analysis has often been utilized as a way to visually and
+quantitatively represent these ties in order to understand their effects
+on those connected to each other, from kinship, social support and
+social capital, to the diffusion of information and transmission of
+disease. These latter networks are crucially important to our
+understanding of how human biosocial variation influences our health,
+where the oft-beneficial complex social networks we maintain and
+navigate every day can also put us at risk of exposure to infection.
+
+This work is guided by the theoretical framework of the human ecology of
+infectious disease, the investigation of how human behavior, social
+patterns, and built environments interact with the broader pathogen
+environment to influence our health. Of particular interest is not just
+aggregate behavior, but also how variation in individual behavior
+influences social patterns and alters the landscape through which
+diseases spread. In order to understand the complex patterns by which
+sexually transmitted infections (STIs) are transmitted throughout
+populations, we first need to understand the behavior of human
+relationships and how these behaviors generate the dynamic sexual
+network across which these types of infections can spread. Syndemic
+theory will also be used as a guide to understand how variation in
+behaviors and patterns act synergistically to increase vulnerability and
+exacerbate existing health disparities of certain population subgroups
+(Singer et al. 2006).(Singer et al., 2006)
+
+from pinksy textbook on stochastic modeling:\\
+``Stochastic processes are ways of quantifying the dynamic relationships
+of sequences of random events. Stochastic models play an important role
+in elucidating many areas of the natural and engineering sciences. They
+can be used to analyze the variability inherent in biological and
+medical processes, to deal with uncertainties affecting man- agerial
+decisions and with the complexities of psychological and social
+interactions, and to provide new perspectives, methodology, models, and
+intuition to aid in other mathematical and statistical studies.''
+
+\chapter{Survival Analysis of Relationship Duration}\label{surv}
 \begin{itemize}
 \tightlist
 \item
-  Like with thesis formatting, the sooner you start compiling your
-  bibliography for something as large as thesis, the better.
+  main goal here to understand where in the distribution we may not be
+  capturing when we use models based on a memoryless process, and
+  explore some ways to do better within the constraints of feasibility
+  imposed by epidemic models
 \item
-  The cite key (a citation's label) needs to be unique from the other
-  entries.
+  so we primarily use the exponential distribution in the SA analyses
 \item
-  When you have more than one author or editor, you need to separate
-  each author's name by the word ``and'' e.g.
-  \texttt{Author\ =\ \{Noble,\ Sam\ and\ Youngberg,\ Jessica\},}.
+  discuss survey data and censoring / truncation issues
 \item
-  Bibliographies made using BibTeX (whether manually or using a manager)
-  accept LaTeX markup, so you can italicize and add symbols as
-  necessary.
-\item
-  To force capitalization in an article title or where all lowercase is
-  generally used, bracket the capital letter in curly braces.
+  And then flesh out the details of the analyses with a clear narrative
+  and you have the core of a chapter!
 \end{itemize}
-\section{Anything else?}\label{anything-else}
+\chapter{Population Aging and Network Statistics}\label{nets}
 
-If you'd like to see examples of other things in this template, please
-\href{https://github.com/benmarwick/huskydown/issues/new}{contact us}
-(email \href{mailto:bmarwick@uw.edu}{\nolinkurl{bmarwick@uw.edu}}) with
-your suggestions. We love to see people using \emph{R Markdown} for
-their theses, and are happy to help.
+needs better title
+
+\chapter{Chlamydia, Acquired Immunity, \& Expedited Partner
+Therapy?}\label{ept}
+
+some text from diss proposal:
+
+C. trachomatis is an obligate intracellular bacterium transmitted
+through sexual contact among humans. Chlamydial infections are most
+often asymptomatic. Untreated infections in women are an additional
+public health concern because they can lead to a variety of sequalae
+including pelvic inflammatory disease, scarring of ovaries and fallopian
+tubes, ectopic pregnancies, chronic pain, and infertility. Repeat
+infections are common and are an additional risk factor for the
+development of the above sequelae (Brunham and Rey-Ladino 2005). There
+is a great deal of uncertainty regarding the natural history of
+chlamydia, but the duration of infection for untreated individuals is
+generally thought to be up to 6 months for men and a year or more for
+women (Golden et al. 2000; Satterwhite et al. 2013). Chlamydia is
+usually treated with azithromycin or doxycycline, and unlike other
+common STIs like syphilis and gonorrhea, true antibiotic resistance is
+rare (Kong et al. 2015).
+
+Chlamydia is the most common reportable disease in the United States and
+incidence, particularly adolescents and young adults aged 15-29, is
+increasing nationwide. The Centers for Disease Control and Prevention
+(CDC) estimates that half of all new STI infections (including
+gonorrhea, syphilis, and others) occur in those aged 15-24 despite them
+making up only a quarter of the sexually active population. Even in
+places like King County, Washington, where overall rates have remained
+stable, longstanding acknowledged disparities in prevalence by race are
+marked and continue to increase (2015 SKCPH STD Report). These rates are
+particularly distressing in light of the fertility consequences of
+long-term infection and reinfection: it is estimated that in King
+County, over 60\% of non-Hispanic Black women have had at least one
+chlamydia infection by age 34 (a rate 5x higher than non-Hispanic White
+women) and 1 in 500 of non-Hispanic Black women develops
+chlamydia-associated tubal factor infertility over their life-course
+(Chambers et al. 2018).
+
+The United States has some of the highest STD rates in the
+industrialized world, and despite this, funding for public health
+programs dedicated to these issues has largely declined (CDC 2016 STD
+Report). As a result, few health departments are able to offer
+traditional partner notification services, where a patient who tests
+positive for an STI gives the contact information of their recent sex
+partners to the health department, and the department then contacts
+their partners with the hope that these partners will then get tested
+and, if necessary, treated. Expedited partner therapy (EPT) was
+developed with this scenario in mind (See figure 2). Under EPT, a
+patient who tests positive, upon receipt of their own treatment,
+receives either additional antibiotic pills for their recent sexual
+partners or prescriptions for treatment that their partners can fill.
+The patient then is expected to hand-deliver either the treatment or
+prescription to their partner(s), who take the medicine at their own
+discretion and without the need for a positive lab test. By using these
+actors to essentially leverage their sexual network in reverse, this
+system hopes to decrease the time to treatment for all possible infected
+partners and increase the total number of partners treated. It can also
+reduce re-infection among the index patients if the partnerships are
+ongoing. There have been several clinical trials of EPT across the US
+(and Europe), including Washington State. These trails demonstrated that
+relative to traditional referral practices, EPT provision increased the
+proportion of partners who were ultimately treated, reduced the number
+of individuals who were re-infected at follow-up, and was less costly if
+at least 30\% of partners were treated via EPT (CITE). Despite these
+results and a growing body of evidence in support, widespread
+implementation of EPT has been slow and there are still many questions
+to be answered.
+
+Arrested Immunity Hypothesis One of the paradoxes in era of modern
+public health is that chlamydia incidence has actually increased overall
+in the presence of mass control programs. In Sweden, Norway, Finland and
+Canada the rates initially decreased but then resumed increasing, and in
+Australia, United States, and the United Kingdom the rates never stopped
+increasing even after program initiation, although this second pattern
+has been attributed to the challenges of implementing control programs
+consistently throughout a large population (Brunham and Rekart 2008).
+These areas now experience incidence rates higher than rates prior to
+introduction of control programs. Additionally, a regression analysis
+using data from family planning clinics in Region X of the United States
+(Alaska, Washington, Idaho, and Oregon) found that, after controlling
+for any changes in demographics, sexual behaviors, and increased
+sensitivity of clinical tests, there was a remaining 5\% `true' and
+unexplained annual increase in chlamydia positivity from 1997-2004 (Fine
+et al. 2008). In response to these and other examples of unabated
+chlamydia infection in the presence of control programs, Brunham and
+Reckart have proposed the arrested immunity hypothesis (Brunham and
+Rekart 2008). Under this hypothesis, early detection and treatment of
+chlamydia interrupts the development of acquired immunity, making
+treated individuals particularly vulnerable to reinfection almost
+immediately after treatment. While we have no natural history studies of
+chlamydia infection in humans that address the development, duration,
+and extent of immunity, there is growing evidence beyond rodent models
+and trends in incidence that partial immunity can develop and play a
+role. Rodent models of chlamydial infection suggest that a high
+proportion are able to resolve their primary infection and are
+temporarily resistant to infection. Rodents that then eventually become
+reinfected with chlamydia have a shorter duration of disease, lower
+pathogen load and decreased inflammatory response (Rank et al. 2003).
+However, it has also been shown that treatment early in the course of
+infection interrupts the development of this protective immunity (Su et
+al. 2002). There is also some indirect evidence in humans. A 2010 review
+article acknowledged that in several studies of infection status among
+couples, the rates of discordance (i.e.~one partner is infected while
+the other is not), are higher for chlamydia than for gonorrhea and that
+this discordance increases with age, providing indirect evidence for
+some level of protective immunity to chlamydia that increases with age,
+likely due to exposure over time. There is little immunity that develops
+to gonorrheal infection due to high levels of antigenic variation
+(Batteiger et al. 2010). Recent modeling using data from both the UK and
+United States has demonstrated that at least some immunity to chlamydia
+following natural clearance is necessary to generate observed patterns
+in incidence (Omori, Chemaitelly, and Abu-Raddad 2019). These questions
+are particularly relevant in the context of expedited partner therapy,
+where the goal is to interrupt transmission by treated individuals and
+their partners as quickly as possible. However, due to the arrested
+immunity of those treated quickly, if the timing of delivery and uptake
+of partners is not sufficient, the initially treated is likely at higher
+risk of reinfection than under the standard referral scenario. If
+sufficient numbers of partners are treated effectively and quickly and
+transmission throughout the network is greatly diminished, then EPT may
+be able to overcome the effects of this arrested immunity.
 
 \chapter*{Conclusion}\label{conclusion}
 \addcontentsline{toc}{chapter}{Conclusion}
 
-If we don't want Conclusion to have a chapter number next to it, we can
-add the \texttt{\{-\}} attribute.
-
-\textbf{More info}
-
-And here's some other random info: the first paragraph after a chapter
-title or section head \emph{shouldn't be} indented, because indents are
-to tell the reader that you're starting a new paragraph. Since that's
-obvious after a chapter or section title, proper typesetting doesn't add
-an indent there.
+We conclude.
 
 \appendix
 
 \chapter{The First Appendix}\label{the-first-appendix}
 
-This first appendix includes all of the R chunks of code that were
-hidden throughout the document (using the \texttt{include\ =\ FALSE}
-chunk tag) to help with readibility and/or setup.
+additional figures?
 
-\textbf{In the main Rmd file}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# This chunk ensures that the huskydown package is}
-\CommentTok{# installed and loaded. This huskydown package includes}
-\CommentTok{# the template files for the thesis.}
-\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(devtools))}
-  \KeywordTok{install.packages}\NormalTok{(}\StringTok{"devtools"}\NormalTok{, }\DataTypeTok{repos =} \StringTok{"http://cran.rstudio.com"}\NormalTok{)}
-\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(huskydown))}
-\NormalTok{  devtools}\OperatorTok{::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"benmarwick/huskydown"}\NormalTok{)}
-\KeywordTok{library}\NormalTok{(huskydown)}
-\end{Highlighting}
-\end{Shaded}
-\textbf{In Chapter \ref{ref-labels}:}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# This chunk ensures that the huskydown package is}
-\CommentTok{# installed and loaded. This huskydown package includes}
-\CommentTok{# the template files for the thesis and also two functions}
-\CommentTok{# used for labeling and referencing}
-\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(devtools))}
-  \KeywordTok{install.packages}\NormalTok{(}\StringTok{"devtools"}\NormalTok{, }\DataTypeTok{repos =} \StringTok{"http://cran.rstudio.com"}\NormalTok{)}
-\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(dplyr))}
-    \KeywordTok{install.packages}\NormalTok{(}\StringTok{"dplyr"}\NormalTok{, }\DataTypeTok{repos =} \StringTok{"http://cran.rstudio.com"}\NormalTok{)}
-\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(ggplot2))}
-    \KeywordTok{install.packages}\NormalTok{(}\StringTok{"ggplot2"}\NormalTok{, }\DataTypeTok{repos =} \StringTok{"http://cran.rstudio.com"}\NormalTok{)}
-\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(ggplot2))}
-    \KeywordTok{install.packages}\NormalTok{(}\StringTok{"bookdown"}\NormalTok{, }\DataTypeTok{repos =} \StringTok{"http://cran.rstudio.com"}\NormalTok{)}
-\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(huskydown))\{}
-  \KeywordTok{library}\NormalTok{(devtools)}
-\NormalTok{  devtools}\OperatorTok{::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"benmarwick/huskydown"}\NormalTok{)}
-\NormalTok{  \}}
-\KeywordTok{library}\NormalTok{(huskydown)}
-\NormalTok{flights <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/flights.csv"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\chapter{The Second Appendix, for
-Fun}\label{the-second-appendix-for-fun}
+\chapter{The Second Appendix}\label{the-second-appendix}
+
+more technical stuff in here?
 
 \chapter*{Colophon}\label{colophon}
 \addcontentsline{toc}{chapter}{Colophon}
@@ -1046,7 +428,7 @@ been organised into an R package, xxx, which is available at
 \url{https://github.com/xxx/xxx}. A hard copy of the thesis can be found
 in the University of Washington library.
 
-This version of the thesis was generated on 2020-08-06 12:20:48. The
+This version of the thesis was generated on 2020-08-10 14:22:53. The
 repository is currently at this commit:
 
 The computational environment that was used to generate this version is
@@ -1062,7 +444,7 @@ as follows:
  collate  en_US.UTF-8                 
  ctype    en_US.UTF-8                 
  tz       America/Los_Angeles         
- date     2020-08-06                  
+ date     2020-08-10                  
 
 - Packages -------------------------------------------------------------------
  package     * version date       lib source                               
@@ -1076,22 +458,19 @@ as follows:
  desc          1.2.0   2018-05-01 [1] CRAN (R 3.6.0)                       
  devtools    * 2.3.1   2020-07-21 [1] CRAN (R 3.6.2)                       
  digest        0.6.25  2020-02-23 [1] CRAN (R 3.6.0)                       
- dplyr       * 1.0.1   2020-07-31 [1] CRAN (R 3.6.2)                       
+ dplyr         1.0.1   2020-07-31 [1] CRAN (R 3.6.2)                       
  ellipsis      0.3.1   2020-05-15 [1] CRAN (R 3.6.2)                       
  evaluate      0.14    2019-05-28 [1] CRAN (R 3.6.0)                       
  fansi         0.4.1   2020-01-08 [1] CRAN (R 3.6.0)                       
- farver        2.0.3   2020-01-16 [1] CRAN (R 3.6.0)                       
  fs            1.5.0   2020-07-31 [1] CRAN (R 3.6.2)                       
  generics      0.0.2   2018-11-29 [1] CRAN (R 3.6.0)                       
- ggplot2     * 3.3.2   2020-06-19 [1] CRAN (R 3.6.2)                       
+ ggplot2       3.3.2   2020-06-19 [1] CRAN (R 3.6.2)                       
  git2r         0.27.1  2020-05-03 [1] CRAN (R 3.6.2)                       
  glue          1.4.1   2020-05-13 [1] CRAN (R 3.6.2)                       
  gtable        0.3.0   2019-03-25 [1] CRAN (R 3.6.0)                       
- highr         0.8     2019-03-20 [1] CRAN (R 3.6.0)                       
  htmltools     0.5.0   2020-06-16 [1] CRAN (R 3.6.2)                       
  huskydown   * 0.0.5   2020-08-06 [1] Github (benmarwick/huskydown@a909835)
- knitr       * 1.29    2020-06-23 [1] CRAN (R 3.6.2)                       
- labeling      0.3     2014-08-23 [1] CRAN (R 3.6.0)                       
+ knitr         1.29    2020-06-23 [1] CRAN (R 3.6.2)                       
  lifecycle     0.2.0   2020-03-06 [1] CRAN (R 3.6.0)                       
  magrittr      1.5     2014-11-22 [1] CRAN (R 3.6.0)                       
  memoise       1.1.0   2017-04-21 [1] CRAN (R 3.6.0)                       
@@ -1138,25 +517,10 @@ as follows:
 \setlength{\parskip}{8pt}
 
 \hypertarget{refs}{}
-\hypertarget{ref-angel2000}{}
-Angel, E. (2000). \emph{Interactive computer graphics : A top-down
-approach with opengl}. Boston, MA: Addison Wesley Longman.
-
-\hypertarget{ref-angel2001}{}
-Angel, E. (2001a). \emph{Batch-file computer graphics : A bottom-up
-approach with quicktime}. Boston, MA: Wesley Addison Longman.
-
-\hypertarget{ref-angel2002a}{}
-Angel, E. (2001b). \emph{Test second book by angel}. Boston, MA: Wesley
-Addison Longman.
-
-\hypertarget{ref-Molina1994}{}
-Molina, S. T., \& Borkovec, T. D. (1994). The Penn State worry
-questionnaire: Psychometric properties and associated characteristics.
-In G. C. L. Davey \& F. Tallis (Eds.), \emph{Worrying: Perspectives on
-theory, assessment and treatment} (pp. 265--283). New York: Wiley.
-
-\hypertarget{ref-reedweb2007}{}
-Reed~College. (2007, March). LaTeX your document. Retrieved from
-\url{http://web.reed.edu/cis/help/LaTeX/index.html}
+\hypertarget{ref-Singer2006}{}
+Singer, M. C., Erickson, P. I., Badiane, L., Diaz, R., Ortiz, D.,
+Abraham, T., \& Nicolaysen, A. M. (2006). Syndemics, sex and the city:
+Understanding sexually transmitted diseases in social and cultural
+context. \emph{Social Science and Medicine}, \emph{63}(8), 2010--2021.
+\url{http://doi.org/10.1016/j.socscimed.2006.05.012}
 \end{document}

@@ -2,4 +2,17 @@
 
 # Introduction {.unnumbered}
 
-texty texty text 
+* social sciency interest in networks & disease transmission
+* dynamic networks require information about relationship duration
+* transition to a history of the evolution of epidemic models (ie. from compartmental where everything is basically independent and exponential through to ERGMs where formation can be quite elaborate but we've never spent much time thinking about dissolution)
+* why doing a bit better on dissolution/duration, especially by age, will be extra important for thinking about certain interventions for certain relatively short-lived infections (e.g. partner services in chlamydia).
+* including age in dynamic models may sound straightforward but as we're going to see adds a surprising amount of complexity
+
+Anthropologists have long recognized the importance of social connections and behavioral variation among humans and our nonhuman primate relatives. Indeed, the ability for us to participate in distinct but potentially interlocking complex social networks has fueled our evolution as a species and made our uniquely elaborate life possible. Network analysis has often been utilized as a way to visually and quantitatively represent these ties in order to understand their effects on those connected to each other, from kinship, social support and social capital, to the diffusion of information and transmission of disease. These latter networks are crucially important to our understanding of how human biosocial variation influences our health, where the oft-beneficial complex social networks we maintain and navigate every day can also put us at risk of exposure to infection.  
+
+This work is guided by the theoretical framework of the human ecology of infectious disease, the investigation of how human behavior, social patterns, and built environments interact with the broader pathogen environment to influence our health. Of particular interest is not just aggregate behavior, but also how variation in individual behavior influences social patterns and alters the landscape through which diseases spread. In order to understand the complex patterns by which sexually transmitted infections (STIs) are transmitted throughout populations, we first need to understand the behavior of human relationships and how these behaviors generate the dynamic sexual network across which these types of infections can spread. Syndemic theory will also be used as a guide to understand how variation in behaviors and patterns act synergistically to increase vulnerability and exacerbate existing health disparities of certain population subgroups (Singer et al. 2006).[@Singer2006]
+
+
+
+from pinksy textbook on stochastic modeling:  
+"Stochastic processes are ways of quantifying the dynamic relationships of sequences of random events. Stochastic models play an important role in elucidating many areas of the natural and engineering sciences. They can be used to analyze the variability inherent in biological and medical processes, to deal with uncertainties affecting man- agerial decisions and with the complexities of psychological and social interactions, and to provide new perspectives, methodology, models, and intuition to aid in other mathematical and statistical studies."
