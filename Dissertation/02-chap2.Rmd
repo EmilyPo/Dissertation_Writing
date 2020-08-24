@@ -1,3 +1,80 @@
-# Population Aging and Network Statistics {#nets}
+# Demography and Dynamic Network Simulations {#nets}
 
 needs better title
+
+Having gained insights about factors important (and not important) to the patterns of relationship length over the age course from survival analysis, the next steps initially seemed straightforward.
+First, I was going to build a two-network simulation model comparable to recently published models (where the casual/shorter relationships are represented on one network and marriages and cohabitations are represented on another) and analyze the patterns of relationship duration across the simulated age range to understand the ways in which we are able to recreate the empirical distribution and the ways in which we are not. Second, I was going to build a network model with a new structure: instead of modeling relationships on separate networks, I would begin all relationships as casual relationships and have them transition over time into cohabitations and marriages. Relationship dissolution probability, as in the first model, would be based on relationship type. By transitioning relationships over time – a process much closer to reality - instead of classifying certain relationships as, say, marriages, at their onset, I hoped to match certain features of the empirical distribution better. In particular: the increasingly uniform distribution of relationship lengths at older ages as some individuals maintain long-lasting marriages and others maintain cohabitations or begin entirely new relationships.
+
+Suffice it to say that I did not get to step two.
+
+In mathematical models, the choice of model terms depends on the question of interest and the underlying patterns in the data and this is no less true for network models of sexual partnerships developed to understand disease transmission. Several previously published models using ERGMs and EpiModel to simulate epidemics focused on men who have sex with men (MSM) populations in a narrow age range, 18-35 (*cite papers and also double check that this is true*). These models focused on terms related to mixing patterns between races, the propensity to form relationships with individuals relatively close in age, and the likelihood of concurrent partnerships. Because prevalence of both main and casual relationships remained relatively stable over the small age range, the models did not include terms that used age as a predictor of relationship formation. However, in this project, we focus on heterosexual relationships over a larger age range (15-45). Unlike MSM, there are large clear differences in the prevalence of main and casual partnerships over this age range (insert figure), so we will need to include terms that include age in our model. In addition to influencing the distribution of relationship duration, these differences are likely to be especially important if we want to use this type of model to understand the processes that generate the large observed differences in bacterial STI prevalence by age - originally one of the broader goals of this dissertation.
+
+* insert figure of mean degree by age (with unrestricted alters)
+
+As it turns out, adding age-related formation terms and other important demographic processes to a dynamic network simulation has some unexpected consequences.
+
+## Model Overview & STERGM fit
+several general trends in relationship formation (finish write-up and cite) --
+
+-	individuals often select partners that are not their exact age
+-	this difference in partner ages often increases over the life course (i.e. adults usually have wider age differences between their partners than do adolescents)
+-	it is common for men to partner with younger women (although the sex differences in relationship formation are not explored in this model, it’s important to note that in a more realistic model the effect of aging out would disproportionately affect the women whose partners age out before them
+
+The terms in the model are relatively simplistic so I did not expect to hit the degree-by-age distribution exactly, but the aging process within the network simulation and artificial node death at age 45, when many nodes are in relationships, heavily influences the degree distribution at the tail end of the age range in several ways.  
+
+(include model terms and coefs and explain terms)
+(full description of EpiModelHIV module flow w/ parameters in appendix, brief overview here)
+
+## Diagnostic Results
+(to demonstrate closed-system effectiveness, assumes fixed nodal attributes)
+
+The final step in evaluate the performance of an estimated STERGM prior to the simulation is to run a dynamic diagnostic. In this diagnostic, we simulate the STERGM for X repetitions of Y time steps and evaluate the network statistics over time. At each time step, ties can form and ties can dissolve based on the model coefficients. If the model is estimated properly and sufficient MCMC intervals are used, the network formation statistics should hover around their estimated targets. In this diagnostic we also evaluate the duration of ties and the rate of tie dissolution to ensure the dissolution targets are met. It is important to note that this diagnostic is an indicator of model performance in a closed system: all nodal attributes are fixed, no nodes exit, and no new nodes enter the population.  
+
+
+
+
+## Overview of Demographic Processes
+
+The simulations run using the EpiModel API are distinct from the above dynamic diagnostic in that in addition to tie formation and dissolution at every time step, a series of modules is run that govern important demographic processes: node departure, node entry, aging, and sexual debut. Nodes automatically depart the model at age 45. This boundary was determined by two things: 1) individuals this point contribute almost a negligible amount of the yearly bacterial STI incidence [CDC figure] and 2) the National Survey of Family Growth, the empirical data from which we estimate our model, only surveys adults aged 15-45. There are likely other sources of information that we could use to increase the age range, but it did not seem necessary to our questions of interest. Note that implicit in this decision is the elimination of all reported relationships among egos aged 15-45 whose *partners* are outside of this age range. The degree distribution that we actually use to estimate the model (and are trying to maintain during simulation) looks rather different than the original distribution shown above, particularly in the marriage/cohabitation network. [insert figure]. We will consider the consequences of effect a later section. In addition to the age boundary at 45, all individuals experience the possibility of dying at each time step. Each node belongs to a class based on their 5-year-age-category and their sex, and is evaluated for death at every time step with the probability determined by data from published in U.S. Vital Statistics documents (cite). Given that our age range is relatively young, departures due to background mortality are uncommon relative to the effect of the age boundary on which nodes depart the model. Nodes enter at age 15 at a rate based on the expected number of departures per time step in order to keep the population size relatively stable. Like ASMR, the actual number of entires per time step is stochastic but maintains a population size within 1-2% of the starting size of 50,000 nodes. (Do I need to explain why we want to keep the pop stable?)
+
+ demography related components we have to grapple with:
+* Births/Arrival - based on departure rate
+* Deaths & Departure
+  * ASMR
+  * Age Boundary of simulation / why we are only interested in a subset of population
+* Aging
+    * why age-dependent formation and dissolution terms exacerbate the effect in the heterosexual case
+* Sexual Debut  
+  * dynamic process, nodal attribute not necessarily monotonic in cross-sectional data - gets into period/cohort stuff that is interesting but not addressed here
+  * debut vs "eligibility" and what information we need for model vs what we have in the data
+  now, in this model setup, the rate of sexual debut does not influence the birth/arrival rate in the model - as mentioned above the model is designed to have a relatively stable population with an arrival rate based on the expected number of departures at each time step. Sexual debut however does dictate whether an individual is allowed to form a relationship, and the number of un-debut persons is jointly estimated in the model, so deviations from the original distribution will influence the likelihood of tie formation...
+
+the underlying population structure is not particularly complex...so it's not the act of aging (or migration etc) that generates problems but the fact that age is so tied to the probability of having (or not having) a certain type of relationship.
+
+## Original Simulation
+  Narrative order:
+  1. Cross network terms - we're going to avoid them due to complications
+  2. Older Partner
+    * offset for older partner
+    * keeping people in
+    * conclusion: we keep offset in all future scenarios but not older partners
+  3. Sexual Debut
+    * Debut
+    * eligibility
+    * conclusion: debut not eligibility
+  4. let's think about why we're seeing the things we are
+    * both networks have too few edges, particularly in early years
+    * both dissolution rates slightly too low
+    * marriage/cohab network: duration far too low
+    * casual network: duration too high
+    * tests:
+      * marriage/cohab -- adj formation for earlier edges and longer durations
+      * casual -- adj formation for earlier edges but also departure for too long relationships
+
+    Edapprox
+  5.
+
+asides / future work
+  * cross-network terms - probably going to do most analysis on the independent networks but will show both and point at where there are holes (hey by the time this gets finished maybe Chad will have already figured this out)
+  * what distribution of formation terms / debut parameters will generate the desired mean degree by age distribution
+  * need to think about race and sex differences in formation and absdiff(age) by sex if we want to use this for applied work

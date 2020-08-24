@@ -2,17 +2,48 @@
 
 # Introduction {.unnumbered}
 
-* social sciency interest in networks & disease transmission
-* dynamic networks require information about relationship duration
+
+Anthropologists have long recognized the importance of social connections and behavioral variation among humans and our nonhuman primate relatives. Indeed, the ability for us to participate in distinct but potentially interlocking complex social networks has fueled our evolution as a species and made our uniquely elaborate life possible. Network analysis has often been utilized as a way to visually and quantitatively represent these ties in order to understand their effects on those connected to each other, from kinship, social support and social capital, to the diffusion of information and transmission of disease. These latter networks are crucially important to our understanding of how human biosocial variation influences our health, where the oft-beneficial complex social networks we maintain and navigate every day can also put us at risk of exposure to infection.
+
+transition to STIs
+
+In order to understand the complex patterns by which sexually transmitted infections (STIs) are transmitted throughout populations, we first need to understand the behavior of human relationships and how these behaviors generate the dynamic sexual network across which these types of infections can spread.
+
+This work is guided by the theoretical framework of the human ecology of infectious disease, the investigation of how human behavior, social patterns, and built environments interact with the broader pathogen environment to influence our health. Of particular interest is not just aggregate behavior, but also how variation in individual behavior influences social patterns and alters the landscape through which diseases spread, particularly as this variation relates to biological age. Syndemic theory will also be used as a guide to understand how variation in behaviors and patterns act synergistically to increase vulnerability and exacerbate existing health disparities of certain population subgroups [@Singer2006].
+
+can I pull some stuff from my PAA abstract about age?
+
 * transition to a history of the evolution of epidemic models (ie. from compartmental where everything is basically independent and exponential through to ERGMs where formation can be quite elaborate but we've never spent much time thinking about dissolution)
+
+Mathematical models are quantitative representations of real-life systems and the processes within these systems important to the outcome of interest. This form of inquiry is particularly useful when classic scientific experiments to understand disease spread or intervention efficacy cannot be conducted for either practical or ethical reasons, or when specific processes or parameter values in a system are unknown. In these situations, we use mathematical modeling as an in-silico laboratory to explore ideas and test hypotheses. Of course, the form and complexity of these models are determined by a variety of factors including the type of question that needs answering and the natural history of the infection of interest, but many types of mathematical models rely on similar underlying assumptions. Without diving too deep into the history of epidemic modeling, here I give a brief overview of the various model forms to highlight some key similarities and differences.
+
+Initial mathematical models for epidemics were deterministic and compartmental in nature. They did not represent people individually, rather they group them into homogenous compartments representing specific states of interest, a portion of which transitioned between compartments at each time step based on a rate. In the most basic models, the compartments are usually "susceptible" and "infected" and the rate of transition from susceptible to infected depends on the rate of contact between the groups and the size of the infected group relative to the whole population. Additional complexity can be added by adding more compartments or states, like breaking down the state of susceptible and infected into demographic states like race or age groups, adding compartments for vector populations like mosquitoes, or by representing a more complex natural history of the pathogen by including states for groups such as "exposed but not infectious", "recovered", "infected and symptomatic", or "infected and asymptomatic" to name a few. These models were deterministic in nature because the transitions between compartments rely on unchanging rates: the same proportion of each component transitions at each time point and if you run a deterministic compartmental model (DCM) multiple times you will alway have the same result.
+
+Stochastic models grew out of this original framework as a way to capture variability and uncertainty in the systems we wish to study. In this scenario, some or all transitions between states were based on a *probability* of transitioning rather than a set rate, meaning that not the same proportion of a state transitioned at every time step, but on *average* 
+
+Notice the assumptions implicit in the way transitions occur in these models - it is memoryless, generating an exponential distribution (or geometric if using discrete time).
+
+
+* dynamic networks require information about relationship duration
+
 * why doing a bit better on dissolution/duration, especially by age, will be extra important for thinking about certain interventions for certain relatively short-lived infections (e.g. partner services in chlamydia).
+
+* additionally, while births and deaths have been a part of models, only recently are we adding explicit age-dependent formation terms -- and age changes over the simulation -- what is this effect?   
 * including age in dynamic models may sound straightforward but as we're going to see adds a surprising amount of complexity
 
-Anthropologists have long recognized the importance of social connections and behavioral variation among humans and our nonhuman primate relatives. Indeed, the ability for us to participate in distinct but potentially interlocking complex social networks has fueled our evolution as a species and made our uniquely elaborate life possible. Network analysis has often been utilized as a way to visually and quantitatively represent these ties in order to understand their effects on those connected to each other, from kinship, social support and social capital, to the diffusion of information and transmission of disease. These latter networks are crucially important to our understanding of how human biosocial variation influences our health, where the oft-beneficial complex social networks we maintain and navigate every day can also put us at risk of exposure to infection.  
 
-This work is guided by the theoretical framework of the human ecology of infectious disease, the investigation of how human behavior, social patterns, and built environments interact with the broader pathogen environment to influence our health. Of particular interest is not just aggregate behavior, but also how variation in individual behavior influences social patterns and alters the landscape through which diseases spread. In order to understand the complex patterns by which sexually transmitted infections (STIs) are transmitted throughout populations, we first need to understand the behavior of human relationships and how these behaviors generate the dynamic sexual network across which these types of infections can spread. Syndemic theory will also be used as a guide to understand how variation in behaviors and patterns act synergistically to increase vulnerability and exacerbate existing health disparities of certain population subgroups (Singer et al. 2006).[@Singer2006]
+**Notes from NME intro to modeling**
 
+exponential -- memoryless survival function, exchangeability
 
+all models have three basic components - elements (actors), states (attributes), transitions (rates of movements between states)
 
-from pinksy textbook on stochastic modeling:  
-"Stochastic processes are ways of quantifying the dynamic relationships of sequences of random events. Stochastic models play an important role in elucidating many areas of the natural and engineering sciences. They can be used to analyze the variability inherent in biological and medical processes, to deal with uncertainties affecting man- agerial decisions and with the complexities of psychological and social interactions, and to provide new perspectives, methodology, models, and intuition to aid in other mathematical and statistical studies."
+DCMs
+within each compartment, people are homogenous
+flows are represented by rates - the fraction of the aggregate count that moves from one compartment to another any any time point
+each run gives the same results  
+at the most basic level - what do you need to transmit infection? one infected and one susceptible and some assumption(s) about the transmission process (acts, transmissibility, etc)
+
+"contacts" somewhat misleading because multiple acts with same person makes a huge difference - but DCMs treat all contacts as independent, and/or contacts estimated as a full complete partnership
+
+move into stochastic modeling (can be have stochastic and deterministic components)- rates become probabilities

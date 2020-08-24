@@ -185,21 +185,6 @@
 \tightlist
 \item
   social sciency interest in networks \& disease transmission
-\item
-  dynamic networks require information about relationship duration
-\item
-  transition to a history of the evolution of epidemic models (ie. from
-  compartmental where everything is basically independent and
-  exponential through to ERGMs where formation can be quite elaborate
-  but we've never spent much time thinking about dissolution)
-\item
-  why doing a bit better on dissolution/duration, especially by age,
-  will be extra important for thinking about certain interventions for
-  certain relatively short-lived infections (e.g.~partner services in
-  chlamydia).
-\item
-  including age in dynamic models may sound straightforward but as we're
-  going to see adds a surprising amount of complexity
 \end{itemize}
 Anthropologists have long recognized the importance of social
 connections and behavioral variation among humans and our nonhuman
@@ -215,21 +200,32 @@ understanding of how human biosocial variation influences our health,
 where the oft-beneficial complex social networks we maintain and
 navigate every day can also put us at risk of exposure to infection.
 
+In order to understand the complex patterns by which sexually
+transmitted infections (STIs) are transmitted throughout populations, we
+first need to understand the behavior of human relationships and how
+these behaviors generate the dynamic sexual network across which these
+types of infections can spread.
+
 This work is guided by the theoretical framework of the human ecology of
 infectious disease, the investigation of how human behavior, social
 patterns, and built environments interact with the broader pathogen
 environment to influence our health. Of particular interest is not just
 aggregate behavior, but also how variation in individual behavior
 influences social patterns and alters the landscape through which
-diseases spread. In order to understand the complex patterns by which
-sexually transmitted infections (STIs) are transmitted throughout
-populations, we first need to understand the behavior of human
-relationships and how these behaviors generate the dynamic sexual
-network across which these types of infections can spread. Syndemic
-theory will also be used as a guide to understand how variation in
-behaviors and patterns act synergistically to increase vulnerability and
-exacerbate existing health disparities of certain population subgroups
-(Singer et al. 2006).(Singer et al., 2006)
+diseases spread, particularly as this variation relates to biological
+age. Syndemic theory will also be used as a guide to understand how
+variation in behaviors and patterns act synergistically to increase
+vulnerability and exacerbate existing health disparities of certain
+population subgroups (Singer et al. 2006).(Singer et al., 2006)
+\begin{itemize}
+\tightlist
+\item
+  transition to a history of the evolution of epidemic models (ie. from
+  compartmental where everything is basically independent and
+  exponential through to ERGMs where formation can be quite elaborate
+  but we've never spent much time thinking about dissolution)
+\end{itemize}
+the history of
 
 from pinksy textbook on stochastic modeling:\\
 ``Stochastic processes are ways of quantifying the dynamic relationships
@@ -240,7 +236,18 @@ medical processes, to deal with uncertainties affecting man- agerial
 decisions and with the complexities of psychological and social
 interactions, and to provide new perspectives, methodology, models, and
 intuition to aid in other mathematical and statistical studies.''
-
+\begin{itemize}
+\item
+  dynamic networks require information about relationship duration
+\item
+  why doing a bit better on dissolution/duration, especially by age,
+  will be extra important for thinking about certain interventions for
+  certain relatively short-lived infections (e.g.~partner services in
+  chlamydia).
+\item
+  including age in dynamic models may sound straightforward but as we're
+  going to see adds a surprising amount of complexity
+\end{itemize}
 \chapter{Survival Analysis of Relationship Duration}\label{surv}
 \begin{itemize}
 \tightlist
@@ -257,6 +264,48 @@ intuition to aid in other mathematical and statistical studies.''
   And then flesh out the details of the analyses with a clear narrative
   and you have the core of a chapter!
 \end{itemize}
+\textbf{Data}\\
+National Survey of Family Growth, 2006-2015.\\
+This survey has had several redesigns since its inception as a women's
+marriage and fertility survey in 1973 but since 2006, the National
+Survey of Family Growth (NSFG) has continuously interviewed both men and
+women aged 15-44 and gathered data on family life, reproductive health,
+marriage, divorce, and sexual history information. Particularly relevant
+to this work are the questions relating to sexual behavior
+(i.e.~frequency of sex and use of condoms) and a 12-month detailed
+partnership history of up to three partners including demographic
+information for these partners, start and ends dates of relationships,
+and how many are currently active. Every few years the most recent data
+are released as waves and include weights designed to make the data
+nationally representative (``NSFG - National Survey of Family Growth
+Homepage'' 2019). These data will be the sole source of empirical data
+in Aims 1 and 2 and will be combined with epidemiological and biological
+literature in Aim 3 to parameterize the full model. The primary focus
+will be restricted to those individuals aged 15-29, but in some cases
+the full dataset (ages 15-44) will be considered.
+
+\textbf{Methods}\\
+First the empirical relational duration data (using the start and end
+dates of all reported relationships in NSFG) will be investigated using
+histograms (overall and stratified by age category). Then, due to the
+issues of right censoring and left truncation as a result of survey
+design in NSFG, a reference survival curve will be constructed from the
+empirical data using a Modified Kaplan-Meier model following (Burington
+et al. 2010) and using the R package `survival'. Next, exploratory
+parametric models will be estimated from the data (with corrections for
+right-censoring and left-truncation) using a variety of distributions
+(namely and latent mixture components) to gain intuition about the
+underlying generative processes. Initial models will be covariate-free
+(representing the effects of relationship duration only on the chances
+of survival) and additional models will begin to examine the influence
+of age on relationship duration, including (but not limited to) the
+ego's age category, the reported current age difference between ego and
+alter, and the ego's age category at the beginning of each reported
+relationship. All models without latent components will be fit using the
+R package `flexsurv' and the likelihood functions for all models with
+latent components will be personally developed and models will be fit
+using the maxLik package (Jackson 2016; Henningsen and Toomet 2011).
+
 \chapter{Population Aging and Network Statistics}\label{nets}
 
 needs better title
@@ -328,6 +377,10 @@ at least 30\% of partners were treated via EPT (CITE). Despite these
 results and a growing body of evidence in support, widespread
 implementation of EPT has been slow and there are still many questions
 to be answered.
+
+Annals of Internal Medicine Article High Incidence of New Sexually
+Transmitted Infections in the Year following a Sexually Transmitted
+Infection: A Case for Rescreening - Peterman et al
 
 Arrested Immunity Hypothesis One of the paradoxes in era of modern
 public health is that chlamydia incidence has actually increased overall
@@ -428,7 +481,7 @@ been organised into an R package, xxx, which is available at
 \url{https://github.com/xxx/xxx}. A hard copy of the thesis can be found
 in the University of Washington library.
 
-This version of the thesis was generated on 2020-08-10 14:22:53. The
+This version of the thesis was generated on 2020-08-12 13:57:36. The
 repository is currently at this commit:
 
 The computational environment that was used to generate this version is
@@ -444,7 +497,7 @@ as follows:
  collate  en_US.UTF-8                 
  ctype    en_US.UTF-8                 
  tz       America/Los_Angeles         
- date     2020-08-10                  
+ date     2020-08-12                  
 
 - Packages -------------------------------------------------------------------
  package     * version date       lib source                               
