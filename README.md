@@ -1,6 +1,6 @@
 # Currently working on 
 
-last updated: `r format(Sys.time(), "%d %B, %Y")`
+last updated: Aug 26 2020
 
 Currently writing up introduction and chatpter 2 (demography & network simulations)  
 
