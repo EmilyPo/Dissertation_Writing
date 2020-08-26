@@ -181,11 +181,7 @@
 
 \chapter*{Introduction}\label{introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-\begin{itemize}
-\tightlist
-\item
-  social sciency interest in networks \& disease transmission
-\end{itemize}
+
 Anthropologists have long recognized the importance of social
 connections and behavioral variation among humans and our nonhuman
 primate relatives. Indeed, the ability for us to participate in distinct
@@ -199,6 +195,8 @@ disease. These latter networks are crucially important to our
 understanding of how human biosocial variation influences our health,
 where the oft-beneficial complex social networks we maintain and
 navigate every day can also put us at risk of exposure to infection.
+
+transition to STIs
 
 In order to understand the complex patterns by which sexually
 transmitted infections (STIs) are transmitted throughout populations, we
@@ -216,7 +214,9 @@ diseases spread, particularly as this variation relates to biological
 age. Syndemic theory will also be used as a guide to understand how
 variation in behaviors and patterns act synergistically to increase
 vulnerability and exacerbate existing health disparities of certain
-population subgroups (Singer et al. 2006).(Singer et al., 2006)
+population subgroups (Singer et al., 2006).
+
+can I pull some stuff from my PAA abstract about age?
 \begin{itemize}
 \tightlist
 \item
@@ -225,17 +225,53 @@ population subgroups (Singer et al. 2006).(Singer et al., 2006)
   exponential through to ERGMs where formation can be quite elaborate
   but we've never spent much time thinking about dissolution)
 \end{itemize}
-the history of
+Mathematical models are quantitative representations of real-life
+systems and the processes within these systems important to the outcome
+of interest. This form of inquiry is particularly useful when classic
+scientific experiments to understand disease spread or intervention
+efficacy cannot be conducted for either practical or ethical reasons, or
+when specific processes or parameter values in a system are unknown. In
+these situations, we use mathematical modeling as an in-silico
+laboratory to explore ideas and test hypotheses. Of course, the form and
+complexity of these models are determined by a variety of factors
+including the type of question that needs answering and the natural
+history of the infection of interest, but many types of mathematical
+models rely on similar underlying assumptions. Without diving too deep
+into the history of epidemic modeling, here I give a brief overview of
+the various model forms to highlight some key similarities and
+differences.
 
-from pinksy textbook on stochastic modeling:\\
-``Stochastic processes are ways of quantifying the dynamic relationships
-of sequences of random events. Stochastic models play an important role
-in elucidating many areas of the natural and engineering sciences. They
-can be used to analyze the variability inherent in biological and
-medical processes, to deal with uncertainties affecting man- agerial
-decisions and with the complexities of psychological and social
-interactions, and to provide new perspectives, methodology, models, and
-intuition to aid in other mathematical and statistical studies.''
+Initial mathematical models for epidemics were deterministic and
+compartmental in nature. They did not represent people individually,
+rather they group them into homogenous compartments representing
+specific states of interest, a portion of which transitioned between
+compartments at each time step based on a rate. In the most basic
+models, the compartments are usually ``susceptible'' and ``infected''
+and the rate of transition from susceptible to infected depends on the
+rate of contact between the groups and the size of the infected group
+relative to the whole population. Additional complexity can be added by
+adding more compartments or states, like breaking down the state of
+susceptible and infected into demographic states like race or age
+groups, adding compartments for vector populations like mosquitoes, or
+by representing a more complex natural history of the pathogen by
+including states for groups such as ``exposed but not infectious'',
+``recovered'', ``infected and symptomatic'', or ``infected and
+asymptomatic'' to name a few. These models were deterministic in nature
+because the transitions between compartments rely on unchanging rates:
+the same proportion of each component transitions at each time point and
+if you run a deterministic compartmental model (DCM) multiple times you
+will alway have the same result.
+
+Stochastic models grew out of this original framework as a way to
+capture variability and uncertainty in the systems we wish to study. In
+this scenario, some or all transitions between states were based on a
+\emph{probability} of transitioning rather than a set rate, meaning that
+not the same proportion of a state transitioned at every time step, but
+on \emph{average}
+
+Notice the assumptions implicit in the way transitions occur in these
+models - it is memoryless, generating an exponential distribution (or
+geometric if using discrete time).
 \begin{itemize}
 \item
   dynamic networks require information about relationship duration
@@ -245,9 +281,35 @@ intuition to aid in other mathematical and statistical studies.''
   certain relatively short-lived infections (e.g.~partner services in
   chlamydia).
 \item
+  additionally, while births and deaths have been a part of models, only
+  recently are we adding explicit age-dependent formation terms -- and
+  age changes over the simulation -- what is this effect?\\
+\item
   including age in dynamic models may sound straightforward but as we're
   going to see adds a surprising amount of complexity
 \end{itemize}
+\textbf{Notes from NME intro to modeling}
+
+exponential -- memoryless survival function, exchangeability
+
+all models have three basic components - elements (actors), states
+(attributes), transitions (rates of movements between states)
+
+DCMs within each compartment, people are homogenous flows are
+represented by rates - the fraction of the aggregate count that moves
+from one compartment to another any any time point each run gives the
+same results\\
+at the most basic level - what do you need to transmit infection? one
+infected and one susceptible and some assumption(s) about the
+transmission process (acts, transmissibility, etc)
+
+``contacts'' somewhat misleading because multiple acts with same person
+makes a huge difference - but DCMs treat all contacts as independent,
+and/or contacts estimated as a full complete partnership
+
+move into stochastic modeling (can be have stochastic and deterministic
+components)- rates become probabilities
+
 \chapter{Survival Analysis of Relationship Duration}\label{surv}
 \begin{itemize}
 \tightlist
@@ -264,25 +326,118 @@ intuition to aid in other mathematical and statistical studies.''
   And then flesh out the details of the analyses with a clear narrative
   and you have the core of a chapter!
 \end{itemize}
+The duration of sexual relationships across a population generates the
+network structure largely responsible for either exposing individuals to
+or protecting individuals from sexually transmitted infections (STIs).
+In addition to dictating this period of possible exposure, relationship
+durations relative to the pathogen-specific duration of infection are an
+important driver of how quickly STIs can spread throughout a population.
+Transmission beyond a pair of actors for infections with short durations
+relative to relationship lengths is challenging and slow, and it is more
+likely that an infection will be detected and treated or resolved
+naturally prior to the dissolution of the relationship. If the duration
+of infection and duration of relationships are more equal, there is a
+greater chance that the infection can spread to future partners and
+throughout the network. When partnerships overlap, transmission pathways
+increase even among those individuals with few lifetime partners, and
+this effect is even greater when the duration of overlap is large
+(Armbruster, Wang, and Morris 2017; Morris and Kretzschmar 1997).
+
+The pattern of relationship durations across the life-course is also
+important because STIs often have distinct age patterns in terms of
+prevalence. Individual age is often used as a predictor for risky sexual
+behavior, but there is additional complexity when considering the effect
+of age on the duration of relationships across the life-course. Young
+age likely influences the immediate intentions for relationships
+(i.e.~serious or casual), and the frequency at which individuals form
+new relationships, but somewhat paradoxically it is also true that the
+only people who can report extremely long relationships are those who
+started them at young ages. This also introduces complex sampling issues
+because most data on relationship durations is collected
+cross-sectionally or retrospectively -- not longitudinally. Given the
+importance of relationship duration to features of STI epidemiology
+discussed above, there is growing interest in improving the
+representation of relational durations in dynamic network models used to
+study epidemics. This study demonstrates the ways in which the current
+literature fails to represent this distribution and proposes a new
+modeling framework to better capture these relationships across the
+life-course.
+
+One common class of models used to understand network influences on
+patterns of STI transmission is known as separable temporal
+exponential-family random graph models (STERGMs). These models are
+governed by two expressions: one that represents the set of processes
+that influence the formation of relationships, and a comparable one for
+dissolution (Krivitsky and Handcock 2014). The current standard practice
+for the dissolution models in this modeling framework assumes that once
+a relationship begins, its persistence is governed by a constant hazard.
+This memoryless process is a convenient simplifying assumption, adopted
+because most hypotheses being explored relate to processes impacting
+network formation or cross-sectional structure. However, it is unlikely
+that this assumption faithfully represents the distribution all
+relationship durations we observe across a wide range of ages.
+
+Several recent models have begun to address this issue by splitting out
+relationships into two categories: the first, marriages and
+cohabitations or main partnerships, and the second, persistent or casual
+partnerships. These are then modeled as separate networks
+simultaneously. By structuring the model in this fashion, each network
+has a hazard of dissolution specific to its type. (These models often
+have a third network for one-time sexual contacts which last only one
+time-step, but this network is not the focus of our study). While these
+models are indeed able to reproduce the mean relationship lengths drawn
+from empirical data, it remains unknown how well these strategies
+reproduce the full distribution of lengths observed. In particular, the
+memoryless assumption means that the modal length of main partnerships
+remains near zero across all ages, which basic intuition says is not
+true and descriptive data analysis confirms. Other work has considered
+disaggregating relational durations by a single demographic attribute of
+their members related to a hypothesis or prevention modality being
+explored, but again with no further effort to capture the full
+distribution, particularly by age (Goodreau et al. 2017; Jenness et al.
+2017).
+
+In this ongoing study, we seek to understand the changing distribution
+of relationship duration over the life-course using data from the
+National Survey of Family Growth, to evaluate which features the above
+dissolution assumptions are capable of replicating and which they
+cannot. We then introduce an alternative framework designed to more
+faithfully represent these data and the different demographic and
+data-collection processes that impact them in an age-structured
+population over time. We use tools from both event history analysis and
+network analysis to answer the following questions: First, under what
+circumstances, if any, can an exponentially distributed time-to-event
+model reasonably approximate empirical relationship duration data?
+Second, does it make sense to lump marriages and cohabitations into one
+network with the same dissolution probability? And third, can we better
+capture the age-wise relationship distribution by using one network
+where (1) relationships can transition between states (e.g.~from a
+cohabitation into a marriage) rather than modeling several types
+separately, and (2) where relational formation probabilities depend on
+current relational status.
+
 \textbf{Data}\\
-National Survey of Family Growth, 2006-2015.\\
-This survey has had several redesigns since its inception as a women's
-marriage and fertility survey in 1973 but since 2006, the National
-Survey of Family Growth (NSFG) has continuously interviewed both men and
-women aged 15-44 and gathered data on family life, reproductive health,
-marriage, divorce, and sexual history information. Particularly relevant
-to this work are the questions relating to sexual behavior
-(i.e.~frequency of sex and use of condoms) and a 12-month detailed
-partnership history of up to three partners including demographic
-information for these partners, start and ends dates of relationships,
-and how many are currently active. Every few years the most recent data
-are released as waves and include weights designed to make the data
-nationally representative (``NSFG - National Survey of Family Growth
-Homepage'' 2019). These data will be the sole source of empirical data
-in Aims 1 and 2 and will be combined with epidemiological and biological
-literature in Aim 3 to parameterize the full model. The primary focus
-will be restricted to those individuals aged 15-29, but in some cases
-the full dataset (ages 15-44) will be considered.
+The empirical data used in this study are drawn from the 2006-2010 and
+2011-2015 waves of the National Survey of Family Growth (NSFG). The NSFG
+surveys men and women aged 15-44 on many aspects of family life,
+including but not limited to marriage and divorce, pregnancy,
+contraception use, infertility, and other aspects of sexual and
+reproductive behavior. In addition to the demographic information
+recorded for each respondent and their sampling weights, in this study
+we use the data collected in section C of the public use files on each
+respondent's recent sexual partnerships with opposite-sex partners in
+the last year, with a maximum of three partnerships reported. These data
+include the century-month of first sexual contact, the century-month of
+last sexual contact, whether the respondent considers this sexual
+partnership to be ongoing, and the partnership status (marriage,
+cohabitation, or other). We limit the combined data set to those
+respondents who report at least one partnership in the last year. Out of
+the original 43,303 respondents, our subset contains 32,516 respondents
+who report on 40,443 sexual partnerships. Due to the study design, all
+relationships that respondents report as ongoing on the day of interview
+have right-censored relationship lengths, and there is left-truncation
+present due to the large number or relationships that started prior to
+the observation window but continued into it.
 
 \textbf{Methods}\\
 First the empirical relational duration data (using the start and end
@@ -306,14 +461,276 @@ R package `flexsurv' and the likelihood functions for all models with
 latent components will be personally developed and models will be fit
 using the maxLik package (Jackson 2016; Henningsen and Toomet 2011).
 
-\chapter{Population Aging and Network Statistics}\label{nets}
+From PAA abstract: In our preliminary work, we first checked the
+assumption that relationship duration can be modeled by a simple
+memoryless process, and then explored some natural extensions to this
+framework. In order to generate the reference distribution, we fit a
+Kaplan-Meier model using a modified estimator to account for both
+right-censoring and left-truncation following Burington et al (2010). We
+then fit several parametric models (all adjusted for the above sampling
+issues): first a simple exponential model to represent the memoryless
+process assumption, then a Weibull distribution and Gamma distribution,
+all with and without additional covariate attributes. Model fit was
+evaluated primarily using the Akaike Information Criterion (AIC) and
+visuals to understand which relationship lengths were represented better
+than others, given our ultimate goal of adapting these into dynamic
+network simulations. Below is a selection of explored models; parametric
+models with covariate categories are displayed in color, with their
+Kaplan-Meier reference curves plotted in black. All parameters in these
+fitted models are statistically significant (p \textless{} 0.001).
+
+\textbf{Results}
+
+The first takeaway is that an exponential distribution alone is not
+sufficient to capture the relationship distribution -- it overestimates
+the survival of short relationships and underestimates the survival of
+long relationships (top left figure, below). The Weibull and Gamma
+perform better and capture more of the short relationships, suggesting
+that there is important heterogeneity in the data, but like the first
+models they also fail to capture the longest relationships. The age
+category of the reporting individual is not explanatory across all age
+categories (top right). This is perhaps not surprising, in that the age
+distribution of relationship lengths is at least partly an emergent
+property rather than a causal one. That is, no individual can have a
+relationship that has lasted longer than they have been sexually active,
+so the range of relationship lengths for young age categories is
+relatively small. Meanwhile, the older age categories are challenging to
+represent because the possible range of relationships is so much larger,
+and are likely influenced not only by dissolution probabilities but also
+by the changing formation probabilities over the lifecourse -- that is,
+older people in long-term relationships do not start new relationships
+at the same rate as others, and thus have relatively few relationships
+that are short.
+
+The next two models test how appropriate it is to group relationships
+defined as marriages and cohabitations into the same dissolution model,
+as has been done in recent STERGMs. We see clear evidence that marriages
+and cohabitations have distinct hazards of dissolution and the combined
+marriage and cohabitation curve, like the simple exponential for all
+relationships, dramatically fails to capture both the shortest and
+longest relationships of these types (bottom right and bottom left
+figures, respectively. These results are similar to other work in family
+demography that has shown significant differences in the risk of
+dissolution between cohabitations and marriages due to variation in
+joint lifestyles (van Houdt and Poortman 2018). These results suggest to
+us that previously developed STERGM dissolution models that only capture
+the mean relationship length are not appropriate approximations of the
+data, and that cohabitation represents a distinctly separate type of
+relationship from marriages and other casual relationships and should be
+treated as such in our networks.
+
+\chapter{Demography and Dynamic Network Simulations}\label{nets}
 
 needs better title
+
+Having gained insights about factors important (and not important) to
+the patterns of relationship length over the age course from survival
+analysis, the next steps initially seemed straightforward. First, I was
+going to build a two-network simulation model comparable to recently
+published models (where the casual/shorter relationships are represented
+on one network and marriages and cohabitations are represented on
+another) and analyze the patterns of relationship duration across the
+simulated age range to understand the ways in which we are able to
+recreate the empirical distribution and the ways in which we are not.
+Second, I was going to build a network model with a new structure:
+instead of modeling relationships on separate networks, I would begin
+all relationships as casual relationships and have them transition over
+time into cohabitations and marriages. Relationship dissolution
+probability, as in the first model, would be based on relationship type.
+By transitioning relationships over time -- a process much closer to
+reality - instead of classifying certain relationships as, say,
+marriages, at their onset, I hoped to match certain features of the
+empirical distribution better. In particular: the increasingly uniform
+distribution of relationship lengths at older ages as some individuals
+maintain long-lasting marriages and others maintain cohabitations or
+begin entirely new relationships.
+
+Suffice it to say that I did not get to step two.
+
+In mathematical models, the choice of model terms depends on the
+question of interest and the underlying patterns in the data and this is
+no less true for network models of sexual partnerships developed to
+understand disease transmission. Several previously published models
+using ERGMs and EpiModel to simulate epidemics focused on men who have
+sex with men (MSM) populations in a narrow age range, 18-35 (\emph{cite
+papers and also double check that this is true}). These models focused
+on terms related to mixing patterns between races, the propensity to
+form relationships with individuals relatively close in age, and the
+likelihood of concurrent partnerships. Because prevalence of both main
+and casual relationships remained relatively stable over the small age
+range, the models did not include terms that used age as a predictor of
+relationship formation. However, in this project, we focus on
+heterosexual relationships over a larger age range (15-45). Unlike MSM,
+there are large clear differences in the prevalence of main and casual
+partnerships over this age range (insert figure), so we will need to
+include terms that include age in our model. In addition to influencing
+the distribution of relationship duration, these differences are likely
+to be especially important if we want to use this type of model to
+understand the processes that generate the large observed differences in
+bacterial STI prevalence by age - originally one of the broader goals of
+this dissertation.
+\begin{itemize}
+\tightlist
+\item
+  insert figure of mean degree by age (with unrestricted alters)
+\end{itemize}
+As it turns out, adding age-related formation terms and other important
+demographic processes to a dynamic network simulation has some
+unexpected consequences.
+
+\section{Model Overview \& STERGM fit}\label{model-overview-stergm-fit}
+
+several general trends in relationship formation (finish write-up and
+cite) --
+\begin{itemize}
+\tightlist
+\item
+  individuals often select partners that are not their exact age
+\item
+  this difference in partner ages often increases over the life course
+  (i.e.~adults usually have wider age differences between their partners
+  than do adolescents)
+\item
+  it is common for men to partner with younger women (although the sex
+  differences in relationship formation are not explored in this model,
+  it's important to note that in a more realistic model the effect of
+  aging out would disproportionately affect the women whose partners age
+  out before them
+\end{itemize}
+The terms in the model are relatively simplistic so I did not expect to
+hit the degree-by-age distribution exactly, but the aging process within
+the network simulation and artificial node death at age 45, when many
+nodes are in relationships, heavily influences the degree distribution
+at the tail end of the age range in several ways.
+
+(include model terms and coefs and explain terms) (full description of
+EpiModelHIV module flow w/ parameters in appendix, brief overview here)
+
+\section{Diagnostic Results}\label{diagnostic-results}
+
+(to demonstrate closed-system effectiveness, assumes fixed nodal
+attributes)
+
+The final step in evaluate the performance of an estimated STERGM prior
+to the simulation is to run a dynamic diagnostic. In this diagnostic, we
+simulate the STERGM for X repetitions of Y time steps and evaluate the
+network statistics over time. At each time step, ties can form and ties
+can dissolve based on the model coefficients. If the model is estimated
+properly and sufficient MCMC intervals are used, the network formation
+statistics should hover around their estimated targets. In this
+diagnostic we also evaluate the duration of ties and the rate of tie
+dissolution to ensure the dissolution targets are met. It is important
+to note that this diagnostic is an indicator of model performance in a
+closed system: all nodal attributes are fixed, no nodes exit, and no new
+nodes enter the population.
+
+\section{Overview of Demographic
+Processes}\label{overview-of-demographic-processes}
+
+The simulations run using the EpiModel API are distinct from the above
+dynamic diagnostic in that in addition to tie formation and dissolution
+at every time step, a series of modules is run that govern important
+demographic processes: node departure, node entry, aging, and sexual
+debut. Nodes automatically depart the model at age 45. This boundary was
+determined by two things: 1) individuals this point contribute almost a
+negligible amount of the yearly bacterial STI incidence {[}CDC figure{]}
+and 2) the National Survey of Family Growth, the empirical data from
+which we estimate our model, only surveys adults aged 15-45. There are
+likely other sources of information that we could use to increase the
+age range, but it did not seem necessary to our questions of interest.
+Note that implicit in this decision is the elimination of all reported
+relationships among egos aged 15-45 whose \emph{partners} are outside of
+this age range. The degree distribution that we actually use to estimate
+the model (and are trying to maintain during simulation) looks rather
+different than the original distribution shown above, particularly in
+the marriage/cohabitation network. {[}insert figure{]}. We will consider
+the consequences of effect a later section. In addition to the age
+boundary at 45, all individuals experience the possibility of dying at
+each time step. Each node belongs to a class based on their
+5-year-age-category and their sex, and is evaluated for death at every
+time step with the probability determined by data from published in U.S.
+Vital Statistics documents (cite). Given that our age range is
+relatively young, departures due to background mortality are uncommon
+relative to the effect of the age boundary on which nodes depart the
+model. Nodes enter at age 15 at a rate based on the expected number of
+departures per time step in order to keep the population size relatively
+stable. Like ASMR, the actual number of entires per time step is
+stochastic but maintains a population size within 1-2\% of the starting
+size of 50,000 nodes. (Do I need to explain why we want to keep the pop
+stable?). Each time step in the simulation represents one week, so nodes
+age by 1/52 per time step. The sexual debut process is somewhat trickier
+to estimate and dynamically represent.
+\begin{itemize}
+\tightlist
+\item
+  Sexual Debut\\
+\item
+  dynamic process, nodal attribute not necessarily monotonic in
+  cross-sectional data - gets into period/cohort stuff that is
+  interesting but not addressed here
+\item
+  debut vs ``eligibility'' and what information we need for model vs
+  what we have in the data now, in this model setup, the rate of sexual
+  debut does not influence the birth/arrival rate in the model - as
+  mentioned above the model is designed to have a relatively stable
+  population with an arrival rate based on the expected number of
+  departures at each time step. Sexual debut however does dictate
+  whether an individual is allowed to form a relationship, and the
+  number of un-debut persons is jointly estimated in the model, so
+  deviations from the original distribution will influence the
+  likelihood of tie formation\ldots{}
+\end{itemize}
+the underlying population structure is not particularly
+complex\ldots{}so it's not the act of aging (or migration etc) that
+generates problems but the fact that age is so tied to the probability
+of having (or not having) a certain type of relationship.
+
+\section{Original Simulation}\label{original-simulation}
+
+Narrative order:\\
+1. Cross network terms - we're going to avoid them due to
+complications\\
+2. Older Partner\\
+* offset for older partner\\
+* keeping people in\\
+* conclusion: we keep offset in all future scenarios but not older
+partners\\
+3. Sexual Debut\\
+* Debut\\
+* eligibility\\
+* conclusion: debut not eligibility\\
+4. let's think about why we're seeing the things we are\\
+* both networks have too few edges, particularly in early years\\
+* both dissolution rates slightly too low\\
+* marriage/cohab network: duration far too low\\
+* casual network: duration too high\\
+* tests:\\
+* marriage/cohab -- adj formation for earlier edges and longer
+durations\\
+* casual -- adj formation for earlier edges but also departure for too
+long relationships
+\begin{verbatim}
+Edapprox  
+\end{verbatim}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\item
+\end{enumerate}
+asides / future work\\
+* cross-network terms - probably going to do most analysis on the
+independent networks but will show both and point at where there are
+holes (hey by the time this gets finished maybe Chad will have already
+figured this out)\\
+* what distribution of formation terms / debut parameters will generate
+the desired mean degree by age distribution\\
+* need to think about race and sex differences in formation and
+absdiff(age) by sex if we want to use this for applied work
 
 \chapter{Chlamydia, Acquired Immunity, \& Expedited Partner
 Therapy?}\label{ept}
 
-some text from diss proposal:
+copying over some text from diss proposal:
 
 C. trachomatis is an obligate intracellular bacterium transmitted
 through sexual contact among humans. Chlamydial infections are most
@@ -481,7 +898,7 @@ been organised into an R package, xxx, which is available at
 \url{https://github.com/xxx/xxx}. A hard copy of the thesis can be found
 in the University of Washington library.
 
-This version of the thesis was generated on 2020-08-12 13:57:36. The
+This version of the thesis was generated on 2020-08-26 10:25:30. The
 repository is currently at this commit:
 
 The computational environment that was used to generate this version is
@@ -497,12 +914,12 @@ as follows:
  collate  en_US.UTF-8                 
  ctype    en_US.UTF-8                 
  tz       America/Los_Angeles         
- date     2020-08-12                  
+ date     2020-08-26                  
 
 - Packages -------------------------------------------------------------------
  package     * version date       lib source                               
  assertthat    0.2.1   2019-03-21 [1] CRAN (R 3.6.0)                       
- backports     1.1.8   2020-06-17 [1] CRAN (R 3.6.2)                       
+ backports     1.1.9   2020-08-24 [1] CRAN (R 3.6.2)                       
  bookdown      0.20.2  2020-08-06 [1] Github (rstudio/bookdown@f9cf1ac)    
  callr         3.4.3   2020-03-28 [1] CRAN (R 3.6.2)                       
  cli           2.0.2   2020-02-28 [1] CRAN (R 3.6.0)                       
@@ -511,7 +928,7 @@ as follows:
  desc          1.2.0   2018-05-01 [1] CRAN (R 3.6.0)                       
  devtools    * 2.3.1   2020-07-21 [1] CRAN (R 3.6.2)                       
  digest        0.6.25  2020-02-23 [1] CRAN (R 3.6.0)                       
- dplyr         1.0.1   2020-07-31 [1] CRAN (R 3.6.2)                       
+ dplyr         1.0.2   2020-08-18 [1] CRAN (R 3.6.2)                       
  ellipsis      0.3.1   2020-05-15 [1] CRAN (R 3.6.2)                       
  evaluate      0.14    2019-05-28 [1] CRAN (R 3.6.0)                       
  fansi         0.4.1   2020-01-08 [1] CRAN (R 3.6.0)                       
@@ -534,7 +951,7 @@ as follows:
  pkgload       1.1.0   2020-05-29 [1] CRAN (R 3.6.2)                       
  prettyunits   1.1.1   2020-01-24 [1] CRAN (R 3.6.0)                       
  processx      3.4.3   2020-07-05 [1] CRAN (R 3.6.2)                       
- ps            1.3.3   2020-05-08 [1] CRAN (R 3.6.2)                       
+ ps            1.3.4   2020-08-11 [1] CRAN (R 3.6.2)                       
  purrr         0.3.4   2020-04-17 [1] CRAN (R 3.6.2)                       
  R6            2.4.1   2019-11-12 [1] CRAN (R 3.6.0)                       
  remotes       2.2.0   2020-07-21 [1] CRAN (R 3.6.2)                       

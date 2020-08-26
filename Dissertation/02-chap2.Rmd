@@ -35,15 +35,8 @@ The final step in evaluate the performance of an estimated STERGM prior to the s
 
 ## Overview of Demographic Processes
 
-The simulations run using the EpiModel API are distinct from the above dynamic diagnostic in that in addition to tie formation and dissolution at every time step, a series of modules is run that govern important demographic processes: node departure, node entry, aging, and sexual debut. Nodes automatically depart the model at age 45. This boundary was determined by two things: 1) individuals this point contribute almost a negligible amount of the yearly bacterial STI incidence [CDC figure] and 2) the National Survey of Family Growth, the empirical data from which we estimate our model, only surveys adults aged 15-45. There are likely other sources of information that we could use to increase the age range, but it did not seem necessary to our questions of interest. Note that implicit in this decision is the elimination of all reported relationships among egos aged 15-45 whose *partners* are outside of this age range. The degree distribution that we actually use to estimate the model (and are trying to maintain during simulation) looks rather different than the original distribution shown above, particularly in the marriage/cohabitation network. [insert figure]. We will consider the consequences of effect a later section. In addition to the age boundary at 45, all individuals experience the possibility of dying at each time step. Each node belongs to a class based on their 5-year-age-category and their sex, and is evaluated for death at every time step with the probability determined by data from published in U.S. Vital Statistics documents (cite). Given that our age range is relatively young, departures due to background mortality are uncommon relative to the effect of the age boundary on which nodes depart the model. Nodes enter at age 15 at a rate based on the expected number of departures per time step in order to keep the population size relatively stable. Like ASMR, the actual number of entires per time step is stochastic but maintains a population size within 1-2% of the starting size of 50,000 nodes. (Do I need to explain why we want to keep the pop stable?)
+The simulations run using the EpiModel API are distinct from the above dynamic diagnostic in that in addition to tie formation and dissolution at every time step, a series of modules is run that govern important demographic processes: node departure, node entry, aging, and sexual debut. Nodes automatically depart the model at age 45. This boundary was determined by two things: 1) individuals this point contribute almost a negligible amount of the yearly bacterial STI incidence [CDC figure] and 2) the National Survey of Family Growth, the empirical data from which we estimate our model, only surveys adults aged 15-45. There are likely other sources of information that we could use to increase the age range, but it did not seem necessary to our questions of interest. Note that implicit in this decision is the elimination of all reported relationships among egos aged 15-45 whose *partners* are outside of this age range. The degree distribution that we actually use to estimate the model (and are trying to maintain during simulation) looks rather different than the original distribution shown above, particularly in the marriage/cohabitation network. [insert figure]. We will consider the consequences of effect a later section. In addition to the age boundary at 45, all individuals experience the possibility of dying at each time step. Each node belongs to a class based on their 5-year-age-category and their sex, and is evaluated for death at every time step with the probability determined by data from published in U.S. Vital Statistics documents (cite). Given that our age range is relatively young, departures due to background mortality are uncommon relative to the effect of the age boundary on which nodes depart the model. Nodes enter at age 15 at a rate based on the expected number of departures per time step in order to keep the population size relatively stable. Like ASMR, the actual number of entires per time step is stochastic but maintains a population size within 1-2% of the starting size of 50,000 nodes. (Do I need to explain why we want to keep the pop stable?). Each time step in the simulation represents one week, so nodes age by 1/52 per time step. The sexual debut process is somewhat trickier to estimate and dynamically represent. 
 
- demography related components we have to grapple with:
-* Births/Arrival - based on departure rate
-* Deaths & Departure
-  * ASMR
-  * Age Boundary of simulation / why we are only interested in a subset of population
-* Aging
-    * why age-dependent formation and dissolution terms exacerbate the effect in the heterosexual case
 * Sexual Debut  
   * dynamic process, nodal attribute not necessarily monotonic in cross-sectional data - gets into period/cohort stuff that is interesting but not addressed here
   * debut vs "eligibility" and what information we need for model vs what we have in the data
@@ -52,29 +45,28 @@ The simulations run using the EpiModel API are distinct from the above dynamic d
 the underlying population structure is not particularly complex...so it's not the act of aging (or migration etc) that generates problems but the fact that age is so tied to the probability of having (or not having) a certain type of relationship.
 
 ## Original Simulation
-  Narrative order:
-  1. Cross network terms - we're going to avoid them due to complications
-  2. Older Partner
-    * offset for older partner
-    * keeping people in
-    * conclusion: we keep offset in all future scenarios but not older partners
-  3. Sexual Debut
-    * Debut
-    * eligibility
-    * conclusion: debut not eligibility
-  4. let's think about why we're seeing the things we are
-    * both networks have too few edges, particularly in early years
-    * both dissolution rates slightly too low
-    * marriage/cohab network: duration far too low
-    * casual network: duration too high
-    * tests:
-      * marriage/cohab -- adj formation for earlier edges and longer durations
-      * casual -- adj formation for earlier edges but also departure for too long relationships
-
-    Edapprox
-  5.
-
-asides / future work
-  * cross-network terms - probably going to do most analysis on the independent networks but will show both and point at where there are holes (hey by the time this gets finished maybe Chad will have already figured this out)
-  * what distribution of formation terms / debut parameters will generate the desired mean degree by age distribution
-  * need to think about race and sex differences in formation and absdiff(age) by sex if we want to use this for applied work
+  Narrative order:  
+  1. Cross network terms - we're going to avoid them due to complications  
+  2. Older Partner  
+    * offset for older partner  
+    * keeping people in  
+    * conclusion: we keep offset in all future scenarios but not older partners  
+  3. Sexual Debut  
+    * Debut  
+    * eligibility  
+    * conclusion: debut not eligibility  
+  4. let's think about why we're seeing the things we are  
+    * both networks have too few edges, particularly in early years  
+    * both dissolution rates slightly too low  
+    * marriage/cohab network: duration far too low  
+    * casual network: duration too high  
+    * tests:  
+      * marriage/cohab -- adj formation for earlier edges and longer durations  
+        * edapprox for impossible length durations  
+        * add't corrections-- what does it take to hit the correct mean deg? does that help duration?  
+      * casual -- adj formation for earlier edges but also departure for too long relationships?  
+    
+  5. asides / future work  
+  * cross-network terms - probably going to do most analysis on the independent networks but will show both and point at where there are holes (hey by the time this gets finished maybe Chad will have already figured this out)  
+  * what distribution of formation terms / debut parameters will generate the desired mean degree by age distribution  
+  * need to think about race and sex differences in formation and absdiff(age) by sex if we want to use this for applied work  
