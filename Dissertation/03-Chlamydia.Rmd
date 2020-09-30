@@ -10,6 +10,8 @@ The United States has some of the highest STD rates in the industrialized world,
 There have been several clinical trials of EPT across the US (and Europe), including Washington State.  These trails demonstrated that relative to traditional referral practices, EPT provision increased the proportion of partners who were ultimately treated, reduced the number of individuals who were re-infected at follow-up, and was less costly if at least 30% of partners were treated via EPT (CITE). Despite these results and a growing body of evidence in support, widespread implementation of EPT has been slow and there are still many questions to be answered.
 
 
+also -- EPT as a tool for health equity, not just effective population-level decrease in prevalence -- can be more effective in high-prevalance groups?
+
 Annals of Internal Medicine Article High Incidence of New Sexually Transmitted Infections in the Year
 following a Sexually Transmitted Infection: A Case for Rescreening - Peterman et al
 

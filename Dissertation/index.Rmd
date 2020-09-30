@@ -12,7 +12,7 @@ signature3: "person 3"
 abstract: |
   "Here is my abstract"
 acknowledgments: |
-  "My acknowledgments"
+  "My acknowledgments"  
 dedication: |
   "My dedication"
 # End of UW thesis fields

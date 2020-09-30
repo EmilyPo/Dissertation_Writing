@@ -44,3 +44,15 @@ vignettes/*.pdf
   
 # Example doc 
 Example Thesis/
+
+# data files (mostly sim files)
+data/
+
+# cached files
+_bookdown_files/
+
+# misc
+Untitled.html
+Untitled.Rmd
+Untitled_files/
+

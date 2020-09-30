@@ -11,6 +11,8 @@ In order to understand the complex patterns by which sexually transmitted infect
 
 This work is guided by the theoretical framework of the human ecology of infectious disease, the investigation of how human behavior, social patterns, and built environments interact with the broader pathogen environment to influence our health. Of particular interest is not just aggregate behavior, but also how variation in individual behavior influences social patterns and alters the landscape through which diseases spread, particularly as this variation relates to biological age. Syndemic theory will also be used as a guide to understand how variation in behaviors and patterns act synergistically to increase vulnerability and exacerbate existing health disparities of certain population subgroups [@Singer2006].
 
+* Whole other review on chlamydia goes here? Or in Chapter 3? I think some here may make sense to really motivate things.  As you see, I’ve mentioned chlamydia enough times already that knowing the basic epi would be useful. It also really drives home the “biological” aspect of biological anthropology early on.
+
 can I pull some stuff from my PAA abstract about age?
 
 * transition to a history of the evolution of epidemic models (ie. from compartmental where everything is basically independent and exponential through to ERGMs where formation can be quite elaborate but we've never spent much time thinking about dissolution)
@@ -19,31 +21,35 @@ Mathematical models are quantitative representations of real-life systems and th
 
 Initial mathematical models for epidemics were deterministic and compartmental in nature. They did not represent people individually, rather they group them into homogenous compartments representing specific states of interest, a portion of which transitioned between compartments at each time step based on a rate. In the most basic models, the compartments are usually "susceptible" and "infected" and the rate of transition from susceptible to infected depends on the rate of contact between the groups and the size of the infected group relative to the whole population. Additional complexity can be added by adding more compartments or states, like breaking down the state of susceptible and infected into demographic states like race or age groups, adding compartments for vector populations like mosquitoes, or by representing a more complex natural history of the pathogen by including states for groups such as "exposed but not infectious", "recovered", "infected and symptomatic", or "infected and asymptomatic" to name a few. These models were deterministic in nature because the transitions between compartments rely on unchanging rates: the same proportion of each component transitions at each time point and if you run a deterministic compartmental model (DCM) multiple times you will alway have the same result.
 
-Stochastic models grew out of this original framework as a way to capture variability and uncertainty in the systems we wish to study. In this scenario, some or all transitions between states were based on a *probability* of transitioning rather than a set rate, meaning that not the same proportion of a state transitioned at every time step, but on *average* 
+Stochastic models grew out of this original framework as a way to capture variability and uncertainty in the systems we wish to study. In this scenario, some or all transitions between states were based on a *probability* of transitioning rather than a set rate, meaning that not the same proportion of a state transitioned at every time step, but on *average*
 
 Notice the assumptions implicit in the way transitions occur in these models - it is memoryless, generating an exponential distribution (or geometric if using discrete time).
+
+* Explain what ERGMs/STERGMs are and why they arose and what are all their various strengths, and then discuss how they have been widely used in epidemic modeling, for HIV/STIs, but even beyond (Sam has a good running list of other applications of EpiModel on the EpiModel page).
+* Explain how current approaches to STERGMs have required us to make simplifying assumptions regarding dissolution, even as they’ve allowed us to do all kinds of awesome things in regards to formation/cross-sectional network structure. And the time has come to try to improve upon these methods within the STREGM framework.  Give examples of the various questions that would be improved by doing so (e.g. impacts of EPT in chlamydia)
+* And explain that (and perhaps why) it is (currently?) intractable to add in general non-memoryless forms of dependence into STERGMs, and to estimate these from data, so that it is useful to see how far one can get while adding in heterogeneity and complexity but still retaining some form of memorylessness.
+
+
+**Relationship Duration**
+
+* Make sure you dive a bit into some of the ways that people have tried to include more complex relationship durations in previous models before. In DCMs, this can include having multiple compartments represent a single state, because the sum of multiple exponentials is not exponential. I can’t think of any specific examples where folks did this for relationship length (maybe there are none), but certainly for other types of transition probabilities.
+* And then I’m sure there are papers that have included age-specific relational dissolution probabilities in agent-based epidemic models, using Martina’s definitions of the terms (that is, they model relationships, but not with a formal statistical model like ERGMs).  Try to find a few cases of this to show that it exists.  Talk about how where their dissolution probabilities come from – survival analysis.     
+* Discuss how survival analysis is the obvious way to consider relational dissolution probabilities over time/age, and how a specific duration distribution implies a specific survival curve, and vice versa.
 
 
 * dynamic networks require information about relationship duration
 
 * why doing a bit better on dissolution/duration, especially by age, will be extra important for thinking about certain interventions for certain relatively short-lived infections (e.g. partner services in chlamydia).
 
-* additionally, while births and deaths have been a part of models, only recently are we adding explicit age-dependent formation terms -- and age changes over the simulation -- what is this effect?   
-* including age in dynamic models may sound straightforward but as we're going to see adds a surprising amount of complexity
-
-
-**Notes from NME intro to modeling**
 
 exponential -- memoryless survival function, exchangeability
 
-all models have three basic components - elements (actors), states (attributes), transitions (rates of movements between states)
+**Age-Related Processes**
+* additionally, while births and deaths have been a part of models, only recently are we adding explicit age-dependent formation terms -- and age changes over the simulation -- what is this effect?   
+* including age in dynamic models may sound straightforward but as we're going to see adds a surprising amount of complexity
+* Talk about why including age-specific rates for anything matters (seems obvious, but still say it.  For example, talk a little about what we know about age-specific rates of chlamydia or other STIs; or even of infectious diseases with other transmission types for different reasons related to contacts. And/or talk about obvious fact that relationship patterns change in many ways across the life-course.  Perhaps summarize a few modeling papers that bring in age-specific contact patterns in different ways just to make the general point.
 
-DCMs
-within each compartment, people are homogenous
-flows are represented by rates - the fraction of the aggregate count that moves from one compartment to another any any time point
-each run gives the same results  
-at the most basic level - what do you need to transmit infection? one infected and one susceptible and some assumption(s) about the transmission process (acts, transmissibility, etc)
+**Primary Data Source**  
+The empirical behavioral data used in this dissertation are drawn from the 2006-2010 and 2011-2015 waves of the National Survey of Family Growth (NSFG). The NSFG surveys men and women aged 15-44 on many aspects of family life, including but not limited to marriage and divorce, pregnancy, contraception use, infertility, and other aspects of sexual and reproductive behavior. In addition to the demographic information recorded for each respondent and their sampling weights, in this study we use the data collected in section C of the public use files on each respondent’s recent sexual partnerships with opposite-sex partners in the last year, with a maximum of three partnerships reported. These data include the century-month of first sexual contact, the century-month of last sexual contact, whether the respondent considers this sexual partnership to be ongoing, and the partnership status (marriage, cohabitation, or other). We limit the combined data set to those respondents who report at least one partnership in the last year. Out of the original 43,303 respondents, our subset contains 32,516 respondents who report on 40,443 sexual partnerships. Due to the study design, all relationships that respondents report as ongoing on the day of interview have right-censored relationship lengths, and there is left-truncation present due to the large number or relationships that started prior to the observation window but continued into it.
 
-"contacts" somewhat misleading because multiple acts with same person makes a huge difference - but DCMs treat all contacts as independent, and/or contacts estimated as a full complete partnership
-
-move into stochastic modeling (can be have stochastic and deterministic components)- rates become probabilities
+This dissertation will....First I will use tools from survival analysis to explore the limitations of the exponential assumption with regard to the distribution of relationship duration across the lifecourse. Second, I will document the ways in which age-related ERGM terms can behave in unexpected ways during certain conditions in simulations with vital dynamics and other important demographic processes and explore a variety of potential adjustments. Lastly....
