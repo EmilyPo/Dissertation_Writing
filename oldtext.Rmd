@@ -1,0 +1,21 @@
+---
+title: "old text"
+author: "Emily Pollock"
+date: "9/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+this doc contains text I removed from the dissertation for various reasons but am keeping around just in case 
+
+- taken out of ch 2 intro on sept 30 to re-frame in more of a paper form
+
+
+Having gained insights about factors important (and not important) to the patterns of relationship length over the age course from survival analysis, the next steps initially seemed straightforward.
+First, I was going to build a two-network simulation model comparable to recently published models (where the casual/shorter relationships are represented on one network and marriages and cohabitations are represented on another) and analyze the patterns of relationship duration across the simulated age range to understand the ways in which we are able to recreate the empirical distribution and the ways in which we are not. Second, I was going to build a network model with a new structure: instead of modeling relationships on separate networks, I would begin all relationships as casual relationships and have them transition over time into cohabitations and marriages. Relationship dissolution probability, as in the first model, would be based on relationship type. By transitioning relationships over time – a process much closer to reality - instead of classifying certain relationships as, say, marriages, at their onset, I hoped to match certain features of the empirical distribution better. In particular: the increasingly uniform distribution of relationship lengths at older ages as some individuals maintain long-lasting marriages and others maintain cohabitations or begin entirely new relationships.
+
+Suffice it to say that I did not get to step two.
+

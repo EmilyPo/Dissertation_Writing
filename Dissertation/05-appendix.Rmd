@@ -9,7 +9,31 @@ If you feel it necessary to include an appendix, it goes here.
 
 # The First Appendix
 
-additional figures?
+## Data and Model Terms
+
+```{r egodata-prep, echo=FALSE, fig.align='center', out.width="60%", fig.cap="Mean Degree by Ego Age and Relationship Type.", cache=T}
+egoplotdat <- cbind(egodat[[2]][,1:2], egodat[[4]][,2])
+names(egoplotdat) <- c("Ego Age", "Marriage/Cohab", "Casual")
+egoplotdat <-  gather(egoplotdat, Type, `Mean Degree`, -`Ego Age`)
+ggplot() +
+  geom_point(data=egoplotdat, aes(x=`Ego Age`, y=`Mean Degree`, color=Type)) +
+  scale_color_manual(values=c("darkblue", "darkred")) +
+  theme(legend.position = c(0.15, 0.8))
+```
+
+include plots for the other terms - absdiff(sqrtage), concurrent, debuted etc  
+
+several general trends in relationship formation (finish write-up and cite) --
+
+-	individuals often select partners that are not their exact age
+-	this difference in partner ages often increases over the life course (i.e. adults usually have wider age differences between their partners than do adolescents)
+-	it is common for men to partner with younger women (although the sex differences in relationship formation are not explored in this model, it’s important to note that in a more realistic model the effect of aging out would disproportionately affect the women whose partners age out before them
+
+(include model terms and coefs and explain terms)
+(full description of EpiModelHIV module flow w/ parameters in appendix, brief overview here)
+
+Cross network terms - we're going to avoid them due to complications  
+
 
 # The Second Appendix
 

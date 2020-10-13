@@ -131,7 +131,7 @@ col = c("black", "blue", "red", "darkgreen"), cex=0.7, lwd=2, lty = c(1,2,1,1))
 
 The next two models test how appropriate it is to group relationships defined as marriages and cohabitations into the same dissolution model, as has been done in recent STERGMs. We see clear evidence that marriages and cohabitations have distinct hazards of dissolution and the combined marriage and cohabitation curve, like the simple exponential for all relationships, dramatically fails to capture both the shortest and longest relationships of these types (bottom right and bottom left figures, respectively. These results are similar to other work in family demography that has shown significant differences in the risk of dissolution between cohabitations and marriages due to variation in joint lifestyles (van Houdt and Poortman 2018). These results suggest to us that previously developed STERGM dissolution models that only capture the mean relationship length are not appropriate approximations of the data, and that cohabitation represents a distinctly separate type of relationship from marriages and other casual relationships and should be treated as such in our networks.  
 
-```{r, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category"}
+```{r, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category", echo=FALSE}
 s <- summary(e.agecat)
 plot(km_agecat_weighted, lty=2, lwd=4,
      col = brewer.pal(9, "Blues")[4:9],
@@ -155,7 +155,7 @@ legend("topright", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(3,12)),
 ```
 
 
-```{r, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category"}
+```{r, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category", echo=FALSE}
 s <- summary(e.agecat)
 plot(km_agecat_weighted, lty=2, lwd=4,
      col = brewer.pal(9, "Blues")[4:9],
