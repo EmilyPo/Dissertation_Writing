@@ -5,6 +5,7 @@
 
 Anthropologists have long recognized the importance of social connections and behavioral variation among humans and our nonhuman primate relatives. Indeed, the ability for us to participate in distinct but potentially interlocking complex social networks has fueled our evolution as a species and made our uniquely elaborate life possible. Network analysis has often been utilized as a way to visually and quantitatively represent these ties in order to understand their effects on those connected to each other, from kinship, social support and social capital, to the diffusion of information and transmission of disease. These latter networks are crucially important to our understanding of how human biosocial variation influences our health, where the oft-beneficial complex social networks we maintain and navigate every day can also put us at risk of exposure to infection.
 
+
 transition to STIs
 
 In order to understand the complex patterns by which sexually transmitted infections (STIs) are transmitted throughout populations, we first need to understand the behavior of human relationships and how these behaviors generate the dynamic sexual network across which these types of infections can spread.

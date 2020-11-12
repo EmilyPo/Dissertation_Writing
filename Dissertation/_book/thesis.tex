@@ -515,7 +515,7 @@ relationships among egos aged 15-45 whose \emph{partners} are outside of
 this age range. The degree distribution that we actually use to estimate
 the model (and are trying to maintain during simulation) looks rather
 different than the original distribution shown above, particularly in
-the marriage/cohabitation network (see \ref{fig:egodata-2}. We will
+the marriage/cohabitation network (see \ref{fig:egodata-2}). We will
 consider the consequences of this in a later section.
 \begin{figure}
 
@@ -1237,38 +1237,44 @@ will have already figured this out)\\
 * need to think about race and sex differences in formation and
 absdiff(age) by sex if we want to use this for applied work
 
-\chapter{Survival Analysis of Relationship Duration}\label{surv}
-\begin{itemize}
-\tightlist
-\item
-  main goal here to understand where in the distribution we may not be
-  capturing when we use models based on a memoryless process, and
-  explore some ways to do better within the constraints of feasibility
-  imposed by epidemic models
-\item
-  so we primarily use the exponential distribution in the SA analyses
-\item
-  discuss survey data and censoring / truncation issues
-\item
-  And then flesh out the details of the analyses with a clear narrative
-  and you have the core of a chapter!
-\end{itemize}
-The duration of sexual relationships across a population generates the
-network structure largely responsible for either exposing individuals to
-or protecting individuals from sexually transmitted infections (STIs).
-In addition to dictating this period of possible exposure, relationship
-durations relative to the pathogen-specific duration of infection are an
-important driver of how quickly STIs can spread throughout a population.
-Transmission beyond a pair of actors for infections with short durations
-relative to relationship lengths is challenging and slow, and it is more
-likely that an infection will be detected and treated or resolved
-naturally prior to the dissolution of the relationship. If the duration
-of infection and duration of relationships are more equal, there is a
-greater chance that the infection can spread to future partners and
-throughout the network. When partnerships overlap, transmission pathways
-increase even among those individuals with few lifetime partners, and
-this effect is even greater when the duration of overlap is large
-(Armbruster, Wang, and Morris 2017; Morris and Kretzschmar 1997).
+\chapter{Relationship Duration}\label{surv}
+
+As we began to unpack at the end of the previous chapter, there is
+reason to believe that the way we stratify relationship duration by
+relationship type in the two-network models has some room for
+improvement. In this chapter I will first begin with an explanation of
+the importance of relationship length on the transmission of STIs,
+highlight some key issues related to demographic trends and constraints
+of current epidemic models, and set up the scope of analysis. Then I
+will use parametric and non-parametric tools from survival analysis to
+compare models of relationship duration and some simple extensions to
+the exponential (memoryless) framework, with the overall goal of
+exploring how well memoryless processes captures the empirical
+distributions of relationship length in the National Survey of Family
+Growth overall and among various stratifications.
+
+\section{Relationship Length
+Overview}\label{relationship-length-overview}
+
+The duration of sexual relationships across a population is a key
+component of the network structure responsible for either exposing
+individuals to or protecting individuals from sexually transmitted
+infections (STIs). Relationship duration determines the length of
+exposure to pathogens, or in the case of a disease-free monogamous
+partnership, protection from pathogens. In addition to dictating this
+period of possible exposure, relationship durations relative to the
+pathogen-specific duration of infection are an important driver of how
+quickly STIs can spread throughout a population. Transmission beyond a
+pair of actors for infections with short durations relative to
+relationship lengths is challenging and slow, and it is more likely that
+an infection will be detected and treated or resolved naturally prior to
+the dissolution of the relationship. If the duration of infection and
+duration of relationships are more equal, there is a greater chance that
+the infection can spread to future partners and throughout the network.
+When partnerships overlap, transmission pathways increase even among
+those individuals with few lifetime partners, and this effect is even
+greater when the duration of overlap is large (Armbruster, Wang, \&
+Morris, 2017, Morris \& Kretzschmar (1997)).
 
 The pattern of relationship durations across the life-course is also
 important because STIs often have distinct age patterns in terms of
@@ -1281,182 +1287,458 @@ new relationships, but somewhat paradoxically it is also true that the
 only people who can report extremely long relationships are those who
 started them at young ages. This also introduces complex sampling issues
 because most data on relationship durations is collected
-cross-sectionally or retrospectively -- not longitudinally. Given the
-importance of relationship duration to features of STI epidemiology
-discussed above, there is growing interest in improving the
-representation of relational durations in dynamic network models used to
-study epidemics. This study demonstrates the ways in which the current
-literature fails to represent this distribution and proposes a new
-modeling framework to better capture these relationships across the
-life-course.
+cross-sectionally or retrospectively -- not longitudinally (see
+description of methods below for more on this). Given the importance of
+relationship duration to features of STI epidemiology discussed above,
+there is growing interest in improving the representation of relational
+durations in dynamic network models used to study epidemics.
 
-One common class of models used to understand network influences on
-patterns of STI transmission is known as separable temporal
-exponential-family random graph models (STERGMs). These models are
-governed by two expressions: one that represents the set of processes
-that influence the formation of relationships, and a comparable one for
-dissolution (Krivitsky and Handcock 2014). The current standard practice
-for the dissolution models in this modeling framework assumes that once
-a relationship begins, its persistence is governed by a constant hazard.
-This memoryless process is a convenient simplifying assumption, adopted
-because most hypotheses being explored relate to processes impacting
-network formation or cross-sectional structure. However, it is unlikely
-that this assumption faithfully represents the distribution all
-relationship durations we observe across a wide range of ages.
+As we used in the first chapter and will continue to use throughout this
+dissertation, one common class of models used to understand network
+influences on patterns of STI transmission is known as separable
+temporal exponential-family random graph models (STERGMs). These models
+are governed by two expressions: one that represents the set of
+processes that influence the formation of relationships, and a
+comparable one for dissolution (Krivitsky \& Handcock, 2014). We have
+previous explored some corrections to these expressions related to
+unexpected effects of certain demographic processes, but here we explore
+assumptions inherent in the dissolution component in more detail. The
+current standard practice for the dissolution models in this modeling
+framework assumes that once a relationship begins, its persistence is
+governed by a constant hazard. This memoryless process is a convenient
+simplifying assumption, adopted because most hypotheses being explored
+relate to processes impacting network formation or cross-sectional
+structure. However, it is unlikely that this assumption faithfully
+represents the distribution all relationship durations we observe across
+a wide range of ages.
 
-Several recent models have begun to address this issue by splitting out
-relationships into two categories: the first, marriages and
-cohabitations or main partnerships, and the second, persistent or casual
-partnerships. These are then modeled as separate networks
-simultaneously. By structuring the model in this fashion, each network
-has a hazard of dissolution specific to its type. (These models often
-have a third network for one-time sexual contacts which last only one
-time-step, but this network is not the focus of our study). While these
-models are indeed able to reproduce the mean relationship lengths drawn
-from empirical data, it remains unknown how well these strategies
-reproduce the full distribution of lengths observed. In particular, the
-memoryless assumption means that the modal length of main partnerships
-remains near zero across all ages, which basic intuition says is not
-true and descriptive data analysis confirms. Other work has considered
+Several recent models have begun to address this simplification by
+splitting out relationships into two categories: the first, marriages
+and cohabitations or main partnerships, and the second, persistent or
+casual partnerships. These are then modeled as separate networks
+simultaneously. This strategy is what we employed in the first chapter.
+By structuring the model in this fashion, each network has a hazard of
+dissolution specific to its type. (These models often have a third
+network for one-time sexual contacts which last only one time-step, but
+this network is not the focus of our study). While these models are
+indeed able to reproduce the mean relationship lengths drawn from
+empirical data, it remains unknown how well these strategies reproduce
+the full distribution of lengths observed. In particular, the memoryless
+assumption means that the modal length of main partnerships remains near
+zero across all ages, which basic intuition says is not true and
+descriptive data analysis confirms. Other work has considered
 disaggregating relational durations by a single demographic attribute of
 their members related to a hypothesis or prevention modality being
 explored, but again with no further effort to capture the full
-distribution, particularly by age (Goodreau et al. 2017; Jenness et al.
-2017).
+distribution, particularly by age (Goodreau et al., 2017,
+({\textbf{???}})).
 
-In this ongoing study, we seek to understand the changing distribution
-of relationship duration over the life-course using data from the
-National Survey of Family Growth, to evaluate which features the above
-dissolution assumptions are capable of replicating and which they
-cannot. We then introduce an alternative framework designed to more
-faithfully represent these data and the different demographic and
-data-collection processes that impact them in an age-structured
-population over time. We use tools from both event history analysis and
-network analysis to answer the following questions: First, under what
-circumstances, if any, can an exponentially distributed time-to-event
-model reasonably approximate empirical relationship duration data?
-Second, does it make sense to lump marriages and cohabitations into one
-network with the same dissolution probability? And third, can we better
-capture the age-wise relationship distribution by using one network
-where (1) relationships can transition between states (e.g.~from a
-cohabitation into a marriage) rather than modeling several types
-separately, and (2) where relational formation probabilities depend on
-current relational status.
+\section{Data}\label{data}
 
-\textbf{Methods}\\
-First the empirical relational duration data (using the start and end
-dates of all reported relationships in NSFG) will be investigated using
-histograms (overall and stratified by age category). Then, due to the
-issues of right censoring and left truncation as a result of survey
-design in NSFG, a reference survival curve will be constructed from the
-empirical data using a Modified Kaplan-Meier model following (Burington
-et al. 2010) and using the R package `survival'. Next, exploratory
-parametric models will be estimated from the data (with corrections for
-right-censoring and left-truncation) using a variety of distributions
-(namely and latent mixture components) to gain intuition about the
-underlying generative processes. Initial models will be covariate-free
-(representing the effects of relationship duration only on the chances
-of survival) and additional models will begin to examine the influence
-of age on relationship duration, including (but not limited to) the
-ego's age category, the reported current age difference between ego and
-alter, and the ego's age category at the beginning of each reported
-relationship. All models without latent components will be fit using the
-R package `flexsurv' and the likelihood functions for all models with
-latent components will be personally developed and models will be fit
-using the maxLik package (Jackson 2016; Henningsen and Toomet 2011).
-
-From PAA abstract: In our preliminary work, we first checked the
-assumption that relationship duration can be modeled by a simple
-memoryless process, and then explored some natural extensions to this
-framework. In order to generate the reference distribution, we fit a
-Kaplan-Meier model using a modified estimator to account for both
-right-censoring and left-truncation following Burington et al (2010). We
-then fit several parametric models (all adjusted for the above sampling
-issues): first a simple exponential model to represent the memoryless
-process assumption, then a Weibull distribution and Gamma distribution,
-all with and without additional covariate attributes. Model fit was
-evaluated primarily using the Akaike Information Criterion (AIC) and
-visuals to understand which relationship lengths were represented better
-than others, given our ultimate goal of adapting these into dynamic
-network simulations. Below is a selection of explored models; parametric
-models with covariate categories are displayed in color, with their
-Kaplan-Meier reference curves plotted in black. All parameters in these
-fitted models are statistically significant (p \textless{} 0.001).
-
-\textbf{Initial Histograms}
+The combined 2006-2015 waves of the National Survey of Family Growth
+once again provide the empirical data for this investigation although
+this time we use all of the data on relationships and relationship
+duration (except for one-time partners) rather than only using the
+active cross-section of relationships. As mentioned briefly in the
+introduction, the survey design makes the information on relationship
+duration somewhat more complex to analyze than the other questions of
+interest. Each participant, if they have indicated they have had sexual
+intercourse, is asked about their three most recent relationships that
+have either started or ended within the last year. We then define
+relationship duration as the difference between the month the ego
+reported first having sex with this partner and either the last month
+they reported sexual intercourse with that partner or the day of the
+interview if the relationship is ongoing. All relationships active on
+the day of the interview have right-censored duration since we do not
+know if/when they end. Additionally, because we calculate duration from
+retrospective information, we also introduce left truncation that biases
+mean duration estimates upwards. For example, if someone reports having
+one monogamous 15-year relationship, we essentially know their 15-year
+relationship history. However, if someone has serial short relationships
+or long time intervals between relationships, we do not see these
+relationships going back 15 years, so we actually gather different
+amounts of information from each participant. Figure \ref{fig:censoring}
+highlights these phenomena. Blue relationships are those lengths that we
+observe via the NSFG questionnaire. Red extensions to the blue lines
+represent theoretical true durations among the right-censored
+relationships. Green lines are those hypothetical relationships that
+could have occurred in the intervals that we do not observe for each
+participant. Many methods in survival analysis have corrections for
+these types of censoring and are employed in the relevant analyses.
 \begin{figure}
 
-{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/hists-1} 
+{\centering \includegraphics{thesis_files/figure-latex/censoring-1} 
 
 }
 
-\caption{All Relationships either Current or Ended in the Last Year}\label{fig:hists}
+\caption{Known and Censored Relationships in NSFG}\label{fig:censoring}
 \end{figure}
+\section{Methods}\label{methods}
+
+First, the relational duration data is displayed using histograms
+(overall, by relationship type, and by age category). These histograms
+are not corrected for any censoring, therefore are solely used to get a
+visual sense of the underlying patterns. In the main analysis we explore
+several parametric survival models to gain insights into the underlying
+heterogeneity in hazard of dissolution. The goal here is not to find the
+most perfect fitting model, but to explore some simple extensions of the
+exponential that may be implemented within the constraints of current
+epidemic network models to better capture the full distribution of
+relationship lengths. Unless otherwise specified, the parametric models
+are fit using the R package `flexsurv' adjusting for the right-censoring
+and left-truncation ({\textbf{???}}). All models use the survey weights
+provided by the NSFG, which weight the observations to the age, sex, and
+race composition of the United States. Model fit is evaluated by the
+Akaike Information Criterion (AIC) and visually by using a Modified
+Kaplan-Meier (following Burington et al. (2010) and fit using the R
+package `survival') as reference curves to compare the survival of the
+empirical relationships to that of the fitted models. Most extensions to
+the exponential will be fit twice: once using the all relationships and
+once stratified by relationship type to reflect the current standard
+practice in the literature.
+
+(All parameters in these fitted models are statistically significant (p
+\textless{} 0.001). maybe put that on the graphs. although significance
+here doesn't mean we gain that much model fit most of the time)
+
+\section{Descriptive Histograms}\label{descriptive-histograms}
+
+At first glance, the histogram of all relationships looks like something
+we would expect from an exponential distribution: a high decay right at
+the beginning, and a long right tail. However, it is clear from
+\ref{fig:hist-reltype} that this shape is primarily driven by the casual
+relationships rather than the marriages and cohabitations. The marriages
+and cohabitations are not uniformly distributed, but have a slower,
+linear-looking decay without an initial steep peak. These trends are
+largely maintained if we break these types down further by age category
+of the reporting ego, although interestingly the marriage and
+cohabitations do look increasingly uniform with age. The casual
+relationships all look relatively exponential, but of note is that the
+immediate drop in survival is of a lesser relative magnitude with
+increasing age. While not shown here, the histograms of solely the
+active relationships on the day of the interview look remarkable similar
+but have slightly fewer very short relationships as we would expect.
+Right off the bat we have indications that for certain relationship
+types, and for certain age groups, a simple constant hazard of
+dissolution may not accurately capture the distributed overall and over
+the lifecourse.
 \begin{figure}
 
-{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/hist-agecat-1} 
+{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/hist-all-1} 
 
 }
 
-\caption{All Relationships either Current or Ended in the Last Year, by Age Category}\label{fig:hist-agecat}
+\caption{All Relationships either Current or Ended in the Last Year}\label{fig:hist-all}
 \end{figure}
-\textbf{Results}
+\begin{figure}
 
-The first takeaway is that an exponential distribution alone is not
-sufficient to capture the relationship distribution -- it overestimates
-the survival of short relationships and underestimates the survival of
-long relationships (top left figure, below). The Weibull and Gamma
-perform better and capture more of the short relationships, suggesting
-that there is important heterogeneity in the data, but like the first
-models they also fail to capture the longest relationships. The age
-category of the reporting individual is not explanatory across all age
-categories (top right). This is perhaps not surprising, in that the age
-distribution of relationship lengths is at least partly an emergent
+{\centering \includegraphics[width=0.8\linewidth]{thesis_files/figure-latex/hist-reltype-1} 
+
+}
+
+\caption{All Relationships either Current or Ended in the Last Year, By Type}\label{fig:hist-reltype}
+\end{figure}
+hists by age cat needs to be formatting differently, latex not expecting
+such a large plot, working on it\ldots{}.
+\begin{figure}
+
+{\centering \includegraphics{thesis_files/figure-latex/hist-agecat-1} 
+
+}
+
+\caption{All Relationships either Current or Ended in the Last Year, by Age Category and Type}\label{fig:hist-agecat}
+\end{figure}
+\section{Duration-Only Models}\label{duration-only-models}
+
+As a first pass, we fit several duration-only (covariate free) models
+using 3 different but related distributions: the exponenential, the
+weibull, and the gamma. We chose the last two because they are related
+to the exponential and a better fit using these distributions would
+represent that there is a heterogeneity in the data that the
+single-parameter exponential doesn't capture. No STERGM developed for
+epidemic models has used either of these distributions in a dissolution
+model, but it is not impossible.
+
+{[}need to re-do graph, make it prettier{]}
+
+As we expect, a single exponential does not capture the full
+distribution of relationships well. All of the distributions fail to
+capture the very long, almost flat right tail of the data but the
+exponential seems to capture these relationships the worst. The
+exponential also fails to capture the the rapid decay at the start of
+the distribution - the shortest relationships. Both the gamma and
+weibull perform better than the exponential, but the weibull captures
+the short relationships somewhat better. In line with our expectations
+based on histograms, there is clear important heterogeneity in the data.
+However, all three fail to capture the few remaining long relationships
+that are not expected to end in the roughly 30 years of observation time
+shown on the x-axis.
+\begin{figure}
+
+{\centering \includegraphics{thesis_files/figure-latex/exp-dist-surv-1} 
+
+}
+
+\caption{Various Duration-Only Survival Models, All Relationships}\label{fig:exp-dist-surv}
+\end{figure}
+\section{Exponential and Relationship
+Type}\label{exponential-and-relationship-type}
+
+Here we re-plot the exponential model fit on its own without the others
+for reference (\ref{fig:exp-network}). \ref{fig:exp-networktype}
+stratifies the relationships into the current practice in the
+literature: into those labeled by the participants as marriages and
+cohabitations, and into all other relationships (we often think of these
+as ``casual'' or ``persistent'' partnerships - all non-marriage/cohabs
+that last for more than one sexual encounter). Each relationship type
+then has its own hazard of dissolution, but within each relationship
+type the hazard is constant. The curve for the casual partnerships fits
+remarkably well. The curve for marriage/cohabitations however, does not.
+This model over-represents the survival of relationships that last less
+than 200 weeks (\textasciitilde{} four years), but under-estimates the
+survival of longer relationships. Clearly there is more heterogeneity
+here that we will try to tease out in the next examples.
+
+{[}K-S test for the casual model fit? i.e.~are they plausibly two
+samples from the same underlying distribution?{]}
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{thesis_files/figure-latex/exp-network-1} \caption{Kaplan-Meier vs Exponential - All Relationships}\label{fig:exp-network}
+\end{figure}
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{thesis_files/figure-latex/exp-networktype-1} \caption{Kaplan-Meier vs Exponential - By Relationship Type}\label{fig:exp-networktype}
+\end{figure}
+\section{Simple Extensions}\label{simple-extensions}
+
+Here we explore add a variety of covariates to the exponential models to
+hopefully tease out the remaining heterogeneity while using covariates
+that often also are relevant to STERGM formation models (age category
+and race), and additionally explore splitting out the
+marriage/cohabitations into two groups to be estimated separately.
+
+\subsection{Age Category}\label{age-category}
+
+There are only very small differences in the expected survival of casual
+relationships by current age category, and we gain very little from
+splitting out each curve by age group (see AIC table) - it seems that
+casual relationships that do not or haven't yet moved into a
+cohabitation or marriage fail at a fairly similar rate regardless of the
+current age of the reporting ego. For the marriage/cohabs, the current
+age category is better representative for the youngest ages, the 15-19
+year olds and the 20-24 year olds, but less so for the older age groups.
+We expect this pattern based on the increasingly uniform distribution in
+the histograms with increasing age. This is perhaps not surprising, in
+that the age relationship lengths is at least partly an emergent
 property rather than a causal one. That is, no individual can have a
 relationship that has lasted longer than they have been sexually active,
 so the range of relationship lengths for young age categories is
 relatively small. Meanwhile, the older age categories are challenging to
 represent because the possible range of relationships is so much larger,
 and are likely influenced not only by dissolution probabilities but also
-by the changing formation probabilities over the lifecourse -- that is,
+by the changing formation probabilities over the life-course -- that is,
 older people in long-term relationships do not start new relationships
 at the same rate as others, and thus have relatively few relationships
-that are short.
+that are short. The poor fit at older ages in the overall model (with
+combined )
 
-\includegraphics{thesis_files/figure-latex/exp-dist-surv-1.pdf}
+in appendix we show not current age but other models fit to age at
+relationship initiation and similar effects
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/agecat-1} 
+
+}
+
+\caption{Kaplan-Meier vs. Constant Hazard by Current Age Category}\label{fig:agecat}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/agecat-reltype-1} 
+
+}
+
+\caption{Kaplan-Meier vs. Constant Hazard by Current Age Category and Rel Type}\label{fig:agecat-reltype-1}
+\end{figure}\begin{figure}
+{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/agecat-reltype-2} 
+
+}
+
+\caption{Kaplan-Meier vs. Constant Hazard by Current Age Category and Rel Type}\label{fig:agecat-reltype-2}
+\end{figure}
+\subsection{Race}\label{race}
+
+Here we add a covariate for race/ethnicity of reporting ego. For the
+casual relationships, like we saw for age category, there are such small
+differenes between groups that this covariate adds little to the
+picture. The marriage/cohabs relationships tell a slightly different
+story. The Non-Hispanic Black population has a clear separation from the
+Hispanics, Non-Hispanic Whites, and all others. Among Blacks the
+exponential model follows the curve of the corresponding Kaplan-Meier
+much closer than all other races which tend to repeat the overall
+pattern we saw in the duration-only model: a large overestimation of the
+survival of relationships less than 4 years in length, and then
+under-estimating the survival in the much flatter right tail.
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/race-reltype-1} 
+
+}
+
+\caption{Kaplan-Meier vs. Constant Hazard by Current Age Category among Casual Relationships}\label{fig:race-reltype}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/race-reltype2-1} 
+
+}
+
+\caption{Kaplan-Meier vs. Constant Hazard by Current Age Category among Marriage/Cohabs}\label{fig:race-reltype2}
+\end{figure}
+\subsection{Three Relationship Types}\label{three-relationship-types}
 
 The next two models test how appropriate it is to group relationships
 defined as marriages and cohabitations into the same dissolution model,
 as has been done in recent STERGMs. We see clear evidence that marriages
-and cohabitations have distinct hazards of dissolution and the combined
-marriage and cohabitation curve, like the simple exponential for all
-relationships, dramatically fails to capture both the shortest and
-longest relationships of these types (bottom right and bottom left
-figures, respectively. These results are similar to other work in family
-demography that has shown significant differences in the risk of
-dissolution between cohabitations and marriages due to variation in
-joint lifestyles (van Houdt and Poortman 2018). These results suggest to
-us that previously developed STERGM dissolution models that only capture
-the mean relationship length are not appropriate approximations of the
-data, and that cohabitation represents a distinctly separate type of
-relationship from marriages and other casual relationships and should be
-treated as such in our networks.
+and cohabitations have distinct hazards of dissolution, and that within
+these three types the exponential captures the distribution well. These
+results are similar to other work in family demography that has shown
+significant differences in the risk of dissolution between cohabitations
+and marriages due to variation in joint lifestyles (van Houdt and
+Poortman 2018). These results suggest that cohabitation represents a
+distinctly separate type of relationship from marriages and other casual
+relationships and we could improve the overall accurary of our
+dissolution models if we captured this additional heterogeneity in
+risk.\\
+{[}do K-S test here?{]}
 \begin{figure}
 
-{\centering \includegraphics{thesis_files/figure-latex/unnamed-chunk-1-1} 
+{\centering \includegraphics[width=0.7\linewidth]{thesis_files/figure-latex/threerels-1} 
 
 }
 
-\caption{Kaplan-Meier vs. Constant Hazard by Current Age Category}\label{fig:unnamed-chunk-1}
+\caption{Kaplan-Meier vs. Constant Hazard by 3 Rel Types}\label{fig:threerels}
 \end{figure}
+\section{Summary of Model Fits and
+Takeaways}\label{summary-of-model-fits-and-takeaways}
+\begin{itemize}
+\item
+  {[}need to make table of AIC and comments about visual fit{]}
+\item
+  takeaway here is most models that rely on common stratifications
+  (casual vs marriage/cohab, age and race) don't fit well but the
+  3-relationship exponential does
+\item
+  neither current age category or race of reporting ego make a
+  substantial difference in the dissolution hazard for relationships
+  that never or haven't yet transitioned to a cohabitation or marriage.
+  it seems that a simple exponential for this relationship type is a
+  reasonable approximation.
+\item
+  there are differences in age category and race for marriage and cohabs
+  but the age effects are likely more emergent than casual, and the race
+  effect, particularly for non-hispanic blacks, is likely due to the
+  higher prevalence of cohabiting relative to marriages compared to the
+  other race groups (maybe should have a table to show that in NSFG.)
+  Outside of non-hispanic blacks however, an exponential is not a
+  reasonable approximation to the K-M within the other groups.
+\end{itemize}
+\section{Young Population}\label{young-population}
+
+In this section we focus on the fit of models when only participants
+aged 15-29 are considered. We know from the above work that the most
+challenging age groups to fit are the oldest given their wide
+distribution of relationship length, and depending on the research
+question of interest it may not be as important to model these
+relationships perfectly. Because the majority of chlamydia diagnoses
+occur in under-30 year olds, in the next chapter we could prioritize
+capturing that distribution rather than that of the full population.
 \begin{figure}
 
-{\centering \includegraphics{thesis_files/figure-latex/unnamed-chunk-2-1} 
+{\centering \includegraphics[width=0.8\linewidth]{thesis_files/figure-latex/young-exp-1} 
 
 }
 
-\caption{Kaplan-Meier vs. Constant Hazard by Current Age Category}\label{fig:unnamed-chunk-2}
+\caption{Kaplan-Meier vs Exponential - By Relationship Type, 15-29}\label{fig:young-exp}
 \end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{thesis_files/figure-latex/young-network2-1} 
+
+}
+
+\caption{Kaplan-Meier vs Exponential - By Relationship Type, 15-29}\label{fig:young-network2}
+\end{figure}
+\section{Note on target relationship duration
+estimation}\label{note-on-target-relationship-duration-estimation}
+
+For comparability with the published literature, the network models
+estimated in the first chapter calculated the target mean relationship
+length by taking the mean length of all active relationships in each
+relationship category (marriage/cohab and casual). Previous work has
+shown that if the empirical data follows an exponential distribution,
+the left-truncation and right-censoring present in the data due to the
+data-generating process (cross-sectional survey with 1-year
+retrospective questions) cancel each other out (reference kirk diss? or
+was that pavel). Thus, the mean of relationship lengths active on the
+day of the interview is an accurate estimate of the true mean duration.
+\begin{itemize}
+\item
+  we also show here the distribution of cross-sectional relationship
+  lengths in the ``Young Age Formation Boost'' Models to the empirical
+  data and parametric models
+\item
+  differences in mean if you fit an exponential model accounting for
+  left-truncation and right censoring (mean based on estimated model for
+  casual rels is much shorter, and marriage/cohabs much much longer)
+\item
+  that is part of the reason the curves from the ``young boost'' model
+  from chapter 1 look so different. - although interestingly the
+  exponential marriage/cohab fits so poorly in the first 4 years that
+  the dissolution hazard based on the cross-sectional mean actually
+  looks closer to the kaplan-meier
+\item
+  but also not that if we move towards a transitional model these aren't
+  actually the targets we want, so this may be a moot point. but I will
+  probably use estimates from the fitted models as the mean duration
+  targets in 3rd chapter
+\end{itemize}
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{thesis_files/figure-latex/exp-network2-1} \caption{Kaplan-Meier vs Exponential - By Relationship Type}\label{fig:exp-network2}
+\end{figure}
+\section{Mixture Models}\label{mixture-models}
+
+appendix? put immune fraction model in there too?\\
+these models are kind of cool in a ``look what we can fit'' kind of way
+but aren't really helpful in terms of finding a simple solution for
+epidemic models
+
+all models with latent components will be personally developed and
+models will be fit using the maxLik package (Jackson 2016; Henningsen
+and Toomet 2011)(, Henningsen \& Toomet, 2011).
+
+\section{Discussion}\label{discussion}
+\begin{itemize}
+\tightlist
+\item
+  when do models based on exponential do ok and when don't they
+\item
+  options for future epidemic models
+\item
+  current setup - is getting marriage network as important as getting
+  the casual network? probably ok for younger pop
+\item
+  3 networks (casual, cohab, marriage) (seems onerous and given the
+  age/race differences this would be a strange setup overall)
+\item
+  transitional network
+  \begin{itemize}
+  \tightlist
+  \item
+    valued tergms don't exist yet
+  \item
+    could be done via epimodel but would likely require great deal of
+    calibration
+  \end{itemize}
+\end{itemize}
 \chapter{Chlamydia, Acquired Immunity, \& Expedited Partner
 Therapy?}\label{ept}
 
@@ -1664,7 +1946,7 @@ been organised into an R package, xxx, which is available at
 \url{https://github.com/xxx/xxx}. A hard copy of the thesis can be found
 in the University of Washington library.
 
-This version of the thesis was generated on 2020-10-12 19:53:59. The
+This version of the thesis was generated on 2020-11-12 12:05:22. The
 repository is currently at this commit:
 
 The computational environment that was used to generate this version is
@@ -1680,7 +1962,7 @@ as follows:
  collate  en_US.UTF-8                 
  ctype    en_US.UTF-8                 
  tz       America/Los_Angeles         
- date     2020-10-12                  
+ date     2020-11-12                  
 
 - Packages -------------------------------------------------------------------
  package        * version    date       lib
@@ -1785,7 +2067,7 @@ as follows:
  stringi          1.4.6      2020-02-17 [1]
  stringr        * 1.4.0      2019-02-10 [1]
  survey           4.0        2020-04-03 [1]
- survival         2.44-1.1   2019-04-01 [1]
+ survival       * 2.44-1.1   2019-04-01 [1]
  survminer      * 0.4.5      2019-08-03 [1]
  survMisc         0.5.5      2018-07-05 [1]
  tergm          * 3.6.1      2019-06-12 [1]
@@ -1943,12 +2225,48 @@ as follows:
 \setlength{\parskip}{8pt}
 
 \hypertarget{refs}{}
+\hypertarget{ref-Armbruster2017}{}
+Armbruster, B., Wang, L., \& Morris, M. (2017). Forward reachable sets:
+Analytically derived properties of connected components for dynamic
+networks. \emph{Network Science}, \emph{5}(3), 328--354.
+\url{http://doi.org/10.1017/nws.2017.10}
+
+\hypertarget{ref-Burington2010}{}
+Burington, B., Hughes, J. P., Whittington, W. L. H., Stoner, B.,
+Garnett, G., Aral, S. O., \& Holmes, K. K. (2010). Estimating duration
+in partnership studies: Issues, methods and examples. \emph{Sexually
+Transmitted Infections}, \emph{86}(2), 84--89.
+\url{http://doi.org/10.1136/sti.2009.037960}
+
 \hypertarget{ref-Carnegie2015}{}
 Carnegie, N. B., Krivitsky, P. N., Hunter, D. R., \& Goodreau, S. M.
 (2015). An Approximation Method for Improving Dynamic Network Model
 Fitting. \emph{Journal of Computational and Graphical Statistics},
 \emph{24}(2), 502--519.
 \url{http://doi.org/10.1080/10618600.2014.903087}
+
+\hypertarget{ref-Goodreau2017}{}
+Goodreau, S. M., Rosenberg, E. S., Jenness, S. M., Luisi, N.,
+Stansfield, S. E., Millett, G. A., \& Sullivan, P. S. (2017). Sources of
+racial disparities in HIV prevalence in men who have sex with men in
+Atlanta, GA, USA: a modelling study. \emph{The Lancet HIV}, \emph{4}(7),
+e311--e320. \url{http://doi.org/10.1016/S2352-3018(17)30067-X}
+
+\hypertarget{ref-Henningsen2011}{}
+Henningsen, A., \& Toomet, O. (2011). MaxLik: A package for maximum
+likelihood estimation in R. \emph{Computational Statistics},
+\emph{26}(3), 443--458. \url{http://doi.org/10.1007/s00180-010-0217-1}
+
+\hypertarget{ref-Krivitsky2014}{}
+Krivitsky, P. N., \& Handcock, M. S. (2014). A separable model for
+dynamic networks. \emph{Journal of the Royal Statistical Society. Series
+B: Statistical Methodology}, \emph{76}(1), 29--46.
+\url{http://doi.org/10.1111/rssb.12014}
+
+\hypertarget{ref-Morris1997}{}
+Morris, M., \& Kretzschmar, M. (1997). Concurrent partnerships and the
+spread of HIV. \emph{AIDS}, \emph{11}(5), 641--648.
+\url{http://doi.org/10.1097/00002030-199705000-00012}
 
 \hypertarget{ref-Singer2006}{}
 Singer, M. C., Erickson, P. I., Badiane, L., Diaz, R., Ortiz, D.,

@@ -1,4 +1,4 @@
-# Survival Analysis of Relationship Duration {#surv}
+# Relationship Duration {#surv}
 
 ```{r surv-libs, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -9,43 +9,18 @@ library(ggfortify)
 #suppressWarnings(library(flexsurv))
 library(survminer)
 library(RColorBrewer)
-```
 
-* main goal here to understand where in the distribution we may not be capturing when we use models based on a memoryless process, and explore some ways to do better within the constraints of feasibility imposed by epidemic models
-* so we primarily use the exponential distribution in the SA analyses
-* discuss survey data and censoring / truncation issues
-*
-And then flesh out the details of the analyses with a clear narrative and you have the core of a chapter!
-
-The duration of sexual relationships across a population generates the network structure largely responsible for either exposing individuals to or protecting individuals from sexually transmitted infections (STIs). In addition to dictating this period of possible exposure, relationship durations relative to the pathogen-specific duration of infection are an important driver of how quickly STIs can spread throughout a population. Transmission beyond a pair of actors for infections with short durations relative to relationship lengths is challenging and slow, and it is more likely that an infection will be detected and treated or resolved naturally prior to the dissolution of the relationship. If the duration of infection and duration of relationships are more equal, there is a greater chance that the infection can spread to future partners and throughout the network. When partnerships overlap, transmission pathways increase even among those individuals with few lifetime partners, and this effect is even greater when the duration of overlap is large (Armbruster, Wang, and Morris 2017; Morris and Kretzschmar 1997).  
-
-The pattern of relationship durations across the life-course is also important because STIs often have distinct age patterns in terms of prevalence. Individual age is often used as a predictor for risky sexual behavior, but there is additional complexity when considering the effect of age on the duration of relationships across the life-course. Young age likely influences the immediate intentions for relationships (i.e. serious or casual), and the frequency at which individuals form new relationships, but somewhat paradoxically it is also true that the only people who can report extremely long relationships are those who started them at young ages. This also introduces complex sampling issues because most data on relationship durations is collected cross-sectionally or retrospectively – not longitudinally.
-Given the importance of relationship duration to features of STI epidemiology discussed above, there is growing interest in improving the representation of relational durations in dynamic network models used to study epidemics. This study demonstrates the ways in which the current literature fails to represent this distribution and proposes a new modeling framework to better capture these relationships across the life-course.
-
-One common class of models used to understand network influences on patterns of STI transmission is known as separable temporal exponential-family random graph models (STERGMs). These models are governed by two expressions: one that represents the set of processes that influence the formation of relationships, and a comparable one for dissolution (Krivitsky and Handcock 2014). The current standard practice for the dissolution models in this modeling framework assumes that once a relationship begins, its persistence is governed by a constant hazard. This memoryless process is a convenient simplifying assumption, adopted because most hypotheses being explored relate to processes impacting network formation or cross-sectional structure. However, it is unlikely that this assumption faithfully represents the distribution all relationship durations we observe across a wide range of ages.
-
-Several recent models have begun to address this issue by splitting out relationships into two categories: the first, marriages and cohabitations or main partnerships, and the second, persistent or casual partnerships. These are then modeled as separate networks simultaneously. By structuring the model in this fashion, each network has a hazard of dissolution specific to its type. (These models often have a third network for one-time sexual contacts which last only one time-step, but this network is not the focus of our study). While these models are indeed able to reproduce the mean relationship lengths drawn from empirical data, it remains unknown how well these strategies reproduce the full distribution of lengths observed. In particular, the memoryless assumption means that the modal length of main partnerships remains near zero across all ages, which basic intuition says is not true and descriptive data analysis confirms. Other work has considered disaggregating relational durations by a single demographic attribute of their members related to a hypothesis or prevention modality being explored, but again with no further effort to capture the full distribution, particularly by age (Goodreau et al. 2017; Jenness et al. 2017).
-
-In this ongoing study, we seek to understand the changing distribution of relationship duration over the life-course using data from the National Survey of Family Growth, to evaluate which features the above dissolution assumptions are capable of replicating and which they cannot.  We then introduce an alternative framework designed to more faithfully represent these data and the different demographic and data-collection processes that impact them in an age-structured population over time. We use tools from both event history analysis and network analysis to answer the following questions: First, under what circumstances, if any, can an exponentially distributed time-to-event model reasonably approximate empirical relationship duration data? Second, does it make sense to lump marriages and cohabitations into one network with the same dissolution probability? And third, can we better capture the age-wise relationship distribution by using one network where (1) relationships can transition between states (e.g. from a cohabitation into a marriage) rather than modeling several types separately, and (2) where relational formation probabilities depend on current relational status.
-
-
-
-**Methods**  
-First the empirical relational duration data (using the start and end dates of all reported relationships in NSFG) will be investigated using histograms (overall and stratified by age category). Then, due to the issues of right censoring and left truncation as a result of survey design in NSFG, a reference survival curve will be constructed from the empirical data using a Modified Kaplan-Meier model following (Burington et al. 2010) and using the R package ‘survival’. Next, exploratory parametric models will be estimated from the data (with corrections for right-censoring and left-truncation) using a variety of distributions (namely and latent mixture components) to gain intuition about the underlying generative processes. Initial models will be covariate-free (representing the effects of relationship duration only on the chances of survival) and additional models will begin to examine the influence of age on relationship duration, including (but not limited to) the ego’s age category, the reported current age difference between ego and alter, and the ego’s age category at the beginning of each reported relationship. All models without latent components will be fit using the R package ‘flexsurv’ and the likelihood functions for all models with latent components will be personally developed and models will be fit using the maxLik package (Jackson 2016; Henningsen and Toomet 2011).
-
-From PAA abstract: In our preliminary work, we first checked the assumption that relationship duration can be modeled by a simple memoryless process, and then explored some natural extensions to this framework. In order to generate the reference distribution, we fit a Kaplan-Meier model using a modified estimator to account for both right-censoring and left-truncation following Burington et al (2010). We then fit several parametric models (all adjusted for the above sampling issues): first a simple exponential model to represent the memoryless process assumption, then a Weibull distribution and Gamma distribution, all with and without additional covariate attributes. Model fit was evaluated primarily using the Akaike Information Criterion (AIC) and visuals to understand which relationship lengths were represented better than others, given our ultimate goal of adapting these into dynamic network simulations. Below is a selection of explored models; parametric models with covariate categories are displayed in color, with their Kaplan-Meier reference curves plotted in black. All parameters in these fitted models are statistically significant (p < 0.001).  
-
-
-**Initial Histograms**  
-
-```{r surv-data, echo=FALSE, cache=T}
-dat <- readRDS("~/nsfg_data_cleaning/Objects/altersegos_survdat.rds")
-dat <- dat %>% mutate(reltype = ifelse(reltype %in% "Cur/Fmr Cohab", "Cohab",
-                                       ifelse(reltype %in% "Cur/Fmr Spouse", "Spouse",
+dataset <- readRDS("~/nsfg_data_cleaning/Objects/altersegos_survdat.rds")
+dat <- dataset %>% mutate(reltype = ifelse(reltype %in% "Cur/Fmr Cohab", "Cohab",
+                                       ifelse(reltype %in% "Cur/Fmr Spouse", "Marriage",
+                                        reltype)),
+                      reltype2 = ifelse(reltype %in% "Cohab", "Cohab/Marriage",
+                                       ifelse(reltype %in% "Marriage", "Cohab/Marriage",
                                         reltype)))
 
+
 # survival models
-# parametric / distributions
+#--------- parametric / duration-only
 expFit <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/nocovs/exp.rds")
 weibFit <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/nocovs/weib.rds")
 gammaFit <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/nocovs/gamma.rds")
@@ -53,52 +28,176 @@ gammaFit <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model
 mixExpFit <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/mixed/mix-exp-nsfg.rds")
 mixExpFitweighted <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/mixed/mix-exp-nsfg-weighted.rds")
 
-# parameteric / categorical
+#--------- parameteric / covariate --------------
 e.reltype <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/covs/ereltype.rds")
 e.network <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/covs/enetwork.rds")
 e.agecat <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/age/expAgeCatCurrent.rds")
+e.race <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/covs/erace.rds")
 
-# kaplan-meier
+e.agecat.Other <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/covs/eagecatOther.rds")
+e.agecat.Marcoh <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/covs/eagecatMarcoh.rds")
+e.race.Other <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/covs/eraceOther.rds")
+e.race.Marcoh <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/covs/eraceMarcoh.rds")
+
+#-------kaplan-meier-------------
 km_weighted <-  readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km-weighted.rds")
 km_agecat_weighted <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km_ac_weighted.rds")
 km_reltype_weighted <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km_reltype_weighted.rds")
 km_network_weighted <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km_network_weighted.rds")
+km_race <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km_race_weighted.rds")
+km_race_casual <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km_race_casual.rds")
+km_race_marcoh <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km_race_marcoh.rds")
+km_agecat_casual <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km_agecat_casual.rds")
+km_agecat_marcoh <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/km/km_agecat_marcoh.rds")
+
+#-------young pop models----------
+exp.young <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/1529/expFlex.rds")
+e.reltype.young <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/1529/ereltype.rds")
+e.network.young <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/1529/enetwork.rds")
+km_young <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/1529/km-weighted.rds")
+km_network_young <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/1529/km_network_weighted.rds")
+km_reltype_young <- readRDS("~/Documents/Dissertation/R/Duration/Survival_Analysis/model_fits/1529/km_reltype_weighted.rds")
 ```
 
-```{r hists, echo=FALSE, warning=FALSE, fig.align="center", fig.cap="All Relationships either Current or Ended in the Last Year", out.width="70%", cache=T}
+As we began to unpack at the end of the previous chapter, there is reason to believe that the way we stratify relationship duration by relationship type in the two-network models has some room for improvement. In this chapter I will first begin with an explanation of the importance of relationship length on the transmission of STIs, highlight some key issues related to demographic trends and constraints of current epidemic models, and set up the scope of analysis. Then I will use parametric and non-parametric tools from survival analysis to compare models of relationship duration and some simple extensions to the exponential (memoryless) framework, with the overall goal of exploring how well memoryless processes captures the empirical distributions of relationship length in the National Survey of Family Growth overall and among various stratifications.
+
+## Relationship Length Overview  
+
+The duration of sexual relationships across a population is a key component of the network structure responsible for either exposing individuals to or protecting individuals from sexually transmitted infections (STIs). Relationship duration determines the length of exposure to pathogens, or in the case of a disease-free monogamous partnership, protection from pathogens. In addition to dictating this period of possible exposure, relationship durations relative to the pathogen-specific duration of infection are an important driver of how quickly STIs can spread throughout a population. Transmission beyond a pair of actors for infections with short durations relative to relationship lengths is challenging and slow, and it is more likely that an infection will be detected and treated or resolved naturally prior to the dissolution of the relationship. If the duration of infection and duration of relationships are more equal, there is a greater chance that the infection can spread to future partners and throughout the network. When partnerships overlap, transmission pathways increase even among those individuals with few lifetime partners, and this effect is even greater when the duration of overlap is large [@Armbruster2017, @Morris1997].  
+
+The pattern of relationship durations across the life-course is also important because STIs often have distinct age patterns in terms of prevalence. Individual age is often used as a predictor for risky sexual behavior, but there is additional complexity when considering the effect of age on the duration of relationships across the life-course. Young age likely influences the immediate intentions for relationships (i.e. serious or casual), and the frequency at which individuals form new relationships, but somewhat paradoxically it is also true that the only people who can report extremely long relationships are those who started them at young ages. This also introduces complex sampling issues because most data on relationship durations is collected cross-sectionally or retrospectively – not longitudinally (see description of methods below for more on this). Given the importance of relationship duration to features of STI epidemiology discussed above, there is growing interest in improving the representation of relational durations in dynamic network models used to study epidemics.
+
+As we used in the first chapter and will continue to use throughout this dissertation, one common class of models used to understand network influences on patterns of STI transmission is known as separable temporal exponential-family random graph models (STERGMs). These models are governed by two expressions: one that represents the set of processes that influence the formation of relationships, and a comparable one for dissolution [@Krivitsky2014]. We have previous explored some corrections to these expressions related to unexpected effects of certain demographic processes, but here we explore assumptions inherent in the dissolution component in more detail. The current standard practice for the dissolution models in this modeling framework assumes that once a relationship begins, its persistence is governed by a constant hazard. This memoryless process is a convenient simplifying assumption, adopted because most hypotheses being explored relate to processes impacting network formation or cross-sectional structure. However, it is unlikely that this assumption faithfully represents the distribution all relationship durations we observe across a wide range of ages.
+
+Several recent models have begun to address this simplification by splitting out relationships into two categories: the first, marriages and cohabitations or main partnerships, and the second, persistent or casual partnerships. These are then modeled as separate networks simultaneously. This strategy is what we employed in the first chapter. By structuring the model in this fashion, each network has a hazard of dissolution specific to its type. (These models often have a third network for one-time sexual contacts which last only one time-step, but this network is not the focus of our study). While these models are indeed able to reproduce the mean relationship lengths drawn from empirical data, it remains unknown how well these strategies reproduce the full distribution of lengths observed. In particular, the memoryless assumption means that the modal length of main partnerships remains near zero across all ages, which basic intuition says is not true and descriptive data analysis confirms. Other work has considered disaggregating relational durations by a single demographic attribute of their members related to a hypothesis or prevention modality being explored, but again with no further effort to capture the full distribution, particularly by age [@Goodreau2017, @Jenness2017].
+
+
+
+## Data
+The combined 2006-2015 waves of the National Survey of Family Growth once again provide the empirical data for this investigation although this time we use all of the data on relationships and relationship duration (except for one-time partners) rather than only using the active cross-section of relationships. As mentioned briefly in the introduction, the survey design makes the information on relationship duration somewhat more complex to analyze than the other questions of interest. Each participant, if they have indicated they have had sexual intercourse, is asked about their three most recent relationships that have either started or ended within the last year. We then define relationship duration as the difference between the month the ego reported first having sex with this partner and either the last month they reported sexual intercourse with that partner or the day of the interview if the relationship is ongoing. All relationships active on the day of the interview have right-censored duration since we do not know if/when they end. Additionally, because we calculate duration from retrospective information, we also introduce left truncation that biases mean duration estimates upwards. For example, if someone reports having one monogamous 15-year relationship, we essentially know their 15-year relationship history. However, if someone has serial short relationships or long time intervals between relationships, we do not see these relationships going back 15 years, so we actually gather different amounts of information from each participant. Figure \@ref(fig:censoring) highlights these phenomena. Blue relationships are those lengths that we observe via the NSFG questionnaire. Red extensions to the blue lines represent theoretical true durations among the right-censored relationships. Green lines are those hypothetical relationships that could have occurred in the intervals that we do not observe for each participant. Many methods in survival analysis have corrections for these types of censoring and are employed in the relevant analyses.
+
+```{r censoring, echo=F, fig.align="center", fig.cap="Known and Censored Relationships in NSFG"}
+dat2 <- readRDS("~/nsfg_data_cleaning/Objects/altersegos_survdat.rds")
+# observed rels
+examples <- dat2[1:75,]
+examples <- examples %>% select(dfs, dls, active) %>% mutate(dfs=-dfs, dls=-dls) %>% mutate(dfs_c = dls)
+examples$id <- c(1:nrow(examples))
+
+# left truncated rels
+second <- dat2[76:150,] %>% select(dfs, dls, active) %>% mutate(dfs=-dfs, dls=-dls)
+offset <- sample(12:30, 75, replace=T)
+second <- cbind(second,offset)
+second <- second %>% mutate(dfs=dfs-offset, dls=dls-offset)
+second <- second[1:37,]
+second$id <- seq(1,74, by=2)
+
+# right censored rels
+rights <- examples %>% filter(dls==0 & active==1)
+rights$dls_c <- sample(1:80, nrow(rights), replace=T)
+
+#### plot ####
+plot(x=NA,
+  xlim=c(-350, 60), xaxt='na', xlab=NA,
+  ylim=c(0, 75), yaxt='n', ylab=NA,
+  main = ""
+)
+# obs window
+abline(v=-12, lty=2)
+abline(v=0, lty=2)
+# observed rels
+segments(
+  x0=examples$dls,
+  x1=examples$dfs,
+  y0=order(examples$id),
+  col="darkblue"
+)
+# truncated (unobserved) rels
+segments(
+  x0=second$dls,
+  x1=second$dfs,
+  y0=second$id,
+  col="darkgreen"
+)
+# right-censored examples
+segments(
+  x0=rights$dfs_c,
+  x1=rights$dls_c,
+  y0=rights$id,
+  col="darkred"
+)
+# legend
+legend("topleft", legend = c("Observation Window", "Known Durations", "Possible Right Censored Durations", "Possible Unobserved (Truncated) Durations"),
+       col = c("black", "darkblue", "darkred", "darkgreen"), lty=c(2,1,1,1), lwd=2, cex=0.6)
+rm(dat2)
+```
+
+
+
+## Methods
+First, the relational duration data is displayed using histograms (overall, by relationship type, and by age category). These histograms are not corrected for any censoring, therefore are solely used to get a visual sense of the underlying patterns. In the main analysis we explore several parametric survival models to gain insights into the underlying heterogeneity in hazard of dissolution. The goal here is not to find the most perfect fitting model, but to explore some simple extensions of the exponential that may be implemented within the constraints of current epidemic network models to better capture the full distribution of relationship lengths. Unless otherwise specified, the parametric models are fit using the R package 'flexsurv' adjusting for the right-censoring and left-truncation [@Jackson2006]. All models use the survey weights provided by the NSFG, which weight the observations to the age, sex, and race composition of the United States. Model fit is evaluated by the Akaike Information Criterion (AIC) and visually by using a Modified Kaplan-Meier (following @Burington2010 and fit using the R package ‘survival’) as reference curves to compare the survival of the empirical relationships to that of the fitted models. Most extensions to the exponential will be fit twice: once using the all relationships and once stratified by relationship type to reflect the current standard practice in the literature.
+
+(All parameters in these fitted models are statistically significant (p < 0.001).  maybe put that on the graphs. although significance here doesn't mean we gain that much model fit most of the time)
+
+## Descriptive Histograms  
+
+At first glance, the histogram of all relationships looks like something we would expect from an exponential distribution: a high decay right at the beginning, and a long right tail. However, it is clear from \@ref(fig:hist-reltype) that this shape is primarily driven by the casual relationships rather than the marriages and cohabitations. The marriages and cohabitations are not uniformly distributed, but have a slower, linear-looking decay without an initial steep peak. These trends are largely maintained if we break these types down further by age category of the reporting ego, although interestingly the marriage and cohabitations do look increasingly uniform with age. The casual relationships all look relatively exponential, but of note is that the immediate drop in survival is of a lesser relative magnitude with increasing age. While not shown here, the histograms of solely the active relationships on the day of the interview look remarkable similar but have slightly fewer very short relationships as we would expect. Right off the bat we have indications that for certain relationship types, and for certain age groups, a simple constant hazard of dissolution may not accurately capture the distributed overall and over the lifecourse.   
+
+```{r histscode, echo=FALSE, cache=T}
 xmax <- 30
 ymax <- 7e6
 
 allRels <- dat %>%
-            ggplot(aes(x = t_c_years, fill = reltype, weights = e.weight)) +
+            ggplot(aes(x = t_c_years, weights = e.weight)) +
+            geom_histogram(binwidth = 0.25) +
+            scale_x_continuous(name="Relationship Age, Years") +
+            scale_y_continuous(name="Weighted Count in Millions") +
+            theme(aspect.ratio=1)
+
+#"#76c0c1"
+allRelsType <- dat %>%
+            ggplot(aes(x = t_c_years, fill = reltype2, weights = e.weight)) +
             geom_histogram(binwidth = 0.25) +
             scale_x_continuous(name="Relationship Age, Years") +
             scale_y_continuous(name="Weighted Count in Millions") +
             theme(aspect.ratio=1) +
             labs(fill="Rel Type") +
-            scale_fill_manual(name="Rel Type", values=c("#014d64", "#6974a7", "#76c0c1"))
+            scale_fill_manual(name="Rel Type", values=c("#014d64", "#6974a7")) +
+            facet_wrap("reltype2")
+```
+```{r hist-all, echo=FALSE, warning=FALSE, fig.align="center", fig.cap="All Relationships either Current or Ended in the Last Year", out.width="70%", cache=T}
 allRels
 ```
 
-```{r hist-agecat, echo=FALSE, fig.cap="All Relationships either Current or Ended in the Last Year, by Age Category", out.width="70%", fig.align="center", cache=T}
-allRelsAgecat <- dat %>%
-            ggplot(aes(x = t_c_years, fill = reltype, weights = e.weight)) +
+```{r hist-reltype, echo=FALSE, warning=FALSE, fig.align="center", fig.cap="All Relationships either Current or Ended in the Last Year, By Type", out.width="80%", cache=T}
+allRelsType
+```
+
+hists by age cat needs to be formatting differently, latex not expecting such a large plot, working on it....
+
+```{r hist-agecat, echo=FALSE, fig.cap="All Relationships either Current or Ended in the Last Year, by Age Category and Type", fig.align="center", cache=T}
+allRelsAgecatType <- dat %>%
+            ggplot(aes(x = t_c_years, fill = reltype2, weights = e.weight)) +
             geom_histogram(binwidth = 0.25) +
             scale_x_continuous(name="Relationship Age, Years") +
             scale_y_continuous(name="Weighted Count in Millions") +
             theme(aspect.ratio=1) +
             labs(fill="Rel Type") +
-            scale_fill_manual(name="Rel Type", values=c("#014d64", "#6974a7", "#76c0c1")) +
-            facet_wrap("e.agecat", ncol=3)
-allRelsAgecat
+            scale_fill_manual(name="Rel Type", values=c("#014d64", "#6974a7")) +
+            facet_wrap(c("e.agecat", "reltype2"), ncol=2) +
+            theme(aspect.ratio=1, legend.position = "none")
+
+allRelsAgecatType
 ```
 
+## Duration-Only Models  
 
-**Results**  
+As a first pass, we fit several duration-only (covariate free) models using 3 different but related distributions: the exponenential, the weibull, and the gamma. We chose the last two because they are related to the exponential and a better fit using these distributions would represent that there is a heterogeneity in the data that the single-parameter exponential doesn't capture. No STERGM developed for epidemic models has used either of these distributions in a dissolution model, but it is not impossible.
 
-The first takeaway is that an exponential distribution alone is not sufficient to capture the relationship distribution – it overestimates the survival of short relationships and underestimates the survival of long relationships (top left figure, below). The Weibull and Gamma perform better and capture more of the short relationships, suggesting that there is important heterogeneity in the data, but like the first models they also fail to capture the longest relationships. The age category of the reporting individual is not explanatory across all age categories (top right). This is perhaps not surprising, in that the age distribution of relationship lengths is at least partly an emergent property rather than a causal one. That is, no individual can have a relationship that has lasted longer than they have been sexually active, so the range of relationship lengths for young age categories is relatively small. Meanwhile, the older age categories are challenging to represent because the possible range of relationships is so much larger, and are likely influenced not only by dissolution probabilities but also by the changing formation probabilities over the lifecourse – that is, older people in long-term relationships do not start new relationships at the same rate as others, and thus have relatively few relationships that are short.  
+[need to re-do graph, make it prettier]
 
-```{r exp-dist-surv, echo=FALSE}
+As we expect, a single exponential does not capture the full distribution of relationships well. All of the distributions fail to capture the very long, almost flat right tail of the data but the exponential seems to capture these relationships the worst. The exponential also fails to capture the the rapid decay at the start of the distribution - the shortest relationships. Both the gamma and weibull perform better than the exponential, but the weibull captures the short relationships somewhat better. In line with our expectations based on histograms, there is clear important heterogeneity in the data. However, all three fail to capture the few remaining long relationships that are not expected to end in the roughly 30 years of observation time shown on the x-axis.
+
+```{r exp-dist-surv, echo=FALSE, fig.align="center", fig.cap="Various Duration-Only Survival Models, All Relationships"}
 logit = function(p){
   log(p/(1-p))
 }
@@ -112,11 +211,11 @@ durVec <- c(1:max(km_weighted$time))
 plot(km_weighted,
      conf.int = FALSE,
      xlab = "t, months", ylab = "S(t)",
-     main="Survival of Relationships", lwd=2
+     main="Survival of Relationships", lwd=2, lty=2
 )
-lines(expFit, col="blue", lty=2)
+lines(expFit, col="blue", lwd=2)
 lines(weibFit, col="red", lwd=2)
-lines(gammaFit, col="darkgreen")
+lines(gammaFit, col="darkgreen", lwd=2)
 #lines(x = durVec,
 #      y = invLogit(coef(mixExpFitweighted)[3]) *
 #      pexp(q = durVec, exp(coef(mixExpFitweighted)[1]), lower.tail = FALSE) +
@@ -125,25 +224,72 @@ lines(gammaFit, col="darkgreen")
 #      col ="purple", lwd=2
 #)
 legend("topright", legend = c("Kaplan-Meier", "Exponential", "Weibull", "Gamma"),
-col = c("black", "blue", "red", "darkgreen"), cex=0.7, lwd=2, lty = c(1,2,1,1))
+col = c("black", "blue", "red", "darkgreen"), cex=0.7, lwd=2, lty = c(2,1,1,1))
 
 ```
 
-The next two models test how appropriate it is to group relationships defined as marriages and cohabitations into the same dissolution model, as has been done in recent STERGMs. We see clear evidence that marriages and cohabitations have distinct hazards of dissolution and the combined marriage and cohabitation curve, like the simple exponential for all relationships, dramatically fails to capture both the shortest and longest relationships of these types (bottom right and bottom left figures, respectively. These results are similar to other work in family demography that has shown significant differences in the risk of dissolution between cohabitations and marriages due to variation in joint lifestyles (van Houdt and Poortman 2018). These results suggest to us that previously developed STERGM dissolution models that only capture the mean relationship length are not appropriate approximations of the data, and that cohabitation represents a distinctly separate type of relationship from marriages and other casual relationships and should be treated as such in our networks.  
 
-```{r, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category", echo=FALSE}
+## Exponential and Relationship Type  
+
+Here we re-plot the exponential model fit on its own without the others for reference (\@ref(fig:exp-network)). \@ref(fig:exp-networktype) stratifies the relationships into the current practice in the literature: into those labeled by the participants as marriages and cohabitations, and into all other relationships (we often think of these as "casual" or "persistent" partnerships - all non-marriage/cohabs that last for more than one sexual encounter). Each relationship type then has its own hazard of dissolution, but within each relationship type the hazard is constant. The curve for the casual partnerships fits remarkably well. The curve for marriage/cohabitations however, does not. This model over-represents the survival of relationships that last less than 200 weeks (~ four years), but under-estimates the survival of longer relationships. Clearly there is more heterogeneity here that we will try to tease out in the next examples.  
+
+[K-S test for the casual model fit? i.e. are they plausibly two samples from the same underlying distribution?]  
+
+
+
+```{r exp-network, echo=F, fig.cap="Kaplan-Meier vs Exponential - All Relationships", out.width="80%"}
+n1 <- as.data.frame(summary(expFit))
+plot(km_weighted, lty=2, lwd=2,
+       col = brewer.pal(9, "Blues")[c(8)],
+       ylab="S(t)", xlab = "t, Weeks",
+       xlim=c(0,348))
+lines(n1$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=2)
+legend("topright", lty=c(rep(1,2), rep(2,2)), lwd=c(rep(2,4)),
+         col=c(rep(brewer.pal(9, "Blues")[8],2)),
+         legend = c("All Relationships",
+                     "K-M Reference: All"), bty="n", cex=0.8)
+```
+
+```{r exp-networktype, echo=F, fig.cap="Kaplan-Meier vs Exponential - By Relationship Type", out.width="80%"}
+n <- summary(e.network)
+  plot(km_network_weighted, lty=2, lwd=2,
+       col = brewer.pal(9, "Blues")[c(6,8)],
+       ylab="S(t)", xlab = "t, Weeks",
+       xlim=c(0,348))
+  lines(n$`network1=marcoh`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=2)
+  lines(n$`network1=other`$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=2)
+  legend("topright", lty=c(rep(1,2), rep(2,2)), lwd=c(rep(2,4)),
+         col=c(rep(brewer.pal(9, "Blues")[c(6,8)],2)),
+         legend = c("Marriage/Cohab", "Other",
+                     "K-M Reference: M/C",
+                     "K-M Reference: O"), bty="n", cex=0.8)
+```
+
+
+
+## Simple Extensions  
+
+Here we explore add a variety of covariates to the exponential models to hopefully tease out the remaining heterogeneity while using covariates that often also are relevant to STERGM formation models (age category and race), and additionally explore splitting out the marriage/cohabitations into two groups to be estimated separately.  
+
+### Age Category  
+
+There are only very small differences in the expected survival of casual relationships by current age category, and we gain very little from splitting out each curve by age group (see AIC table) - it seems that casual relationships that do not or haven't yet moved into a cohabitation or marriage fail at a fairly similar rate regardless of the current age of the reporting ego. For the marriage/cohabs, the current age category is better representative for the youngest ages, the 15-19 year olds and the 20-24 year olds, but less so for the older age groups. We expect this pattern based on the increasingly uniform distribution in the histograms with increasing age. This is perhaps not surprising, in that the age  relationship lengths is at least partly an emergent property rather than a causal one. That is, no individual can have a relationship that has lasted longer than they have been sexually active, so the range of relationship lengths for young age categories is relatively small. Meanwhile, the older age categories are challenging to represent because the possible range of relationships is so much larger, and are likely influenced not only by dissolution probabilities but also by the changing formation probabilities over the life-course – that is, older people in long-term relationships do not start new relationships at the same rate as others, and thus have relatively few relationships that are short. The poor fit at older ages in the overall model (with combined )
+
+in appendix we show not current age but other models fit to age at relationship initiation and similar effects  
+
+```{r agecat, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category", echo=FALSE, out.width="70%"}
 s <- summary(e.agecat)
-plot(km_agecat_weighted, lty=2, lwd=4,
+plot(km_agecat_weighted, lty=2, lwd=2,
      col = brewer.pal(9, "Blues")[4:9],
      ylab="S(t)", xlab = "t, Weeks",
      xlim=c(0,348))
-lines(s$`e.agecat=15-19`$est, type = "l", col = brewer.pal(9, "Blues")[4], lwd=4)
-lines(s$`e.agecat=20-24`$est, type = "l", col = brewer.pal(9, "Blues")[5], lwd=4)
-lines(s$`e.agecat=25-29`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=4)
-lines(s$`e.agecat=30-34`$est, type = "l", col = brewer.pal(9, "Blues")[7], lwd=4)
-lines(s$`e.agecat=35-39`$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=4)
-lines(s$`e.agecat=40-44`$est, type = "l", col = brewer.pal(9, "Blues")[9], lwd=4)
-legend("topright", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(3,12)),
+lines(s$`e.agecat=15-19`$est, type = "l", col = brewer.pal(9, "Blues")[4], lwd=2)
+lines(s$`e.agecat=20-24`$est, type = "l", col = brewer.pal(9, "Blues")[5], lwd=2)
+lines(s$`e.agecat=25-29`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=2)
+lines(s$`e.agecat=30-34`$est, type = "l", col = brewer.pal(9, "Blues")[7], lwd=2)
+lines(s$`e.agecat=35-39`$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=2)
+lines(s$`e.agecat=40-44`$est, type = "l", col = brewer.pal(9, "Blues")[9], lwd=2)
+legend("topright", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(2,12)),
        col=c(rep(brewer.pal(9, "Blues")[4:9],2)),
        legend = c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44",
                    "K-M Reference: 15-19",
@@ -155,19 +301,19 @@ legend("topright", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(3,12)),
 ```
 
 
-```{r, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category", echo=FALSE}
-s <- summary(e.agecat)
-plot(km_agecat_weighted, lty=2, lwd=4,
+```{r agecat-reltype, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category and Rel Type", echo=FALSE, out.width="70%"}
+s1 <- summary(e.agecat.Other)
+plot(km_agecat_casual, lty=2, lwd=2,
      col = brewer.pal(9, "Blues")[4:9],
      ylab="S(t)", xlab = "t, Weeks",
      xlim=c(0,348))
-lines(s$`e.agecat=15-19`$est, type = "l", col = brewer.pal(9, "Blues")[4], lwd=4)
-lines(s$`e.agecat=20-24`$est, type = "l", col = brewer.pal(9, "Blues")[5], lwd=4)
-lines(s$`e.agecat=25-29`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=4)
-lines(s$`e.agecat=30-34`$est, type = "l", col = brewer.pal(9, "Blues")[7], lwd=4)
-lines(s$`e.agecat=35-39`$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=4)
-lines(s$`e.agecat=40-44`$est, type = "l", col = brewer.pal(9, "Blues")[9], lwd=4)
-legend("topright", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(3,12)),
+lines(s1$`e.agecat=15-19`$est, type = "l", col = brewer.pal(9, "Blues")[4], lwd=2)
+lines(s1$`e.agecat=20-24`$est, type = "l", col = brewer.pal(9, "Blues")[5], lwd=2)
+lines(s1$`e.agecat=25-29`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=2)
+lines(s1$`e.agecat=30-34`$est, type = "l", col = brewer.pal(9, "Blues")[7], lwd=2)
+lines(s1$`e.agecat=35-39`$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=2)
+lines(s1$`e.agecat=40-44`$est, type = "l", col = brewer.pal(9, "Blues")[9], lwd=2)
+legend("topright", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(2,12)),
        col=c(rep(brewer.pal(9, "Blues")[4:9],2)),
        legend = c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44",
                    "K-M Reference: 15-19",
@@ -176,4 +322,261 @@ legend("topright", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(3,12)),
                    "K-M Reference: 30-34",
                    "K-M Reference: 35-39",
                    "K-M Reference: 40-44"), bty="n", cex=0.8)
+
+s2 <- summary(e.agecat.Marcoh)
+plot(km_agecat_marcoh, lty=2, lwd=2,
+     col = brewer.pal(9, "Blues")[4:9],
+     ylab="S(t)", xlab = "t, Weeks",
+     xlim=c(0,348))
+lines(s2$`e.agecat=15-19`$est, type = "l", col = brewer.pal(9, "Blues")[4], lwd=2)
+lines(s2$`e.agecat=20-24`$est, type = "l", col = brewer.pal(9, "Blues")[5], lwd=2)
+lines(s2$`e.agecat=25-29`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=2)
+lines(s2$`e.agecat=30-34`$est, type = "l", col = brewer.pal(9, "Blues")[7], lwd=2)
+lines(s2$`e.agecat=35-39`$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=2)
+lines(s2$`e.agecat=40-44`$est, type = "l", col = brewer.pal(9, "Blues")[9], lwd=2)
+legend("topright", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(2,12)),
+       col=c(rep(brewer.pal(9, "Blues")[4:9],2)),
+       legend = c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44",
+                   "K-M Reference: 15-19",
+                   "K-M Reference: 20-24",
+                   "K-M Reference: 25-29",
+                   "K-M Reference: 30-34",
+                   "K-M Reference: 35-39",
+                   "K-M Reference: 40-44"), bty="n", cex=0.7)
 ```
+
+### Race
+
+Here we add a covariate for race/ethnicity of reporting ego. For the casual relationships, like we saw for age category, there are such small differenes between groups that this covariate adds little to the picture. The marriage/cohabs relationships tell a slightly different story. The Non-Hispanic Black population has a clear separation from the Hispanics, Non-Hispanic Whites, and all others. Among Blacks the exponential model follows the curve of the corresponding Kaplan-Meier much closer than all other races which tend to repeat the overall pattern we saw in the duration-only model: a large overestimation of the survival of relationships less than 4 years in length, and then under-estimating the survival in the much flatter right tail.  
+
+```{r race, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Race", echo=FALSE, out.width="70%", eval=F}
+r <- summary(e.race)
+plot(km_race, lty=2, lwd=2,
+     col = brewer.pal(9, "YlOrRd")[4:7],
+     ylab="S(t)", xlab = "t, Weeks",
+     xlim=c(0,348))
+lines(r$`e.race=b`$est, type = "l", col = brewer.pal(9, "YlOrRd")[4], lwd=2)
+lines(r$`e.race=h`$est, type = "l", col = brewer.pal(9, "YlOrRd")[5], lwd=2)
+lines(r$`e.race=o`$est, type = "l", col = brewer.pal(9, "YlOrRd")[6], lwd=2)
+lines(r$`e.race=w`$est, type = "l", col = brewer.pal(9, "YlOrRd")[7], lwd=2)
+legend("topright", lty=c(rep(1,4), rep(2,4)), lwd=c(rep(2,8)),
+       col=c(rep(brewer.pal(9, "YlOrRd")[4:7],2)),
+       legend = c("NH-Black", "Hispanic", "Other", "NH-White",
+                   "K-M: NH-Black",
+                   "K-M: Hispanic",
+                   "K-M: Other",
+                   "K-M: NH-White"), bty="n", cex=0.8)
+```
+
+```{r race-reltype, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category among Casual Relationships", echo=FALSE, out.width="70%"}
+r1 <- summary(e.race.Other)
+plot(km_race_casual, lty=2, lwd=2,
+     col = brewer.pal(9, "YlOrRd")[4:7],
+     ylab="S(t)", xlab = "t, Weeks",
+     xlim=c(0,348))
+lines(r1$`e.race=b`$est, type = "l", col = brewer.pal(9, "YlOrRd")[4], lwd=2)
+lines(r1$`e.race=h`$est, type = "l", col = brewer.pal(9, "YlOrRd")[5], lwd=2)
+lines(r1$`e.race=o`$est, type = "l", col = brewer.pal(9, "YlOrRd")[6], lwd=2)
+lines(r1$`e.race=w`$est, type = "l", col = brewer.pal(9, "YlOrRd")[7], lwd=2)
+legend("topright", lty=c(rep(1,4), rep(2,4)), lwd=c(rep(2,8)),
+       col=c(rep(brewer.pal(9, "YlOrRd")[4:7],2)),
+       legend = c("NH-Black", "Hispanic", "Other", "NH-White",
+                   "K-M: NH-Black",
+                   "K-M: Hispanic",
+                   "K-M: Other",
+                   "K-M: NH-White"), bty="n", cex=0.8)
+```
+
+```{r race-reltype2, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by Current Age Category among Marriage/Cohabs", echo=FALSE, out.width="70%"}
+r2 <- summary(e.race.Marcoh)
+plot(km_race_marcoh, lty=2, lwd=2,
+     col = brewer.pal(9, "YlOrRd")[4:7],
+     ylab="S(t)", xlab = "t, Weeks",
+     xlim=c(0,348))
+lines(r2$`e.race=b`$est, type = "l", col = brewer.pal(9, "YlOrRd")[4], lwd=2)
+lines(r2$`e.race=h`$est, type = "l", col = brewer.pal(9, "YlOrRd")[5], lwd=2)
+lines(r2$`e.race=o`$est, type = "l", col = brewer.pal(9, "YlOrRd")[6], lwd=2)
+lines(r2$`e.race=w`$est, type = "l", col = brewer.pal(9, "YlOrRd")[7], lwd=2)
+legend("topright", lty=c(rep(1,4), rep(2,4)), lwd=c(rep(2,8)),
+       col=c(rep(brewer.pal(9, "YlOrRd")[4:7],2)),
+       legend = c("NH-Black", "Hispanic", "Other", "NH-White",
+                   "K-M: NH-Black",
+                   "K-M: Hispanic",
+                   "K-M: Other",
+                   "K-M: NH-White"), bty="n", cex=0.8)
+```
+
+### Three Relationship Types  
+The next two models test how appropriate it is to group relationships defined as marriages and cohabitations into the same dissolution model, as has been done in recent STERGMs. We see clear evidence that marriages and cohabitations have distinct hazards of dissolution, and that within these three types the exponential captures the distribution well. These results are similar to other work in family demography that has shown significant differences in the risk of dissolution between cohabitations and marriages due to variation in joint lifestyles (van Houdt and Poortman 2018). These results suggest that cohabitation represents a distinctly separate type of relationship from marriages and other casual relationships and we could improve the overall accurary of our dissolution models if we captured this additional heterogeneity in risk.  
+[do K-S test here?]   
+
+
+```{r threerels, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by 3 Rel Types", echo=FALSE, out.width="70%"}
+t <- summary(e.reltype)
+plot(km_reltype_weighted, lty=2, lwd=2,
+     col = brewer.pal(9, "Blues")[4:9],
+     ylab="S(t)", xlab = "t, Weeks",
+     xlim=c(0,348))
+lines(t$`reltype=Cur/Fmr Spouse`$est, type = "l", col = brewer.pal(9, "Blues")[4], lwd=2)
+lines(t$`reltype=Cur/Fmr Cohab`$est, type = "l", col = brewer.pal(9, "Blues")[5], lwd=2)
+lines(t$`reltype=Other`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=2)
+legend("right", lty=c(rep(1,3), rep(2,3)), lwd=c(rep(2,12)),
+       col=c(rep(brewer.pal(9, "Blues")[c(4:6)],2)),
+       legend = c("Marriage", "Cohab", "Other",
+                   "K-M Reference: Marriage",
+                   "K-M Reference: Cohab",
+                   "K-M Reference: Other"), bty="n", cex=0.8)
+```
+
+## Summary of Model Fits and Takeaways
+
+* [need to make table of AIC and comments about visual fit]  
+
+* takeaway here is most models that rely on common stratifications (casual vs marriage/cohab, age and race) don't fit well but the 3-relationship exponential does 
+
+* neither current age category or race of reporting ego make a substantial difference in the dissolution hazard for relationships that never or haven't yet transitioned to a cohabitation or marriage. it seems that a simple exponential for this relationship type is a reasonable approximation.  
+
+* there are differences in age category and race for marriage and cohabs but the age effects are likely more emergent than casual, and the race effect, particularly for non-hispanic blacks, is likely due to the higher prevalence of cohabiting relative to marriages compared to the other race groups (maybe should have a table to show that in NSFG.) Outside of non-hispanic blacks however, an exponential is not a reasonable approximation to the K-M within the other groups. 
+
+
+
+## Young Population
+
+In this section we focus on the fit of models when only participants aged 15-29 are considered. We know from the above work that the most challenging age groups to fit are the oldest given their wide distribution of relationship length, and depending on the research question of interest it may not be as important to model these relationships perfectly. Because the majority of chlamydia diagnoses occur in under-30 year olds, in the next chapter we could prioritize capturing that distribution rather than that of the full population.
+
+
+```{r young-exp, echo=F, fig.cap="Kaplan-Meier vs Exponential - By Relationship Type, 15-29", out.width="80%", fig.align="center"}
+e <- as.data.frame(summary(exp.young))
+plot(km_young, lty=2, lwd=2,
+       col = brewer.pal(9, "Blues")[6],
+       ylab="S(t)", xlab = "t, Weeks",
+       xlim=c(0,250))
+  lines(e$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=2)
+
+  legend("topright", lty=c(1,2), lwd=2,
+         col=brewer.pal(9, "Blues")[c(8,6)],
+         legend = c("Exponential, All Rels",
+                     "K-M Reference"), bty="n", cex=0.8)
+```
+
+```{r threerels-young, fig.align="center", fig.cap="Kaplan-Meier vs. Constant Hazard by 3 Rel Types, 15-29", echo=FALSE, out.width="70%", eval=F}
+t <- summary(e.reltype.young)
+plot(km_reltype_young, lty=2, lwd=2,
+     col = brewer.pal(9, "Blues")[4:9],
+     ylab="S(t)", xlab = "t, Weeks",
+     xlim=c(0,250))
+lines(t$`reltype=Cur/Fmr Spouse`$est, type = "l", col = brewer.pal(9, "Blues")[4], lwd=2)
+lines(t$`reltype=Cur/Fmr Cohab`$est, type = "l", col = brewer.pal(9, "Blues")[5], lwd=2)
+lines(t$`reltype=Other`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=2)
+legend("right", lty=c(rep(1,6), rep(2,6)), lwd=c(rep(3,12)),
+       col=c(rep(brewer.pal(9, "Blues")[c(4:6)],2)),
+       legend = c("Marriage", "Cohab", "Other",
+                   "K-M Reference: Marriage",
+                   "K-M Reference: Cohab",
+                   "K-M Reference: Other"), bty="n", cex=0.8)
+```
+
+```{r young-network2, echo=F, fig.cap="Kaplan-Meier vs Exponential - By Relationship Type, 15-29", out.width="80%", fig.align="center"}
+n <- summary(e.network.young)
+  plot(km_network_young, lty=2, lwd=2,
+       col = brewer.pal(9, "Blues")[c(6,8)],
+       ylab="S(t)", xlab = "t, Weeks",
+       xlim=c(0,250))
+  lines(n$`network1=marcoh`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=2)
+  lines(n$`network1=other`$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=2)
+  legend("topright", lty=c(rep(1,2), rep(2,2)), lwd=c(rep(3,4)),
+         col=c(rep(brewer.pal(9, "Blues")[c(6,8)],2)),
+         legend = c("Marriage/Cohab", "Other",
+                     "K-M Reference: M/C",
+                     "K-M Reference: O"), bty="n", cex=0.8)
+```
+
+## Note on target relationship duration estimation   
+
+For comparability with the published literature, the network models estimated in the first chapter calculated the target mean relationship length by taking the mean length of all active relationships in each relationship category (marriage/cohab and casual). Previous work has shown that if the empirical data follows an exponential distribution, the left-truncation and right-censoring present in the data due to the data-generating process (cross-sectional survey with 1-year retrospective questions) cancel each other out (reference kirk diss? or was that pavel). Thus, the mean of relationship lengths active on the day of the interview is an accurate estimate of the true mean duration.  
+
+* we also show here the distribution of cross-sectional relationship lengths in the "Young Age Formation Boost" Models to the empirical data and parametric models
+
+* differences in mean if you fit an exponential model accounting for left-truncation and right censoring (mean based on estimated model for casual rels is much shorter, and marriage/cohabs much much longer)
+
+* that is part of the reason the curves from the "young boost" model from chapter 1 look so different. - although interestingly the exponential marriage/cohab fits so poorly in the first 4 years that the dissolution hazard based on the cross-sectional mean actually looks closer to the kaplan-meier  
+
+* but also not that if we move towards a transitional model these aren't actually the targets we want, so this may be a moot point. but I will probably use estimates from the fitted models as the mean duration targets in 3rd chapter
+
+
+```{r simdata, echo=F}
+# import sim data
+sim <- readRDS(here("Dissertation", "data", "sims", "NoCross_Offset_EdapproxMort_youngboost.rds"))
+el <- sim$cel.temp
+nsims <- sim$control$nsims
+nsteps <- sim$control$nsteps
+
+# generate el with ego info over all sims
+full <- NULL
+for (i in 1:nsims) {full <- rbind(full, el[[i]])}
+rm(sim)
+rm(el)
+full$end <- nsteps
+# in months, and +1 because rels that started the last time step have duration 1 week
+full$dur <- ((full$end-full$start)+1)/4
+full$censored <- 0
+
+
+# separate into network
+marcoh <- full[full$type=="marcoh",]
+other <- full[full$type=="other",]
+
+library(survival)
+km_marcoh <- survfit(
+  formula = Surv(time = dur)~1,
+  data = marcoh,
+  error = "greenwood"
+)
+
+km_other <- survfit(
+  formula = Surv(time = dur) ~ 1,
+  data = other,
+  error = "greenwood"
+)
+```
+
+```{r exp-network2, echo=F, fig.cap="Kaplan-Meier vs Exponential - By Relationship Type", out.width="80%"}
+n <- summary(e.network)
+dat <- summary(km_other)
+dat2 <- summary(km_marcoh)
+
+  plot(km_network_weighted, lty=2, lwd=2,
+       col = brewer.pal(9, "Blues")[c(6,8)],
+       ylab="S(t)", xlab = "t, Months",
+       xlim=c(0,125))
+  lines(x=dat$time, y=dat$surv, type="l", lwd=2, col="orange")
+  lines(x=dat2$time, y=dat2$surv, type="l", lwd=2, col="purple")
+  lines(n$`network1=marcoh`$est, type = "l", col = brewer.pal(9, "Blues")[6], lwd=2)
+  lines(n$`network1=other`$est, type = "l", col = brewer.pal(9, "Blues")[8], lwd=2)
+  legend("topright", lty=c(rep(1,2), rep(2,2)), lwd=c(rep(2,4)),
+         col=c(rep(brewer.pal(9, "Blues")[c(6,8)],2)),
+         legend = c("Marriage/Cohab", "Other",
+                     "K-M Reference: M/C",
+                     "K-M Reference: O"), bty="n", cex=0.8)
+
+
+```
+
+
+
+
+## Mixture Models  
+appendix? put immune fraction model in there too?  
+these models are kind of cool in a "look what we can fit" kind of way but aren't really helpful in terms of finding a simple solution for epidemic models
+
+all models with latent components will be personally developed and models will be fit using the maxLik package (Jackson 2016; Henningsen and Toomet 2011)[, @Henningsen2011].
+
+## Discussion  
+
+* when do models based on exponential do ok and when don't they
+* options for future epidemic models
+  - current setup - is getting marriage network as important as getting the casual network? probably ok for younger pop
+  - 3 networks (casual, cohab, marriage) (seems onerous and given the age/race differences this would be a strange setup overall)
+  - transitional network  
+    - valued tergms don't exist yet
+    - could be done via epimodel but would likely require great deal of calibration
