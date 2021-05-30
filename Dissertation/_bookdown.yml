@@ -1,5 +1,5 @@
 book_filename: "thesis"
 chapter_name: "Chapter "
-rmd_files: ["index.Rmd", "00-Introduction.Rmd", "01-Demography.Rmd", "02-SurvAnalysis.Rmd", "03-Chlamydia.Rmd", "04-conclusion.Rmd", "05-appendix.Rmd", "98-colophon.Rmd", "99-references.Rmd"]
+rmd_files: ["index.Rmd", "00-Introduction.Rmd", "01-Demography.Rmd", "02-SurvAnalysis.Rmd", "03-Chlamydia.Rmd", "04-conclusion.Rmd", "05-appendix.Rmd", "99-references.Rmd"]
 download: [["thesis.pdf", "PDF"], ["thesis.epub", "EPUB"], ["thesis.docx", "Word"]]
 delete_merged_file: true

@@ -2,6 +2,18 @@
 
 \documentclass [11pt, proquest] {uwthesis}[2015/03/03]
 
+% Syntax highlighting #22
+$if(highlighting-macros)$
+  $highlighting-macros$
+$endif$
+
+%% https://github.com/rstudio/rmarkdown/issues/1649
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newenvironment{CSLReferences}%
+{\setlength{\parindent}{0pt}%
+\everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces}%
+{\par}
 
 % fix for pandoc 1.14
 \providecommand{\tightlist}{%
@@ -12,6 +24,9 @@
 %% \bibliography{references}
 
 \hyphenation{mar-gin-al-ia}
+
+% make caption sizes smaller 
+\usepackage[font={small}]{caption}
 
 %
 % ----- apply watermark to every page
@@ -25,6 +40,9 @@
 
 %% for the per mil symbol
 \usepackage[nointegrals]{wasysym}
+
+%% something about tables, from https://github.com/ismayc/thesisdown/issues/122
+\usepackage{calc}
 
 %% for copyright symbol
 \usepackage{textcomp}
@@ -53,7 +71,7 @@
 
 % If the Grad. Division insists that the first paragraph of a section
 % be indented (like the others), then include this line:
-% \usepackage{indentfirst}
+\usepackage{indentfirst}
 
 %%%%%%%%%%%%%%%%%%
 % If you want to use "sections" to partition your thesis
@@ -120,27 +138,6 @@
 \fi
 \usepackage{color}
 \usepackage{fancyvrb}
-\DefineShortVerb[commandchars=\\\{\}]{\|}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\newenvironment{Shaded}{}{}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
-\newcommand{\RegionMarkerTok}[1]{{#1}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\NormalTok}[1]{{#1}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
 
 
 \ifxetex

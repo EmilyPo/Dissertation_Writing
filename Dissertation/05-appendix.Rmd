@@ -7,9 +7,101 @@ If you feel it necessary to include an appendix, it goes here.
 -->
 
 
-# The First Appendix
+# Appendix
 
-## Data and Model Terms
+## Survival Analysis 
+
+```{r more-hists, echo=F, cache=T, fig.cap="Histograms of Relationship Duration by Censored Status & Type"}
+library(tidyverse)
+dataset <- readRDS("~/nsfg_data_cleaning/Objects/altersegos_survdat.rds")
+
+dataset$reltype2 = ifelse(dataset$reltype %in% "Other", 1, 2)
+dataset$len <- dataset$t_c-dataset$t_o
+dataset$reltype4[dataset$len<=1 & dataset$reltype2==1] <- 1
+dataset$reltype4[dataset$len>1 & dataset$reltype2==1] <- 2
+dataset$reltype4[dataset$reltype=="Cur/Fmr Cohab"] <- 3
+dataset$reltype4[dataset$reltype=="Cur/Fmr Spouse"] <- 4
+
+dat <- dataset %>% mutate(reltype = ifelse(reltype %in% "Cur/Fmr Cohab", "Cohab",
+                                       ifelse(reltype %in% "Cur/Fmr Spouse", "Marriage",
+                                        reltype)),
+                      reltype2 = ifelse(reltype %in% "Cohab", "Cohab/Marriage",
+                                       ifelse(reltype %in% "Marriage", "Cohab/Marriage",
+                                        ifelse(reltype %in% "Other", "Casual", reltype))),
+                      reltype4 = ifelse(reltype4==1, "Casual-short",
+                                        ifelse(reltype4==2, "Casual-long",
+                                               ifelse(reltype4==3, "Cohab",
+                                                      ifelse(reltype4==4, "Marriage", NA)))),
+                      censorstatus = ifelse(censored==1, "Completed", "Ongoing"))
+
+
+ dat %>%
+     ggplot(aes(x = t_c_years, fill = reltype2, weights = e.weight)) +
+     geom_histogram(binwidth = 0.25) +
+     scale_x_continuous(name="Relationship Age, Years") +
+     scale_y_continuous(name="Weighted Count in Millions") +
+     theme(aspect.ratio=1) +
+     labs(fill="Rel Type") +
+     scale_fill_manual(name="Rel Type", values=c("#014d64", "#6974a7")) +
+     facet_wrap(~reltype2+censorstatus) +
+    theme(legend.position="none")
+```
+
+## Chlamydia & EPT
+
+```{r uncalibrated-networks, echo=F, message=F, warning=F}
+source("~/Documents/Dissertation/R/EPT/functions/ddaf_functions.R")
+source("~/Documents/Dissertation/R/Duration/Functions/as_nfsg_rels.R")
+library(EpiModel)
+library(ggplot2)
+library(srvyr)
+library(kableExtra)
+library(tidyverse)
+
+sim <- readRDS("~/Documents/Dissertation/R/EPT/calibration/uncalibrated_sim.rds")
+
+mdist1 <- get_dist(sim, network=1, ndynamic=2)
+#mdist1[[1]];mdist1[[2]]
+
+odist1 <- get_dist(sim, network=2, ndynamic=2)
+#odist1[[1]];odist1[[2]]
+```
+
+```{r coefs,  message=F, warning=F, echo=F, cache=T, out.width="70%"}
+library(broom)
+library(here)
+library(tidyverse)
+library(kableExtra)
+fit.other <- readRDS(here("data", "ept", "fit.other.rds"))
+fit.marcoh <- readRDS(here("data", "ept", "fit.marcoh.rds"))
+fit.once  <- readRDS(here("data", "ept", "fit.once.rds"))
+netest <- readRDS(here("data", "ept", "calibrated_netests.rds"))
+
+# update calibrated coefs
+fit.marcoh$coef[3:15] <- netest[[1]]$coef.form[2:14]
+fit.other$coef[3:30] <- netest[[2]]$coef.form[2:29]
+
+
+fits <- rbind(tidy(fit.marcoh), tidy(fit.other), tidy(fit.once))
+
+durs <- data.frame(Network= c("Marriage", "Casual", "Inst"), `Duration` = c(476, 55, 1))
+
+
+kable(fits[1:15,], booktabs=T, col.names = c("Model Term", "Estimate", "SE", "Statistic", "Pvalue"),
+      caption="Marriage/Cohabitation Network: Summary of Formation Model Fit ") %>%
+  kable_styling()
+
+kable(fits[16:45,], booktabs=T, col.names = c("Model Term", "Estimate", "SE", "Statistic", "Pvalue"),
+      caption="Casual Network: Summary of Formation Model Fit ") %>%
+  kable_styling()
+
+kable(fits[46:56,], booktabs=T, col.names = c("Model Term", "Estimate", "SE", "Statistic", "Pvalue"),
+      caption="Instantaneous: Summary of Formation Model Fit ") %>%
+  kable_styling()
+
+#kable(durs, booktabs=T, caption="Mean Relationship Duration in Weeks") %>%
+#  kable_styling()
+```
 
 ```{r egodata-prep, echo=FALSE, fig.align='center', out.width="60%", fig.cap="Mean Degree by Ego Age and Relationship Type.", cache=T}
 egoplotdat <- cbind(egodat[[2]][,1:2], egodat[[4]][,2])
@@ -35,6 +127,4 @@ several general trends in relationship formation (finish write-up and cite) --
 Cross network terms - we're going to avoid them due to complications  
 
 
-# The Second Appendix
 
-more technical stuff in here?

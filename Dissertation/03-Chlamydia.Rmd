@@ -1,13 +1,18 @@
-# Chlamydia, Acquired Immunity, & Expedited Partner Therapy? {#ept}
+# The Role of Expedited Partner Therapy in Reinfection of Chlamydia {#ept}
+
+
 
 copying over some text from diss proposal:  
 
 C. trachomatis is an obligate intracellular bacterium transmitted through sexual contact among humans.  Chlamydial infections are most often asymptomatic. Untreated infections in women are an additional public health concern because they can lead to a variety of sequalae including pelvic inflammatory disease, scarring of ovaries and fallopian tubes, ectopic pregnancies, chronic pain, and infertility. Repeat infections are common and are an additional risk factor for the development of the above sequelae (Brunham and Rey-Ladino 2005). There is a great deal of uncertainty regarding the natural history of chlamydia, but the duration of infection for untreated individuals is generally thought to be up to 6 months for men and a year or more for women (Golden et al. 2000; Satterwhite et al. 2013). Chlamydia is usually treated with azithromycin or doxycycline, and unlike other common STIs like syphilis and gonorrhea, true antibiotic resistance is rare (Kong et al. 2015).  
 
-Chlamydia is the most common reportable disease in the United States and incidence, particularly adolescents and young adults aged 15-29, is increasing nationwide. The Centers for Disease Control and Prevention (CDC) estimates that half of all new STI infections (including gonorrhea, syphilis, and others) occur in those aged 15-24 despite them making up only a quarter of the sexually active population. Even in places like King County, Washington, where overall rates have remained stable, longstanding acknowledged disparities in prevalence by race are marked and continue to increase (2015 SKCPH STD Report). These rates are particularly distressing in light of the fertility consequences of long-term infection and reinfection: it is estimated that in King County, over 60% of non-Hispanic Black women have had at least one chlamydia infection by age 34 (a rate 5x higher than non-Hispanic White women) and 1 in 500 of non-Hispanic Black women develops chlamydia-associated tubal factor infertility over their life-course (Chambers et al. 2018).
+Chlamydia is the most common reportable disease in the United States and incidence, particularly adolescents and young adults. The Centers for Disease Control and Prevention (CDC) estimates that half of all new STI infections (including gonorrhea, syphilis, and others) occur in those aged 15-24 despite them making up only a quarter of the sexually active population. The United States has some of the highest STD rates in the industrialized world, and despite this, funding for public health programs dedicated to these issues has largely declined (CDC 2016 STD Report). As a result, few health departments are able to offer traditional partner notification services, where a patient who tests positive for an STI gives the contact information of their recent sex partners to the health department, and the department then contacts their partners with the hope that these partners will then get tested and, if necessary, treated. Expedited partner therapy (EPT) was developed with this scenario in mind. Under an EPT regime, a patient who tests positive, upon receipt of their own treatment, receives either additional antibiotic pills for their recent sexual partners or prescriptions for treatment that their partners can fill. The patient then is expected to hand-deliver either the treatment or prescription to their current or previous partner(s), who take the medicine at their own discretion and without the need for a positive lab test. By leveraging the sexual network in this fashion, this intervention hopes to decrease the time to treatment for all possible infected partners and increase the total number of partners treated. It also has the potential to reduce re-infection among the index patients if the partnerships are ongoing.
 
-The United States has some of the highest STD rates in the industrialized world, and despite this, funding for public health programs dedicated to these issues has largely declined (CDC 2016 STD Report). As a result, few health departments are able to offer traditional partner notification services, where a patient who tests positive for an STI gives the contact information of their recent sex partners to the health department, and the department then contacts their partners with the hope that these partners will then get tested and, if necessary, treated. Expedited partner therapy (EPT) was developed with this scenario in mind (See figure 2). Under EPT, a patient who tests positive, upon receipt of their own treatment, receives either additional antibiotic pills for their recent sexual partners or prescriptions for treatment that their partners can fill. The patient then is expected to hand-deliver either the treatment or prescription to their partner(s), who take the medicine at their own discretion and without the need for a positive lab test. By using these actors to essentially leverage their sexual network in reverse, this system hopes to decrease the time to treatment for all possible infected partners and increase the total number of partners treated. It can also reduce re-infection among the index patients if the partnerships are ongoing.
-There have been several clinical trials of EPT across the US (and Europe), including Washington State.  These trails demonstrated that relative to traditional referral practices, EPT provision increased the proportion of partners who were ultimately treated, reduced the number of individuals who were re-infected at follow-up, and was less costly if at least 30% of partners were treated via EPT (CITE). Despite these results and a growing body of evidence in support, widespread implementation of EPT has been slow and there are still many questions to be answered.
+There have been several clinical trials of EPT across the US (and Europe), including Washington State.  These trails demonstrated that relative to traditional referral practices, EPT provision increased the proportion of partners who were ultimately treated, reduced the number of individuals who were re-infected at follow-up, and was less costly if at least 30% of partners were treated via EPT (CITE).
+
+However, there are several concerns about the real-world feasibility of this type of intervention. The primary concern concerns the overuse of antibiotics and lack of testing of sexual partners. The over-use of antibiotics in general has been documented, and treating partners regardless of infection status could be highly wasteful if a large proportion of partners are not actually infected. Although the rise of antibiotic resistance is less of a concern for chlamydia compared to gonorrhea and syphillis, because infection with one STI is often associated infection with other STIs, many physicians are concerned that not screening sexual partners is a lost opportunity to test for these additional STIs and also monitor the various infections for antibiotic-resistant strains.  
+
+some community trials and implementation at local clinics has provided mixed results regarding how well this intervention reduces reinfection of the original diagnosed patient (cite).
 
 
 also -- EPT as a tool for health equity, not just effective population-level decrease in prevalence -- can be more effective in high-prevalance groups?
@@ -20,4 +25,347 @@ Arrested Immunity Hypothesis
 	One of the paradoxes in era of modern public health is that chlamydia incidence has actually increased overall in the presence of mass control programs. In Sweden, Norway, Finland and Canada the rates initially decreased but then resumed increasing, and in Australia, United States, and the United Kingdom the rates never stopped increasing even after program initiation, although this second pattern has been attributed to the challenges of implementing control programs consistently throughout a large population  (Brunham and Rekart 2008).  These areas now experience incidence rates higher than rates prior to introduction of control programs. Additionally, a regression analysis using data from family planning clinics in Region X of the United States (Alaska, Washington, Idaho, and Oregon) found that, after controlling for any changes in demographics, sexual behaviors, and increased sensitivity of clinical tests, there was a remaining 5% ‘true’ and unexplained annual increase in chlamydia positivity from 1997-2004 (Fine et al. 2008). In response to these and other examples of unabated chlamydia infection in the presence of control programs, Brunham and Reckart have proposed the arrested immunity hypothesis (Brunham and Rekart 2008). Under this hypothesis, early detection and treatment of chlamydia interrupts the development of acquired immunity, making treated individuals particularly vulnerable to reinfection almost immediately after treatment.
 While we have no natural history studies of chlamydia infection in humans that address the development, duration, and extent of immunity, there is growing evidence beyond rodent models and trends in incidence that partial immunity can develop and play a role. 	Rodent models of chlamydial infection suggest that a high proportion are able to resolve their primary infection and are temporarily resistant to infection. Rodents that then eventually become reinfected with chlamydia have a shorter duration of disease, lower pathogen load and decreased inflammatory response (Rank et al. 2003). However, it has also been shown that treatment early in the course of infection interrupts the development of this protective immunity (Su et al. 2002).
 There is also some indirect evidence in humans. A 2010 review article acknowledged that in several studies of infection status among couples, the rates of discordance (i.e. one partner is infected while the other is not), are higher for chlamydia than for gonorrhea and that this discordance increases with age, providing indirect evidence for some level of protective immunity to chlamydia that increases with age, likely due to exposure over time. There is little immunity that develops to gonorrheal infection due to high levels of antigenic variation (Batteiger et al. 2010). Recent modeling using data from both the UK and United States has demonstrated that at least some immunity to chlamydia following natural clearance is necessary to generate observed patterns in incidence (Omori, Chemaitelly, and Abu-Raddad 2019).
+
+
 These questions are particularly relevant in the context of expedited partner therapy, where the goal is to interrupt transmission by treated individuals and their partners as quickly as possible. However, due to the arrested immunity of those treated quickly, if the timing of delivery and uptake of partners is not sufficient, the initially treated is likely at higher risk of reinfection than under the standard referral scenario. If sufficient numbers of partners are treated effectively and quickly and transmission throughout the network is greatly diminished, then EPT may be able to overcome the effects of this arrested immunity.
+
+
+In order for an individual who gets follow-up tested following treatment one of things must have happened. First, their treatment could have failed, leading to a positive test a follow-up from the same infection. Second, their infected partner could have reinfected them either due to treatment failure of their own or failing to get treated. Third, they form a relationship with a new partner who is chlamydia-positive and they become infected. There is a fourth possible option, where an individual who gets treated has a partner with other partner. This partner-of-a-partner could be infected, and if the index patient only treats their own partners, there is path to reinfection from the 3rd partner to the index patient (see diagram).
+
+
+The goal of this chapter are twofold. First, using the insights gained from Chapter 1 regarding the effect of demographic processes on network structure, we will implement several of the strategies we explored independently in Chapter 1 and demonstrate their efficacy. Second, we will 
+
+## Hypotheses  
+
+**1. The presence of concurrency exacerbates the rate of reinfection among diagnosed individuals.**  
+  
+Concurrency could exacerbate the rate of reinfection in two ways. There is a direct pathway by which the 3rd partner in a concurrent chain doesn't receive treatment and transmits the infection back to the index node. We call this the direct route. Indirectly, concurrency could increase the prevalence of infection in the general population, meaning that any future partner is more likely to be infected, causing higher reinfection rates from new partners. We will test both of these possibilities by comparing the rate of reinfection following treatment between networks with rates of concurrency as reported in the NSFG, and a counterfactual scenario with a prohibition on concurrency.  
+
+
+```{r reinf-diag, out.width="65%", fig.align="center", cache=T, echo=F, fig.cap="Pathways to reinfection following treatment due to concurrency"}
+knitr::include_graphics("data/ept/ConcurrencyReinfection.jpg")
+```
+
+**2. Treatment increases the rate of reinfection among diagnosed individuals compared to those whose infections clear naturally.**  
+    
+To test this theory, we will compare the difference in reinfection rates among individuals whose infections clear naturally (and are temporarily immune to reinfection) versus those individuals who clear their infections following treatment and are immediately susceptible to new infections. We will also compare these rates between concurrency scenarios to evaluate the interacting role of multiple overlapping partnership on reinfection between these types of recovery.
+
+If we find that concurrency plays a large role in reinfection following treatment, this would provide more evidence for the need to have partners of diagnosed patients to seek in-person testing and refer any additional partners to the health department.
+
+
+
+## Methods  
+
+### Networks and Relationship Target Calibration
+
+Two sets of networks are estimated. The baseline networks (with concurrency) are similar in structure to the networks previously described in Chapter 1, with several exceptions. First, we separate both the nodecov and concurrent terms that influence relationship formation by age and the number of individuals who have multiple ongoing partnerships within the casual network into separate terms by sex in order to capture small variations in the age-wise distribution of relationship frequency over the life course. Second, we made the age mixing term directional by sex to reflect that on average females form relationships with slightly older males. Third, we add several nodefactor terms for a range of ages to both the casual and marriage/cohabitation networks for ease of calibration. Lastly, we add a network for relationships that only last for one time step, we call this the instantaneous network and it is meant to reflect the frequency of one-offs, or more colloquially, "one night stands" by age category.  
+The second set of three networks is identical to this initial set with one major exception: no individual is allowed to be in more than one active relationship at a time. This means that there is no concurrency within the casual network and also no cross-network concurrency (i.e. a marriage/cohabitation partnership where one partner forms an additional casual relationship). We do this by turning the formation terms that would normally govern these processes into offsets instead, thereby prohibiting them. This set of networks will provide the counterfactual to our baseline scenario to test our theories about the role of concurrency in reinfection following treatment.  
+
+The networks are calibrating based on two insights we gained in Chapter 1: that we need a boost in the formation coefficients at younger ages to account for left-boundary issues and rapidly changing targets in this narrow age range, and that the the same departure correction should not be applied to both the marriage/cohabitation and casual networks. In the marriage network, we slightly boosted the log-odds of forming a tie among those nodes in age categories 1-3 (15-19 20-24, and 25-29), and slightly decreased the log-odds of tie formation for all nodes older than 30 to reduce the excess number of relationships we observed in various approaches to demographic corrections in chapter 1. In the casual network, we only needed to slighly boost the log-odds of tie formation for males at age 15 (at entry) and at age 18. For the departure corrections in this project, instead of estimating the correction needed to account for unanticipated relationship dissolution due to node departure, we simply calibrated the adjustment necessary for each network in order to match the target mean relationship length, i.e. the endogenous relationship length needed to match the target mean relationship length in the presence of these excess dissolution. This calibration meant that we increased the underlying length of relationships by a factor of five in the marriage network, but only increased the length of casual relationships by 3%. All formation coefficients for the baseline networks and relationship length targets are outlined in the appendix. 
+
+```{r net-uncalib, warning=F, message=F, echo=F}
+source("~/Documents/Dissertation/R/EPT/functions/ddaf_functions.R")
+source("~/Documents/Dissertation/R/Duration/Functions/as_nfsg_rels.R")
+library(EpiModel)
+library(ggplot2)
+library(srvyr)
+library(kableExtra)
+library(tidyverse)
+
+sim <- readRDS("~/Documents/Dissertation/R/EPT/calibration/uncalibrated_sim.rds")
+
+#mdist1 <- get_dist(sim, network=1, ndynamic=2)
+#mdist1[[1]];mdist1[[2]]
+
+#odist1 <- get_dist(sim, network=2, ndynamic=2)
+#odist1[[1]];odist1[[2]]
+
+r1 <- active_rels(sim)
+m1 <- r1[[1]]
+c1 <- r1[[2]]
+
+
+md1 <- data.frame(targets = c((sim$nwparam[[1]]$target.stats[1]*2)/20000,
+                            (sim$nwparam[[2]]$target.stats[1]*2)/20000),
+                 results = c(mean(c(sim$epi$meanDegMarcoh[[1]][1000:1500],
+                                  sim$epi$meanDegMarcoh[[2]][1000:1500],
+                                  sim$epi$meanDegMarcoh[[3]][1000:1500],
+                                  sim$epi$meanDegMarcoh[[4]][1000:1500],
+                                  sim$epi$meanDegMarcoh[[5]][1000:1500])),
+                             mean(c(sim$epi$meanDegOther[[1]][1000:1500], 
+                                      sim$epi$meanDegOther[[2]][1000:1500], 
+                                      sim$epi$meanDegOther[[3]][1000:1500], 
+                                      sim$epi$meanDegOther[[4]][1000:1500], 
+                                      sim$epi$meanDegOther[[5]][1000:1500])))
+)
+
+
+md1$percent <- ((md1$results - md1$targets) / md1$targets)*100
+md1 <- round(md1, 3)
+md1$percent <- paste0(md1$percent, "%")
+
+durs1 <- data.frame(targets = c(476, 55), results=c(mean(m1$len), mean(c1$len)))
+durs1$percent <- ((durs1$results - durs1$targets ) / durs1$targets )*100
+durs1 <- round(durs1, 3)
+durs1$percent <- paste0(durs1$percent, "%")
+
+all1 <- cbind(md1, durs1)
+colnames(all1) <- rep(c("Target", "Simulation", "Pct Off"),2)
+kable(all1, booktabs=T, caption="Key Network Targets and Pre-Calibration Results") %>%
+  kable_styling() %>%
+  pack_rows("Marriage/Cohabitation Network", 1,1) %>%
+  pack_rows("Casual Network", 2, 2) %>%
+  add_header_above(c("Mean Degree" = 3, "Mean Relationship Length" = 3))
+```
+
+```{r nets-calib, echo=F}
+sim2 <- readRDS("~/Documents/Dissertation/R/EPT/sims/may2/current/simBase.rds")
+
+#mdist <- get_dist(sim2, network=1, ndynamic=2)
+#mdist[[1]];mdist[[2]]
+
+#odist <- get_dist(sim2, network=2, ndynamic=2)
+#odist[[1]];odist[[2]]
+
+r <- active_rels(sim2)
+m <- r[[1]]
+c <- r[[2]]
+
+
+md <- data.frame(targets = c((sim2$nwparam[[1]]$target.stats[1]*2)/20000,
+                            (sim2$nwparam[[2]]$target.stats[1]*2)/20000),
+                 results = c(mean(c(sim2$epi$meanDegMarcoh[[1]][2000:4100],
+                                  sim2$epi$meanDegMarcoh[[2]][2000:4100],
+                                  sim2$epi$meanDegMarcoh[[3]][2000:4100],
+                                  sim2$epi$meanDegMarcoh[[4]][2000:4100],
+                                  sim2$epi$meanDegMarcoh[[5]][2000:4100])),
+                             mean(c(sim2$epi$meanDegOther[[1]][2000:4100], 
+                                      sim2$epi$meanDegOther[[2]][2000:4100], 
+                                      sim2$epi$meanDegOther[[3]][2000:4100], 
+                                      sim2$epi$meanDegOther[[4]][2000:4100], 
+                                      sim2$epi$meanDegOther[[5]][2000:4100])))
+)
+
+
+md$percent <- ((md$results - md$targets) / md$targets)*100
+md <- round(md, 3)
+md$percent <- paste0(md$percent, "%")
+
+durs <- data.frame(targets = c(476, 55), results=c(mean(m$len), mean(c$len)))
+durs$percent <- ((durs$results - durs$targets ) / durs$targets )*100
+durs <- round(durs, 3)
+durs$percent <- paste0(durs$percent, "%")
+
+all <- cbind(md, durs)
+colnames(all) <- rep(c("Target", "Simulation", "Pct Off"),2)
+kable(all, booktabs=T, caption="Key Network Targets and Post-Calibration Results") %>%
+  kable_styling() %>%
+  pack_rows("Marriage/Cohabitation Network", 1,1) %>%
+  pack_rows("Casual Network", 2, 2) %>%
+  add_header_above(c("Mean Degree" = 3, "Mean Relationship Length" = 3))
+```
+
+
+### Demographics and the Epidemic Simulations  
+
+The dynamic demographics (births, aging, and deaths) are handled almost identically to the simulations in chapter one, with two exceptions. First, the sexual debut process is no longer explicitly modeled. This exclusion is based on the issues with implementation as described in the first chapter of this dissertation, and also the observation that once the degree-by-age targets are met post-calibration, the rate at which individuals form partnerships in the dynamic network simulation mirrors the distribution of individuals every having had sexual intercourse as reported in the National Survey of Family Growth. (insert plot). Second, to facilitate faster and more consistent simulations, the population size is reduced to 20,000 and is maintained at this size by setting the number at births at each time step to the number of deaths in the previous step. These small adjustments do not meaningfully change the proportional distribution of age and sex from the initial networks in chapter one. 
+
+In addition to the demographic modules, we now also include modules that govern the number of sexual acts per time step, the probability of condom use, the disease transmission process, testing, treatment, recovery, and the expedited partner treatment intervention. I will discuss each of these modules briefly, but they are based on previously published work using an MSM population and publicly available code @Weiss2019, [epimodel hiv github link]. Prior to model simulation, I fit two separate regression models to the National Survey of Family Growth data using the type of relationship (marriage/cohabitation or casual) and the combined age of each of the partners as predictors for each outcome. The first outcome was the number of sexual acts per week....
+
+Once the number of acts with and without condoms has been determined, we focus on those relationship pairs who have a discordant infection status, i.e. one member is infected with chlamydia and is eligible to transmit, and one partner is susceptible (individuals are prohibited from transmitting the infection to a susceptible partner during the same time step in which they were infected, although this scenario is only possible in the presence of concurrency of any type). Then each sexual act is evaluated for transmission, based on the probability of transmission per act and the protective effect of condom use.
+
+If any male or female has an infection that is symptomatic, the individual will seek testing within a month of infection. Females additionally screen for asymptomatic infections with probability according on their age category based on reports in NSFG. Diagnosed males and females are offered treatment for their current partners, and if they accept, their partners are then offered treatment at the following time step, and they accept, are flagged for treatment. In these scenarios, if a diagnosed individual accepts treatment for a current partner, we assume that partner also accepts the treatment. If any person is diagnosed, or flagged for treatment via EPT, they receive treatment and recover at the next time step (there is a present but low probability of treatment failure). Nobody who is flagged for treatment is allowed to have sex in the time step before their recovery. Each infected asymptomatic individual is evaluated at each time step for spontaneous recovery with probability 1/(mean duration of infection). If a node
+
+Each set of networks is modeled under five scenario conditions: with no partner treatment, and with 25%, 50%, 75% and 100% of diagnosed egos accepting expedited partner therapy for their current partners. Each of the ten scenarios are run for 80 years with five repeat simulations within each scenario. The first 40 years are used as a burn-in period to allow the system to reach its dynamic equilibrium. The below results reflect the last 40 years of the simulation sets for each scenario. Mean statistics represent the average within all simulations, and the standard errors represent the variation between the five simulations.
+
+I calibrated the model with concurrency and 25% acceptance of partner treatment to the prevalence among females estimated by X.
+
+calibration:  
+- transmission probability  
+- duration of infection  
+- act rate  
+- condom use
+- testing
+- young female modifier  
+
+
+
+## Results  
+```{r, echo=F}
+alldats <- readRDS("~/Documents/Dissertation/R/EPT/results/alldats.rds")
+dat0 <- alldats[[1]]
+dat03 <- alldats[[2]]
+dat <- alldats[[3]]
+dat3 <- alldats[[4]]
+datept <- alldats[[5]]
+dat3ept <- alldats[[6]]
+datepthigh <- alldats[[7]]
+dat3epthigh <- alldats[[8]]
+datept1 <- alldats[[9]]
+dat3ept1 <- alldats[[10]]
+```
+### Prevalence 
+
+```{r prev, echo=F, message=FALSE, warning=FALSE}
+library(kableExtra)
+library(tidyverse)
+library(plotly)
+#source(here::here("functions", "analyze_sims.R"))
+
+femaleprev <- rbind(dat0[[1]][[1]], dat[[1]][[1]], datept[[1]][[1]], datepthigh[[1]][[1]], datept1[[1]][[1]], 
+                    dat03[[1]][[1]], dat3[[1]][[1]], dat3ept[[1]][[1]], dat3epthigh[[1]][[1]], dat3ept1[[1]][[1]])
+
+femaleprev$Behavior <- factor(c(rep("M.F.Concurrency", 5), rep("No.Concurrency", 5)), levels=c("M.F.Concurrency","No.Concurrency"))
+
+femaleprev$Treatment = factor(rep(c("None","25%", "50%","75%", "100%"), 2), levels = c("None", "25%", "50%", "75%", "100%"))
+
+maleprev <- rbind(dat0[[1]][[2]], dat[[1]][[2]], datept[[1]][[2]], datepthigh[[1]][[2]], datept1[[1]][[2]], dat03[[1]][[2]], dat3[[1]][[2]], dat3ept[[1]][[2]], dat3epthigh[[1]][[2]], dat3ept1[[1]][[2]])
+
+maleprev$Behavior <- factor(c(rep("M.F.Concurrency", 5), rep("No.Concurrency", 5)), levels=c("M.F.Concurrency","No.Concurrency"))
+
+maleprev$Treatment = factor(rep(c("None","25%", "50%","75%", "100%"), 2), levels = c("None", "25%", "50%", "75%", "100%"))
+
+simprev <- rbind(femaleprev, maleprev)
+simprev$Sex <- c(rep("Female", 10), rep("Male", 10))
+
+meanprev <- simprev %>% group_by(Behavior, Treatment) %>% mutate(means = mean(mean), lows = mean(low), highs=mean(high))
+meanprev <- meanprev[1:10,c(4:5,7:9)]
+meanprev <- meanprev %>% 
+                mutate(means = round(means, 3)*100,
+                lows = round(lows, 3)*100,
+                highs = round(highs, 3)*100)
+            
+meanprev$value <- paste0(meanprev$means, "% (", meanprev$lows, " - ", meanprev$highs, ")")
+meanprev <- meanprev %>%
+  select(-c("means", "lows", "highs")) %>%
+  pivot_wider(names_from = Behavior, values_from = value)
+
+kable(meanprev, booktabs=T, caption="Overall Prevalence by Behavior and Partner Treatment Scenario") %>%
+  kable_styling()
+```
+
+
+### Concurrency & Reinfection
+
+```{r reinfs, echo=F}
+r <- rbind(dat0[[3]][[1]], dat[[3]][[1]], datept[[3]][[1]], datepthigh[[3]][[1]],  datept1[[3]][[1]],
+           dat03[[3]][[1]],dat3[[3]][[1]], dat3ept[[3]][[1]],dat3epthigh[[3]][[1]],dat3ept1[[3]][[1]])
+r$Behavior <- c(rep("M.F.Concurrency",6*5), rep( "No.Concurrency",6*5))
+r$Behavior <- factor(r$Behavior, levels=c("M.F.Concurrency", "No.Concurrency"))
+r$Treatment <- factor(rep(c(rep("None", 6), rep("25%", 6), rep("50%", 6), rep("75%", 6), rep("100%", 6)),2), levels = c("None", "25%", "50%", "75%", "100%"))
+r$ReinfType <- rep(c(rep("Following Natural Recovery", 3), rep("Following Treatment",3)),10)
+r$Reinfection <- factor(rep(c("Twelve", "Six", "Three"),20), levels = c("Three", "Six", "Twelve"))
+
+r2 <- rbind(dat0[[3]][[2]], dat[[3]][[2]], datept[[3]][[2]], datepthigh[[3]][[2]],  datept1[[3]][[2]],
+           dat03[[3]][[2]],dat3[[3]][[2]], dat3ept[[3]][[2]],dat3epthigh[[3]][[2]],dat3ept1[[3]][[2]])
+r2$Behavior <- c(rep("M.F.Concurrency",6*5), rep( "No.Concurrency",6*5))
+r2$Behavior <- factor(r$Behavior, levels=c("M.F.Concurrency", "No.Concurrency"))
+r2$Treatment <- factor(rep(c(rep("None", 6), rep("25%", 6), rep("50%", 6), rep("75%", 6), rep("100%", 6)),2), levels = c("None", "25%", "50%", "75%", "100%"))
+r2$ReinfType <- rep(c(rep("Following Natural Recovery", 3), rep("Following Treatment",3)),10)
+r2$Reinfection <- factor(rep(c("Twelve", "Six", "Three"),20), levels = c("Three", "Six", "Twelve"))
+
+r3 <- rbind(r, r2)
+r3$Sex <- c(rep("Female", 60), rep("Male", 60))
+
+diffs <- data.frame(meandiff = c(r3[1:30, 1] - r3[31:60, 1], r3[61:90, 1] - r3[91:120, 1]),
+                    meanlow = c(r3[1:30, 2] - r3[31:60, 2], r3[61:90, 2] - r3[91:120, 2]),
+                    meanhigh = c(r3[1:30, 3] - r3[31:60, 3], r3[61:90, 3] - r3[91:120, 3]))
+
+diffs <- round(diffs, 4)*100
+
+r3[,1:3] <- round(r3[,1:3], 4)*100
+r3$value <- paste0(r3$mean, "% (", r3$low, " - ", r3$high, ")")
+
+reinfs <- r3 %>% 
+  select(Behavior, Treatment, Reinfection, ReinfType, Sex, value) %>%
+  pivot_wider(names_from = Behavior, values_from = value)
+
+reinfs$Difference <- diffs$meandiff
+reinfs$Difference <- paste0(reinfs$Difference, "%")
+
+reinfs_tx_3 <- reinfs %>% 
+  filter(Reinfection=="Three", ReinfType=="Following Treatment") %>%
+  select(Treatment, M.F.Concurrency, No.Concurrency, Difference)
+
+kable(reinfs_tx_3, booktabs=T, caption="Rate of Reinfection at Three Months Post-Treatment and Recovery") %>%
+  kable_styling() %>%
+  pack_rows("Females", 1, 5) %>%
+  pack_rows("Males", 6, 10)
+```
+
+```{r reinf12, echo=F}
+reinfs_tx_12 <- reinfs %>% 
+  filter(Reinfection=="Twelve", ReinfType=="Following Treatment") %>%
+  select(Treatment, M.F.Concurrency, No.Concurrency, Difference)
+
+kable(reinfs_tx_12, booktabs=T, caption="Rate of Reinfection at 1 Year Post-Treatment and Recovery") %>%
+  kable_styling() %>%
+  pack_rows("Females", 1, 5) %>%
+  pack_rows("Males", 6, 10)
+
+``` 
+
+### Reinfection Among Those Who Clear Infections Naturally
+```{r natclear2, echo=F}
+reinfs_nat_3 <- reinfs %>% 
+  filter(Reinfection =="Three", ReinfType=="Following Natural Recovery") %>%
+  select(Treatment, M.F.Concurrency, No.Concurrency, Difference)
+
+kable(reinfs_nat_3, booktabs=T, caption="Rate of Reinfection at Three Months Post-Natural Clearance") %>%
+  kable_styling() %>%
+  pack_rows("Females", 1, 5) %>%
+  pack_rows("Males", 6, 10)
+```
+```{r natclear6, echo=F}
+reinfs_nat_12<- reinfs %>% 
+  filter(Reinfection =="Twelve", ReinfType=="Following Natural Recovery") %>%
+  select(Treatment, M.F.Concurrency, No.Concurrency, Difference)
+
+kable(reinfs_nat_12, booktabs=T, caption="Rate of Reinfection at 1 Year Post-Natural Clearance") %>%
+  kable_styling() %>%
+  pack_rows("Females", 1, 5) %>%
+  pack_rows("Males", 6, 10)
+```
+
+### Comparison of Reinfection Between Treatment and Natural Recovery 
+
+```{r reinfdiffs, echo=F}
+# instead of difference between conc and no conc,
+# now we show difference among behavior scenarios between treatment & recovery 
+
+txdiff <- r3 %>% 
+  filter(Reinfection != "Six")
+
+tx <- txdiff[txdiff$ReinfType=="Following Treatment", ]
+nat <- txdiff[txdiff$ReinfType=="Following Natural Recovery", ]
+
+txdiffs <- tx$mean - nat$mean
+
+comp <- txdiff %>% 
+  select(Behavior, Treatment, Reinfection, ReinfType, Sex, value) %>%
+  pivot_wider(names_from = ReinfType, values_from = value)
+
+comp$Difference <- txdiffs
+comp$Difference <- paste0(comp$Difference, "%")
+
+reinfs_txdiff_3 <- comp %>% 
+  filter(Reinfection=="Three") %>%
+  select(-c(Reinfection, Behavior, Sex))
+
+tab <- cbind(reinfs_txdiff_3[1:10,], reinfs_txdiff_3[11:20,-1])
+kable(tab, booktabs=T, caption="Rate of Reinfection at Three Months Post-Treatment and Recovery") %>%
+  kable_styling(full_width=F) %>%
+  column_spec(2:7, width = "1.8cm") %>%
+  pack_rows("M.F. Concurrency", 1, 5) %>%
+  pack_rows("No Concurrency", 6, 10) %>%
+  add_header_above(c(" " = 1, "Females"= 3, "Males" = 3))
+
+``` 
+
+
+## Discussion 
+
+The way we built the counterfactual was to assume the same number of relationships across the network by age, but prohibit any overlapping partnerships. This means that while the mean degree is preserved between behavior scenarios, the prohibition on concurrency actually increases the total number of egos in relationships at any given point in time. We could have instead altered the NSFG dataset to only include the first reported ongoing relationship of any ego, which would have reduced the overall mean degree of the network. It is unknown what effect this choice would have had on the results, but the rate of reported concurrency is so low in the networks based on the unaltered recent relationship reports it likely would have been minimal. 
+
+## old text
+ Even in places like King County, Washington, where overall rates have remained stable, longstanding acknowledged disparities in prevalence by race are marked and continue to increase (2015 SKCPH STD Report). These rates are particularly distressing in light of the fertility consequences of long-term infection and reinfection: it is estimated that in King County, over 60% of non-Hispanic Black women have had at least one chlamydia infection by age 34 (a rate 5x higher than non-Hispanic White women) and 1 in 500 of non-Hispanic Black women develops chlamydia-associated tubal factor infertility over their life-course (Chambers et al. 2018).

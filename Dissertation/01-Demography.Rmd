@@ -12,37 +12,51 @@ library(gridExtra)
 alphaBlue <- rgb(red=52, blue=102, green=0, alpha=120, maxColorValue=255)
 alphaGreen <- rgb(red=0, blue=0, green=102, alpha=120, maxColorValue=255)
 ```
+*Note:*
+The introduction chapter will introduce mathematical models, ergms/stergms, broadly why social scientists are interested in them, epidemics, and the primary source of empirical data (National Survey of Family Growth).  
 
-In mathematical models the choice of model terms depends on the question of interest and the underlying patterns in the data and this is no less true for network models of sexual partnerships developed to understand disease transmission. Several previously published models using ERGMs and EpiModel to simulate epidemics focused on men who have sex with men (MSM) populations in a narrow age range, 18-35 (*cite papers and also double check that this is true*). These models focused on terms related to mixing patterns between races, the propensity to form relationships with individuals relatively close in age, and the likelihood of concurrent partnerships. Because prevalence of both main and casual relationships remained relatively stable over the small age range, the models did not include terms that used age as a predictor of relationship formation. However, in this project, we focus on heterosexual relationships over a larger age range (15-45). Unlike the narrower MSM models, there are large clear differences in the prevalence of main and casual partnerships over this age range, so we will need to include terms that involve age in our model (see appendix for breakdown of empirical data relevant to the model terms). In addition to influencing the distribution of relationship duration, these differences are likely to be especially important if we want to use this type of model to understand the processes that generate the large observed differences in bacterial STI prevalence by age - one of the broader goals of this dissertation.
-However, while individual age is straightforward to represent in the model, it introduces several complicating factors for network models largely related to the boundaries imposed by age range and the aging process. This is not the first simulation to incorportae vital dynamics, and there are a few existing corrections relating to these processes already implemented
 
-In this chapter, first I will show the relevant diagnostics demonstrating that the estimated model itself reproduces key network statistics in the absence of dynamic vital processes. Then I will show document how simulations that incorporate individual births, deaths, aging, and sexual debut lead the network to deviate from these key statistics. Third, I will explore the possible underlying causes for these deviations, implement a variety of corrections (some new, some extensions of previously implmented corrections), evaluate the efficacy of each, and outline some possible future directions for improved simulations.
 
+The choice of model terms in mathematical models depends on the question of interest and the underlying patterns in the data and this is no less true for network models of sexual partnerships developed to understand disease transmission. Several previously published models using ERGMs and EpiModel to simulate epidemics focused on adult men who have sex with men (MSM) populations aged 18-39 (@Jenness2017, @Goodreau2017). These models focused on terms related to the average number of relationships of certain types, mixing patterns by age, the likelihood of concurrent partnerships. Because prevalence of both main and casual relationships remained relatively stable over the small age range, the models did not include terms that used age as a predictor of relationship formation. However, in this project, we focus on heterosexual relationships over a larger age range (15-45). Unlike the MSM models, there are large differences in the prevalence of different relationship types over this age range, so we will need to include terms that involve age in our model (see Figure \@ref(fig:diagnostic-results)). However, while individual age is straightforward to represent in this modeling framework, using age-dependent relational formation terms introduces several complicating factors for network models largely related to the boundaries imposed by age range and the aging process. In this chapter, first I will demonstrate that the dynamic networks estimated from empirical data (STERGMs, separable temporal exponential random graph models) reproduce key network statistics in the absence of dynamic vital processes. Then I will document how simulations that incorporate individual births, deaths, aging, and sexual debut lead the network to deviate from these key statistics. Third, I will explore the possible underlying causes for these deviations, implement new and/or extend existing corrections for demographic effects, evaluate the efficacy of each, and outline some possible future directions for improved simulations.
 
 ## Some Definitions  
-  
-*Static Diagnostic:* Simulates networks based on the STERGM model fit and reports summary statistics for formation model terms. These networks are not dynamic, thus no dissolution or durational statistics are reported.  
-*Dynamic Diagnostic:* The dynamic diagnostic simulates the networks over time and tracks cross-sectional summary statistics for the formation model terms as well as dissolution model and relational duration statistics. This is a closed system: nodes do not depart, new nodes do not arrive, and no nodal attributes change across the simulation period (i.e. if you are age 15 when then the diagnostic begins, you remain 15 for the entire run).   
-*Simulation:* While the static and dynamic diagnostics are run using simulation methods, when I refer to the "simulation" I am referring to the simulation using the EpiModel API that controls vital dynamics and other processes like sexual debut and eventually, disease transmission.  
 *Node / Ego:* An individual in the network.  
-*Nodal Attribute:* A trait of an individual (sex, age, sexual debut status, etc)
+*Nodal Attribute:* A trait of an individual (sex, age, sexual debut status, etc).
 
 ## Base Model Overview
 
-The base network models we use for this chapter focus largely on the age effects of relationship formation, with additional terms and structural offsets. For epidemic modeling purposes it will be important to also model race/ethnicity due to the existence of large racial dispartiies in prevalence of several sexually transmitted diseases, but that additional complexity is not the focus here. 
+The models used in this chapter focus largely on the age-related effects of relationship formation, with several additional terms and structural offsets. Two networks are estimated separately and simulated together to represent two primary categories of relationships: main partnerships defined as marriages and cohabitations, and casual partnerships, defined as any relationship with duration greater than one week that is not a marriage or cohabitations. One-off relationships ("instantaneous" or "one night stands") are not included in the current model, but will be included in later chapters when we model the transmission of disease. Both the marriage/cohabitation network and the casual networks have terms for:  
+1. the overall density of the network,  
+2. the prevalence of relationships by age and age-squared of each node,  
+3. a mixing term for the difference in the square root of each node's age and that of their partner's age,  
+4. an offset term prohibiting the formation of relationships among specific nodes to mimic the sexual debut process, and  
+5. an additional offset term to prohibit the formation of relationships among same-sex nodes.  
 
-[network terms]
+The marriage/cohab network additionally includes a term for the number of relationships that can form among individuals who have a concurrent casual relationship as well as a term prohibiting concurrent marriages. Similarly, the casual network also includes a term for the number of individuals who have both a casual relationship and a marriage/cohabitation, as well as a term for how many relationships within the casual network exist concurrently (have one node in common). The models are estimated from egocentrically collected data (NSFG) using the ergm.ego package in R, which first estimates target statistics for the specified model terms from the data and then fits the ergms based on these targets (@Krivitsky2017). Table \@ref(tab:display-models) displays the formation models and their estimated coefficients.  
 
-## Closed-System Results  
+```{r display-models, message=F, warning=F, echo=F, cache=T}
+library(broom)
+fit.other <- readRDS(here("data", "og_fits", "fit.other.rds"))
+fit.marcoh <- readRDS(here("data", "og_fits", "fit.marcoh.rds"))
 
-One of the several steps to check model fit and convergence is a dynamic diagnostic. In this diagnostic, we simulate the STERGM for X repetitions of Y time steps and evaluate the cross-sectional network statistics over time. At each time step, ties can form and ties can dissolve based on the model coefficients. If the model is estimated properly and sufficient MCMC intervals are used, the network formation statistics should hover around their estimated targets. In this diagnostic we also evaluate the duration of ties and the rate of tie dissolution to ensure the dissolution targets are met. It is important to note that this diagnostic is an indicator of model performance in a closed system: all nodal attributes are fixed, no nodes exit, and no new nodes enter the population. 
-In this context the models perform exceptionally well. Not only is the overall mean degree of each network met, but mean degree by age in both networks is reproduced well. Additionally, both models reach the target mean cross-sectional relationship duration after sufficient time. Any deviation from these targets as we move to the simulation then, will be related to the introduction of vital dynamics and other processes like sexual debut that alter nodal attributes that model terms. 
+fits <- rbind(tidy(fit.other), tidy(fit.marcoh))
+
+kable(fits, booktabs=T, col.names = c("Model Term", "Estimate", "SE", "Statistic", "Pvalue"),
+      caption="Summary of Formation Model Fits ") %>%
+  kable_styling() %>%
+    pack_rows("Casual Network", 1,9) %>%
+    pack_rows("Marriage/Cohabitation Network", 10, 18)
+```
+
+## Closed-System Dynamics  
+
+First we demonstrate that the estimated models dynamically reproduce statistics we are interested in, particularly the mean degree by age in each network and the expected duration of relationships, in a closed system (i.e. without aging, births, or deaths). This is one of the several steps to check model performance prior to epidemic simulations (for additional model diagnostics, see appendix). In this diagnostic, we simulate the STERGM for 5 repetitions of 7500 time steps (representing almost 150 years) and evaluate the cross-sectional network statistics over time. At each time step, ties can form and ties can dissolve based on the model coefficients. If the model is estimated properly and sufficient MCMC intervals are used, the network formation statistics should hover around their estimated targets. In this diagnostic we also evaluate the duration of ties and the rate of tie dissolution to ensure the dissolution targets are met. At this step, the node set is static - all nodal attributes including age are fixed, no nodes exit, and no new nodes enter the population.  
 
 ```{r diagnostic-results, echo=FALSE, out.width="60%", fig.cap="Comparison: Egodata vs Diagnostic Mean Degree.", fig.align='center', cache=T}
 egodat <- egodata_meandegs()
 
-md <- readRDS(here("Dissertation", "data", "diagnostics", "dynamic.m.nocross.rds"))
-cd <- readRDS(here("Dissertation", "data", "diagnostics", "dynamic.c.nocross.rds"))
+md <- readRDS(here("data", "diagnostics", "dynamic.m.nocross.rds"))
+cd <- readRDS(here("data", "diagnostics", "dynamic.c.nocross.rds"))
 
 age <- md$nw %v% "age"
 age_dist <- table(age)
@@ -75,30 +89,34 @@ plot(md, type="duration", xlab="Diagnostic Time Step, Mar/Coh")
 plot(cd, type="duration", xlab="Diagnostic Time Step, Casual")
 ```
 
+Figures \@ref(fig:diagnostic-results) and \@ref(fig:dynamic-duration-m) show that in this closed system simulation, the models perform exceptionally well. Not only is the overall mean degree of each network met, but mean degree by age in both networks is also reproduced well, which is not necessarily guaranteed by the parsimonious parameterization - so the estimated networks are actually exceeding expectations. Additionally, both models reach the target mean cross-sectional relationship duration after sufficient time. Any deviation from these targets as we move to the simulation then, should be related to the introduction of vital dynamics and other processes like sexual debut.  
 
-## Overview of Demographic Processes of Interest
+## Existing Demographic corrections
 
-The simulations run using the EpiModel API are distinct from the above closed-system dynamic diagnostic in that in addition to tie formation and dissolution at every time step, a series of modules is run that govern important demographic processes: node departure, node entry, aging, and sexual debut. Nodes automatically depart the model at age 45. This boundary was selected for two main reasons: 1) According to the CDC in their 2018 surveillance report, 97.4% of all chlamydia infections were diagnoses in the 15-44 age range (cite surveillance report) and 2) the National Survey of Family Growth, the empirical data from which we estimate our model, only surveys adults aged 15-44. There are likely other sources of information that we could use to increase the age range, but it did not seem necessary to our questions of interest. Note that implicit in this decision is the elimination of all reported relationships among egos aged 15-45 whose *partners* are outside of this age range. The degree distribution that we actually use to estimate the model (and are trying to maintain during simulation) looks rather different than the original distribution shown above, particularly in the marriage/cohabitation network (see \@ref(fig:egodata-2)). We will consider the consequences of this in a later section.
+This section provides an overview of existing corrections for dynamic networks and demography and outlines some of the boundary effect issues that we will explore in more detail below.
 
-```{r egodata-2, echo=FALSE, fig.align='center', out.width="60%", fig.cap="Mean Degree by Ego Age and Relationship Type, Restricted and Unrestricted Alters", cache=T}
-egoplotdat <- cbind(egodat[[2]][,1:2], egodat[[1]][,2], egodat[[4]][,2], egodat[[3]][,2])
-names(egoplotdat) <- c("Ego Age", "Marriage/Cohab", "Marriage/Cohab - Restricted", "Casual", "Casual - Restricted")
-egoplotdat <-  gather(egoplotdat, Type, `Mean Degree`, -`Ego Age`)
-ggplot() +
-  geom_point(data=egoplotdat, aes(x=`Ego Age`, y=`Mean Degree`, color=Type)) +
-  theme(legend.position = c(0.16, 0.8)) +
-  scale_color_manual(values=c("darkblue", "blue", "darkred", "red"))
-```
+**1. Formation Approximation**  
+In many cases, a full STERGM cannot directly be estimated directly due to the computational burden when networks are large, sparse, and have relatively long relational durations (which describes many sexual networks). Instead @Carnegie2015 introduced an approximation to full STERGM estimation that uses the same data: cross-sectional egocentric network data and information on tie duration. In this approximation, the static ERGM is estimated using standard techniques. Then the edges formation term (which represents the base propensity for ties to form between any two individuals in the network) is decreased by the log odds of the probability of edge persistence, in effect transforming the formation term from *prevalence* of ties in the network to the *incidence* of ties. The explorations below do not attempt to modify this approach, but instead explore the relationship between the adjustment of the formation coefficient, the probability of tie persistence as estimated from the long relationship duration expected in the marriage network relative to the limited observation window per individual as they arrive and eventually age out.  
 
-In addition to the age boundary at 45, all individuals experience the possibility of dying at each time step. Each node belongs to a class based on their 5-year-age-category and their sex, and is evaluated for death at every time step with the probability determined by data from published in U.S. Vital Statistics documents (cite). Given that our age range is relatively young, departures due to background mortality are uncommon relative to the effect of the age boundary on which nodes depart the model. Nodes enter at age 15 at a rate based on the expected number of departures per time step in order to keep the population size relatively stable. Like ASMR, the actual number of entires per time step is stochastic but maintains a population size within 1-2% of the starting size of 50,000 nodes. Each time step in the simulation represents one week, so nodes age by 1/52 per time step. Nodes enter the population at age 15 and are evaluated for sexual debut at each time step, with probability that increases until age 29 to match the age-at-debut distribution as reported in the NSFG. In accordance with the data, some individuals will never debut into the heterosexual population and will therefore never form a tie in these networks.
+**2. Departure Correction**  
+The node departure correction used in the model estimation-to-simulation workflow is necessary due to the observation that when nodes were removed from the simulation to mimic, for example, background age-specific mortality, the mean degree of the network became lower than expected, as does the mean duration of relationships. The logic is relatively straightforward: the statistical model underlying these network simulations balances the probability of tie formation with the probability of tie dissolution in order to maintain a target number of ties in the network. However, when nodes depart in an open population, some additional ties will break due to this process, lowering mean degree and the mean duration of ties. This node death is exogenous to the originally estimated statistical model, and therefore “unexpected”. To counter the lowering of relationship duration (and subsequently mean degree) related this excess node death, the expected (endogenous) duration of ties is increased such that the *average* duration in the presence of both forms of dissolution is maintained.  
+The departure correction implemented in previous models has two components: 1) the average mortality rate per time step across the entire population (often weighted by age and/or race) and 2), the rate at which individuals depart the simulation due to the age boundary, calculated as 1/(time steps each node is expected to be observed in the simulation in the absence of early death). (cite SMG's working paper?) For example, if the age range of the model was 18:39, then the weekly rate at which each individual was expected to be exit the simulation is 1/(52*(39-18)). In the past this approach has successfully balanced the additional unexpected dissolution of relationships due to node departure. Below we will explore situations where this correction is not sufficient in its current form.  
 
+**3. Population Size Correction**  
+Occasionally it is of interest to model a population that is growing, declining, or stochastically varying around some mean size. The correction outlined in @Kritvitsky2011 makes small adjustments at each time step based on the difference in population size between time t and t-1 to the coefficient on the edges (density) term. This correction is designed to maintain the target mean degree of the network in the presence of changes in the size of the population by while preserving the odds of forming ties based on nodal attributes as specified by the other model terms (e.g. matching by age, race, classroom, etc). This correction is robust to many changes in the population size and composition, so we will not further modify it here.
+
+## Overview of Open-Population Demographic Processes of Interest
+
+The open-population simulations run using the EpiModel API are distinct from the above closed-system simulations in that in addition to tie formation and dissolution at every time step, a series of modules is run that govern important demographic processes: node departure, node entry, aging, and sexual debut. Nodes automatically depart the model at age 45. This boundary was selected for two main reasons: 1) According to the CDC in their 2018 surveillance report, 97.4% of all chlamydia infections were diagnoses in the 15-44 age range (@CDC2019) and 2) the National Survey of Family Growth, the empirical data from which we estimate our model, only surveys adults aged 15-44. There are likely other sources of information that we could use to increase the age range, but it did not seem necessary to our questions of interest. Note that implicit in this decision is the elimination of all reported relationships among egos aged 15-45 whose *partners* are outside of this age range. The degree distribution that we actually use to estimate the model (and are trying to maintain during simulation) looks rather different than the original distribution shown above, particularly in the marriage/cohabitation network (see \@ref(fig:egodata-2)). We will consider the consequences of this in a later section.
+
+In addition to the age boundary at 45, all individuals experience the possibility of dying at each time step. I will refer to this as their age-specific mortality rate, or ASMR. Each node belongs to a class based on their 5-year-age-category and their sex, and is evaluated for death at every time step with the probability determined by data from published in recent U.S. Vital Statistics documents. Given that our age range is relatively young, departures due to background mortality are uncommon relative to the effect of the age boundary on which nodes depart the model. Nodes enter at age 15 at a rate based on the expected number of departures per time step in order to keep the population size relatively stable. Like the number of deaths due to ASMR, the actual number of entires per time step is stochastic but maintains a population size within 1-2% of the starting size of 50,000 nodes. Each time step in the simulation represents one week, so nodes age by 1/52 per time step. Nodes enter the population at age 15 and are evaluated for sexual debut at each time step, with probability that increases until age 29 to match the age-at-debut distribution as reported in the NSFG. In accordance with the data where a small proportion of the population never reports intercourse with a member of the opposite sex, some individuals will never will never "debut" and will therefore never form a tie in these networks.
 
 ## Initial Simulation Results
 
-Unlike the dynamic diagnostics, when we run these simulations with demographic processes, several metrics stray from their target values. First, the overall network mean degree, or average number of relationships per person, is too low in both the marriage/cohabitaiton network and in the casual network (by roughly five and three percent respectively). These deviations are not incredibly large, but they are somewhat concerning esepcially becuase Second, the mean degree by age is severally underpresented in both networks for the youngest ages but overrepreseted in the mid-30s. Finally, the mean relationship length is 24% too short in the marriage network but 7% too long in the casual network. 
+Unlike closed-population scenario above, when we run these simulations with demographic processes, several metrics stray from their target values. First, while the mean degree in the initial networks march the targets, the equilibrium mean degrees, or average number of relationships per person across each network, are lower than expected in both the marriage/cohabitation network and in the casual network (by roughly five and three percent respectively). These deviations are not large overall, but they are especially concerning when considering the equilibrium distribution of relationships by age. The mean degree by age is underrepresented in both networks for the youngest ages but overrepresented in the mid-30s. Finally, the mean relationship length is 24% too short in the marriage network but 7% too long in the casual network. In the next few sections, we describe possible explanations for these deviations and explore several corrections.
 
-```{r load-simdata, echo=F, cache=T}
-dat <- readRDS(here("Dissertation", "data", "summary_sims.rds"))
+```{r load-simdata, echo=F}
+dat <- readRDS(here("data", "summary_sims.rds"))
 ```
 
 ```{r scen1-tab, echo=F, cache=T}
@@ -140,47 +158,38 @@ c <- ggplot() +
 grid.arrange(m, c, ncol=2)
 ```
 
-## Boundary Effects & Existing Corrections
-
-This section provides an overview of existing corrections for dynamic networks and dynamic demography and outlines the boundary effect issues that we will explore in more detail below. 
-
-**1. Formation Approximation**
-In many cases, a full STERGM cannot directly be estimated directly due to the computational burden when networks are large, sparse, and have relatively long relational durations (which describes many sexual networks). Instead @Carnegie2015 introduce an approximation to full STERGM estimation that uses the same data: cross-sectional egocentric network data and information on tie duration. In this approximation, the static ERGM is estimated using standard techniques. Then the edges formation term (which represents the base propensity for ties to form between any two individuals in the network) is decreased by the log odds of the probability of edge persistence, in effect transforming the formation term from *prevalence* of ties in the network to the *incidence* of ties. The explorations below do not attempt to modify this approach, but instead explore the relationship between the adjustment of the formation coefficient, the probabilty of tie persistence as estimated from the long relationship duration expected in the marriage network relative to the limited observation window per individual as they arrive and eventually age out.  
-**2. Right Boundary Existing Correction: Departure**
-The node departure correction used in the model estimation-to-simulation workflow was developed after the observation that when nodes were removed from the simulation to mimic, for example, background age-specific mortality, the mean degree of the network became lower than expected, as does the mean duration of relationships. The logic is relatively straightforward: the statistical model underlying these network simulations balances the probability of tie formation with the probability of tie dissolution in order to maintain a target number of ties in the network. However, when nodes depart, some additional ties will break due to this process, lowering mean degree and the mean duration of ties. This node death is exogenous to the originally estimated statistical model, and therefore “unexpected”. To counter the lowering of relationship duration (and subsequently mean degree) related this excess node death, the expected (endogenous) duration of ties is increased such that the *average* duration is maintained.  
-The departure correction implemented in previous models has two components: 1) the mortality rate per time step averaged across the entire population, and 2) the rate at which individuals depart the simulation due to the age boundary, calculated as 1/(time steps each node is expected to be observed in the simluation). In the past this approach has successfully....
-
-However, due to the large difference in average probability of breaking a tie upon departer between the marriage/cohab network and the casual network (due to the distribution of mean degree by age), it seems unlikely that the departure correction should be the same for both networks. 
-**3. Left Boundary Existing Correction: Arrival**
-Kritvitsky, Handcock and Morris (2011) - this correction is designed to maintain the target mean degree of the network in the presence of changes in the size of the population. In these simulations, while the exact number of entries at every time step is stochastic, the rate is designed to keep the population size relatively stable so while we do use this correction, we will not futher modify it. 
-However, another arrival-related problem is the issue is that fact that nodes do not enter the population *with* ties to other nodes. While the model coefficients suggest a certain average number of relationships among these young adults, because the nodes age each week, there is a very limited time frame in which to form relationships and hit these targets. 
-
 
 ## Considering the effect of older partners  
-Because we observed that in the marriage/cohabitation network there is an overrepresentation of relationships among the older egos, and the model coefficients suggests that older nodes are in general more likely to form relationships than younger nodes (with some tapering as age increases), we theorized that when a node aged 45 aged out and broke the tie with their partner (who is likely to be somewhat close in age), that the partner remaining in the simulation very quickly forms a new relationship. However, the tie that dissolved as a result of one partner leaving the simulation due to this age boundary is not a true dissolution, and these newly formed relationships should not actually exist because the remaining partner should not actually be eligible to form a new relationship in the network yet. Perhaps then, these new, short relationships in older ages contribute both to the lower than expected mean relationship duration in the marriage network and the lower than expected mean degree at younger ages.  
+The empirical data show that the prevalence of marriages and cohabitations is higher at older ages than at younger ages, and the model coefficients support this observation (as demonstrated by the closed-system results). However, we observe that in simulations when the characteristics of the node set are largely in equilibrium but each individual node enters, ages, and eventually exits, there are too many relationships among the older egos. We theorize that this may be due to the age boundary imposed by the model. When nodes leave the simulation age at 45, they will dissolve any relationship that they were in at the previous time step. While these additional dissolutions are theoretically corrected for using the Departure Correction, the positive model coefficient on age and prohibition on concurrency suggest that the now-unpartnered node who remains in the simulation after their partner departs has a high likelihood of forming a new relationship. And because the age-mixing term increases the odds of forming relationships with nodes of similar ages, the incidence of relationships at older ages increases. It is possible that these new, short relationships in older ages contribute both to the lower than expected mean relationship duration in the marriage network and the lower than expected mean degree at younger ages. The problem is that the tie that dissolved as a result of one partner leaving the simulation due to this age boundary is not a true dissolution, and these newly formed relationships should not actually exist because the remaining partner should not actually be eligible to form a new relationship in the network yet. That is, they should still be in their original relationship, even if we no longer observe it. Figure \@ref(fig:egodata-2) highlights this age boundary effect in the empirical data. The light blue and light red dots reflect the mean degree by age among egos and their partners aged 15-44. Their darker counterparts reflect egos reporting on their partners of all ages. The effect is particularly pronounced among the oldest ages in the marriage network, while there is a much smaller effect in the casual network. The casual network also displays some small differences in the youngest ages, where a few 15 and 16 year-olds report relationships with partners younger than 15, although the below corrections focus only on correcting for the effect of partners outside the upper end of the age boundary.  
 
-We consider two ways to address the effect of partners outside the age boundary. First, we prevent egos whose partners have aged out from immediately forming new relationships by adding an offset terms for egos who meet this condition. In this scenario we hope that by preventing new relationships from forming among egos whose previous relationships were terminated artificially by the age boundary, the simulation will better match the data with the restricted alter set and increase the mean relationship length by generating new relationships at earlier ages. In the second scenario, we increase the age at which egos depart the simulation to age 65. While we may not be interested in modeling individuals older than 45 for epidemiological reasons, it may be worthwhile to keep them in the simulation over a longer period of time to avoid the artificial ending of relationships. In this case we hope to match the empirical mean degree distribution among egos with the age-unrestricted alter set. However, because we would be simulating individuals outside the age range in the data we used for estimation, we may run into additional issues.
+```{r egodata-2, echo=FALSE, fig.align='center', out.width="60%", fig.cap="Mean Degree by Ego Age and Relationship Type, Restricted and Unrestricted Alters", cache=T}
+egoplotdat <- cbind(egodat[[2]][,1:2], egodat[[1]][,2], egodat[[4]][,2], egodat[[3]][,2])
+names(egoplotdat) <- c("Ego Age", "Marriage/Cohab", "Marriage/Cohab - Restricted", "Casual", "Casual - Restricted")
+egoplotdat <-  gather(egoplotdat, Type, `Mean Degree`, -`Ego Age`)
+ggplot() +
+  geom_point(data=egoplotdat, aes(x=`Ego Age`, y=`Mean Degree`, color=Type)) +
+  theme(legend.position = c(0.16, 0.8)) +
+  scale_color_manual(values=c("darkblue", "blue", "darkred", "red"))
+```
+
+We consider two ways to address the effect of partners outside the age boundary. First, we prevent egos whose partners have aged out from immediately forming new relationships by adding an offset term for egos who meet this condition. In this scenario we hope that by preventing new relationships from forming among egos whose previous relationships were terminated artificially by the age boundary, the simulation will better match the data with the restricted alter set and increase the mean relationship length by generating new relationships at earlier ages. In the second scenario, we increase the age at which egos depart the simulation to age 65. While we may not be interested in modeling individuals older than 44 for epidemiological reasons, it may be worthwhile to keep them in the simulation over a longer period of time to avoid the artificial ending of relationships. In this case we hope to match the empirical mean degree distribution among egos with the age-unrestricted alter set. However, because we would be simulating individuals outside the age range in the data we used for estimation, we may run into additional issues.
 
 ### Offset for Partner Age-Out
 
-This scenario adds an offset term to the formation model (“olderpartner”) for egos whose alters are outside of the 15-45 age range modeled in the simulation. During estimation there are already some egos whose partners are outside the age range so they appear to have degree 0 and do not contributed to the expected edge count but are flagged as “olderpartner=1”. During the simulation, if an individual ages out while they are in a relationship, the remaining partner gets flagged by the “olderpartner” attribute and are prohibited from forming a new relationship. The probability of becoming available for a relationship on any future time step is equal to 1/expected duration of the relationship type, although in the case of the marriage/cohab network relationships last so long that it’s unlikely that a node become available for the rest of their simulation lifecourse (unless the age difference between partners was exceptionally large, which is not impossible).  
+This scenario adds an offset term to the formation model (“olderpartner”) for egos whose alters are outside of the 15-44 age range modeled in the simulation. We have a target count for this offset during estimation because as the figure above demonstrates, there are nodes that exist in the empirical data who have a partner older than 44. During the simulation, if a node ages out while they are in a relationship, the remaining partner gets flagged by the “olderpartner” attribute and are prohibited from forming a new relationship. The probability of becoming available for a relationship on any future time step (i.e. removing the "olderpartner" flag by resetting that attribute to 0) is equal to 1/expected duration of the relationship type, although in the case of the marriage/cohabitation network relationships last so long that it is unlikely that a node becomes available for the rest of their simulation life-course (unless the age difference between partners was exceptionally large, which is not impossible). Figure \@ref(fig:scen2-networks) plots the mean degree by age in the simulation with the older partner offset included compared to both the base model simulation and the egodata. The first thing we note is that this offset did not largely influence the overall mean degree in either network, nor did it increase the mean relationship duration in the marriage/cohabitation network (mean relationship length was also unchanged in the casual network, but we did not necessarily expect it to). When comparing mean degree by age between scenarios, the offset did not correct the general trend of the overrepresentation of relationships at the older ages, but it did slightly increase the mean degree in nodes ages roughly 30-35. The casual network was largely uninfluenced by this offset.
 
-I don't necessarily expect this to solve the issue of the overall mean degree, but if we prevent relationships that only exist due to the age boundary, perhaps these relationships will be distributed among the younger issues. In turn these relationships would begin earlier, and possibly increase the average mean duration.   
+```{r scen2-networks, echo=F, fig.align='center', out.width="80%", fig.cap="Mean Degree Comparison: Base vs Offset.", cache=T}
+#```{r scen2-tab, echo=F, cache=T}
+#```
 
-*Results*
-
-The first thing we note is that this offset did not largely influence the overall mean degree in either network, nor did it increase the mean relationship duration in the marriage/cohabitation network (mean relationship length was also unchanged in the casual network, but we did not necessarily expect it to). However, when comparing mean degree by age between scenarios, the offset did correct much of the overrepresentation of relationships at the older ages, and also slightly increased the mean degree in the youngers (these changes are subtle but present). The casual network was largely uninfluenced by this offset, but that would be expected given that older ages are actually less likely to form casual partnerships than younger ages.  
-
-```{r scen2-tab, echo=F, cache=T}
 means2 <- cbind(dat[[2]]$meandegs, dat[[2]]$meandurs)
+
 kable(means2, col.names = c("Mean Degree Target", "Base", "Pct Off",
                                        "Mean Duration Target", "Base", "Pct Off"),
        booktabs=T,
       caption = "Mean Degree and Duration Comparison, Targets vs Older Partner Offset") %>%
   kable_styling(full_width=F)
-```
 
-```{r scen2-networks, echo=F, fig.align='center', out.width="80%", fig.cap="Mean Degree Comparison: Base vs Offset.", cache=T}
 m2 <- as.data.frame(dat[[2]]$marcoh)
 c2 <- as.data.frame(dat[[2]]$casual)
 
@@ -226,22 +235,21 @@ grid.arrange(m, c, ncol=2)
 
 #### Increase Age Boundary
 
-In this scenario, we hope to move the degree distribution closer to the egodata distribution with the age-unrestricted alters (blue dots) – the distribution that better represents reality. This scenario includes the offset for “older partners” but employs it in a slightly different fashion. In the previous scenario, edges dissolved artificially when one of the partners left the model at age 45. We now allow those relationships to continue as they would normally by increasing the age of departure in the model to age 65. However, we use the offset to prevent any nodes older than 45 but not in a relationship from forming new relationships. Only relationships that began prior both partners turning 45 exist.
+In this scenario, we hope to move the degree distribution closer to the egodata distribution with the age-unrestricted alters, the distribution that better represents reality when surveying egos aged 15-44 about their relationships. This scenario also includes the offset for “older partners” but employs it in a slightly different fashion. In the previous scenario, edges dissolved artificially when one of the partners left the model at age 45. We now allow all individuals to remain in the simulation until age 65 and allow those relationships to continue as they would normally. We use the offset to prevent any nodes older than 45 from forming new relationships. This means that only relationships that began prior both partners turning 45 exist in this simulation.
 
-*Results*
+Table \@ref(tab:scen3-networks) and Figure \@ref(fig:scen3-networks) present the results from this scenario. It is clear that in the marriage/cohabitation network, we can easily represent the partnerships lost to the upper age boundary simply by keeping their older partners in the model, even if the data used to estimate the model did not include these partners. However, this approach has some unintended consequences. The edges coefficient in the formation model is a density term, and its target is based on a mean degree estimated from the restricted partner data. When we prevent relationships from dissolving when one partner turns 45, we increase the mean degree of those at older ages, bu this same logic this would imply then a decrease in the mean degree at younger ages. And indeed this is what we observe: the increased age boundary reduces the mean degree of those below 30 in the casual network and those roughly 25-35 in the marriage/cohabitation network. So while the overall mean degree now slightly exceeds the target and the mean relationship length has increased, this approach on its own fails to substantially improve the fit of the mean degree distribution overall. 
 
-First off, it is clear that we can easily recover the marriage and cohabitations lost to the age boundary among egos in the 35-45 age range simply by keeping their older partners in the model, even if the data used to estimate the model did not include these partners. However, this approach has consequences. Because the model is targeting a mean degree based on the restricted partner data, the maintenence of relationships among 35-45 year olds increased the overall mean degree beyond the target and also comes at the expense of relationships among the younger ages, the section of the distribution that we already fail to match well. The mean age of relationships has increased, but this is clearly a result of the relationship at older ages, thus only a partial success. The casual network also displays some undesireable qualities similar to the cohab network. The mean degree is too low at the expense of the younger age group and the mean relationship length is unchanged.
 
-```{r scen3-tab, echo=F, cache=T}
+```{r scen3-networks, echo=F, fig.align='center', out.width="80%", fig.cap="Mean Degree Comparison: Increased Age Boundary.", cache=T}
+#```{r scen3-tab, echo=F, cache=T}
+#```
 means3 <- cbind(dat[[3]]$meandegs, dat[[3]]$meandurs)
 kable(means3, col.names = c("Mean Degree Target", "Sim", "Pct Off",
                                        "Mean Duration Target", "Sim", "Pct Off"),
        booktabs=T,
       caption = "Mean Degree and Duration Comparison, Targets vs Increased Age Boundary") %>%
   kable_styling(full_width=F)
-```
 
-```{r scen3-networks, echo=F, fig.align='center', out.width="80%", fig.cap="Mean Degree Comparison: Increased Age Boundary.", cache=T}
 m2 <- as.data.frame(dat[[3]]$marcoh)
 c2 <- as.data.frame(dat[[3]]$casual)
 
@@ -286,19 +294,19 @@ c <- ggplot() +
 grid.arrange(m, c, ncol=2)
 ```
 
-*Discussion*
-
-conclusion: we keep offset in all future scenarios but not older partners, older partners may be a good idea in some case but we have to rethink some things especially if the younger ages are going to perform worse
+We find that these corrections that focus on the effet of older partners have limited utility on their own. That we could capture the distribution of relationships with unrestricted partner ages by a simple extension of the age boundary is heartening and may have a role to play in other contexts, but the consequences in the casual network in particular are too strong to continue down this path. The small improvements we see in mean relationship duration and mean degree in the marriage network suggest that while the older age boundary may not be the primary factor governing the misrepresentation of relationships by age, it did contribute. The fact that very little effect at all on the casual network is somewhat expected given that older ages are actually less likely to form casual partnerships than younger ages. Additionally, whereas each node is allowed a maximum of one relationship in the marriage network, no such limit exists for the casual network, so the prohibition on relationship formation in the casual network is not strictly necessary. We continue to include the older partner offset in the following scenarios because it makes intuitive sense in the marriage network to discourage partner turnover at the oldest ages due to artificial relationship dissolution. However, more work is needed to address the broader issues in these simulations.  
 
 ## Relationship Length & The Simulation Window
 
-So far, nothing we have done has largely influenced the issues with relationship duration in these networks. In the marriage/cohab network, the mean duration falls nearly 2 years short of the expected length and in the casual network the mean duration is roughly 3 months too long. There are a few possible reasons that there may be a mismatch between the formation and dissolution coefficients in-simulation that may contribute to these outcomes. Here we explore possible issues related to the window of observation for each node in the simulation and how that inluences the observable mean relationship duration. 
+We now turn our focus to the issue of relationship length. So far, our attempts to represent relationships at older ages in a more accurate way has not corrected the issues with relationship duration in these networks. In the marriage/cohabitation network, the mean relationship length falls nearly 2 years short of the target length and the length among casual relationships is roughly 10% too long. This may not seem substantial, but these shorter, occasionally overlapping, relationships are important for the transmission of STIs and an increase in the mean length (and poentially decreasing the rate of new partner acquisition) could have consequences for our understanding of epidemics across these networks (@Morris2009, @Niccolai2005, @Jolly2001). Conversely, marriages that are too short may decrease the time certain portions of the network are isolated and protected from exposure. There are a few possible reasons that there may be a mismatch between the formation and dissolution coefficients in-simulation that may contribute to these outcomes. Here we explore a possible issue related to the window of observation for each node in the simulation and how that influences the observable mean relationship duration.  
 
-```{r edcalcs, echo=F, cache=T}
+The dissolution component of the STERGM in these models assumes a homogenous (exponential) hazard of dissolution within each network (i.e. marriages and casual relationships have different expected duration, but *each* marriage has the same expected length). The model then evaluates each relationship at every time step for stochastic dissolution, and this generates a distribution of simulated relationship lengths within each network that is exponential. There are consequences of this assumption of a constant hazard that we explore in greater detail in Chapter 2, but for now we will address the relationship between the range of possible relationship lengths predicted by the exponential and the length of the simulation window that we are actually able to observe in the simulation.  
+
+```{r plot-expdist, echo=FALSE, fig.align='center', out.width="70%", fig.cap="Predicted Distribution of Relationship Lengths and Simulation Window"}
 dur <- dat[[1]]$meandurs[1,1]
 rate <- 1/dur
 # randomly generate 1000
-n <- 100000
+n <- 1000
 r <- rexp(n, rate)
 r <- sort(r)
 # density function
@@ -311,31 +319,21 @@ newR <- r[which(r < window)]
 #newD <- dexp(newR, rate)
 newDur <- mean(newR)
 
-# make smaller for plot
-n <- 1000
-r <- rexp(n, rate)
-r <- sort(r)
-# density function
-d <- dexp(r, rate)
-data <- cbind(r, d)
-
 ## version of casual for plotting
 # first find mean in biggggg sample
-dur <- dat[[1]]$meandurs[2,1]
-rate <- 1/dur
+dur2 <- dat[[1]]$meandurs[2,1]
+rate2 <- 1/dur2
 # randomly generate 1000
-r <- rexp(n, rate)
-r <- sort(r)
-newR <- r[which(r < window)]
-newDur <- mean(newR)
+r2 <- rexp(n, rate2)
+r2 <- sort(r2)
+newR2 <- r2[which(r2 < window)]
+newDur2 <- mean(newR)
 # density function
 n <- 1000
-r <- rexp(n, rate)
-d <- dexp(r, rate)
-data2 <- cbind(r, d)
-```
+r2 <- rexp(n, rate2)
+d2 <- dexp(r2, rate2)
+data2 <- cbind(r2, d2)
 
-```{r plot-expdist, echo=FALSE, fig.align='center', out.width="70%", fig.cap="Predicted Distribution of Relationship Lengths and Simulation Window", cache=T}
 dist1 <- ggplot(as.data.frame(data), aes(x=r, y=d)) +
   geom_point() +
   geom_vline(xintercept=window) +
@@ -353,26 +351,18 @@ dist2 <- ggplot(as.data.frame(data2), aes(x=r, y=d)) +
 grid.arrange(dist1, dist2, ncol=1)
 ```
 
-[will need to re-frame this section if the survival analysis doesn't happen until chapter 2]  
+An exponential distribution with a mean of roughly `r round(dur)` weeks (the mean cross-sectional length of marriages in this data) has a very long right tail extending to `r round(max(r)/52)` years. Clearly this tail is not possible to observe when you consider that the window of observation in the simulation is equal to the age range of the population, 15-44 (30 years). \@ref(fig:plot-expdist) shows the density plot of 1000 relationships lengths that are randomly generated from an exponential distribution with a mean of `r round(dur)` weeks based on the data for marriages and cohabitations, and `r round(dur2)` weeks for the casual. While `r round((length(newR)/length(r))*100, 2)`% of randomly generated marriages lay within the simulation window, the removal of the tail lowers the mean observable relationship length based on this distribution (the mean of relationship lengths if you remove the observations that are impossible to occur in the simulation) from `r round(dur)` weeks to `r round(newDur)` weeks. The mean relationship duration in the casual network is also shown to demonstrate that the simulation window of each node is unlikely to contribute to the variation we see in the mean simulated relationship duration in the same way and as such we will only implement a correction for the marriage network.
 
-From our survival analysis it is clear that the exponential distribution, even when separated into separate networks by relationship type, had some serious limitations in its ability to represent the full distribution of relationship lengths - both by age and across the whole population. One of the limitations that may pertain to the right tail of the distribution. An exponential distribution with a mean of roughly `r round(dur)` weeks (the mean cross-sectional length in the empirical data) has a very long right tail extending beyond a normal human lifespan, `r round(max(r)/52)` years. Clearly this tail isn't possible to observe, even less so when you consider that the window of observation in the simulation is equal to the age range of the population, 15-45 (30 years). \@ref(fig:plot-expdist) shows the density plot of relationships lengths that are exponentially distributed with a mean of `r round(dur)` weeks. While `r round((length(newR)/length(r))*100, 2)`% of observsations lay within the simulation window, the removal of the tail lowers the mean observerable relationship length based on this distribution (the mean of relationship lengths if you remove the observations that are impossible to occur in the simulation) from `r round(dur)` weeks to `r round(newDur)` weeks. The mean relationship duration in the casual network is also shown to demonstrate that the simulation window of each node is unlikely to contribute to the variation we see in the mean simulated relationship duration in the same way and as such we will only implment a correction for the marriage network. 
+Recall the previous description of the formation approximation that used log of the expected relationship duration to convert the edges coefficient estimated by a static ERGM from a prevalence term to an incidence term for a dynamic network. In the present scenario, we modify this approximation for the marriage/cohabitation. Instead of using the log of the target duration, we instead use use the log of the mean relationship length that we estimate from the distribution that was truncated by the simulation window length. This will slightly increase the underlying rate of formation in the network and hopefully will both help us recover missing edges across the network but specifically increase the number of edges that form earlier in the life-course, improving our fit of the full mean degree distribution and increasing the mean observed relationship length.  
 
-In this scenario, we increase the edges formation coefficient by the difference between the log odds of the target mean duration and the log odds of the observable mean duration in the marriage network. If you recall, this in effect slightly alters the "edapprox" approximation method described above from adjusting the static edges coefficient by the maximum observable mean duration rather than the rather than the target mean. We hope that this wil help edges to form on average earlier in the lifecourse and help us recover missing edges. 
-
-While not fully considered here, this issue could also be exacerbated by the fact that the mean age of marriage/cohab formation is so much later than the mean age in the casual network. When relationships form earlier on in the life cycle, the average duration is less curtailed by the age boundary of the simulation. So in addition to being much shorter than marriages and cohabitations, and the obverall expected distribution is less influenced by the obvservation window, the representation of casual relationships also benefit from their unique distribution.  
-
-
-```{r scen4-tab, echo=F, cache=T}
+```{r scen4-networks, echo=F, fig.align='center', out.width="80%", fig.cap="Mean Degree Comparison: Edapprox Correction", cache=T}
 means4 <- cbind(dat[[4]]$meandegs, dat[[4]]$meandurs)
 kable(means4, col.names = c("Mean Degree Target", "Sim", "Pct Off",
                                        "Mean Duration Target", "Sim", "Pct Off"),
        booktabs=T,
       caption = "Mean Degree and Duration Comparison, Targets vs Edapprox Correction") %>%
   kable_styling(full_width=F)
-```
 
-
-```{r scen4-networks, echo=F, fig.align='center', out.width="80%", fig.cap="Mean Degree Comparison: Edapprox Correction", cache=T}
 m2 <- as.data.frame(dat[[4]]$marcoh)
 c2 <- as.data.frame(dat[[4]]$casual)
 
@@ -415,25 +405,23 @@ c <- ggplot() +
 grid.arrange(m, c, ncol=2)
 ```
 
-**Results**  
-The boost in the edges coefficient sucessfully increased the overall mean degree of the network to within 2% of the target mean degree. However, very little of the increase in mean degree came from the an increase in the younger ages. Instead, the boost largely only increase the degree at the peak, which was already over-representing relationships in the mid-to-late 30s. Additionally, we only gained about two months in mean relationship duration. This is again likely due to the increase in mean degree in individuals in their 30s rather than across the network more evenly. 
+The boost in the edges coefficient successfully increased the overall mean degree of the network to within 2% of the target mean degree. However, very little of the increase in mean degree came from an increase relationship prevalence at younger ages. Instead, the boost largely only increased the degree at the peak, which was already over-representing relationships in the mid-to-late 30s. Additionally, we only gained about two months in mean relationship duration. This is again likely due to the increase in mean degree in individuals in their 30s rather than across the network more evenly. If more relationships had formed among younger individuals, more relationships would have the opportunity to last longer, improving mean length. Unfortunately while this is a step in the right direction, it is becoming clear that in order to meet the target mean degree in both the marriage network and the casual network we will have to address the issue of formation at younger ages more directly. In the next section we will address one more facet of the age-boundary related issues before moving our focus to the formation of edges among the younger ages.
 
-## Departure 
+## Departure  
 
-In this scenario, I re-consider the standard implemented departure correction. As stated earlier, this correction acts to balance out the "unexpected" edge dissolutions due to aging out of the simulation or age-specific mortality by lowering the probability of "expected" edge dissolution and thereby increasing the "expected" duration of relationships. In the past this correction has been the same for both main (marriage/cohab) and casual partnerships. However, due to the large difference in the likelihood that a nodal departure causes an edge to dissolve between the networks, it is not clear that this correction 
-*should* be same. 
+The departure correction seeks to balance out the "unexpected" edge dissolutions due to nodes departing the simulation due to aging out or age-specific mortality by increasing the underlying expected length of relationships in each network (or rather, decreasing the log-odds of dissolution). The current departure correction generates a single estimate that is applied to the dissolution coefficient of both networks. When considering these marriage and casual networks among heterosexuals across a wide age range however, this assumption may not hold given the extreme variation in the prevalence of relationships by age. Most nodal departures in the simulation are due to nodes departing at age 45, but nodes of this age are far more likely to dissolve a marriage or cohabitation than a casual relationship upon departure. In this scenario, I re-consider the standard implemented departure correction by incorporating information about the prevalence of ties across likely departures.
 
-The current correction is calculated by adding the likelihood that any one node departs the network due to aging out multiplied by the mean weighted age category-specific mortality rate per time step:  
-$$drate = \frac{1}{simulation window} + ASMR_weighted$$  
+The current correction is calculated by adding the probability that any one node departs the network due to aging out multiplied by the mean weighted age category-specific mortality rate per time step to estimate the average probability of departure for any given node in the network per time step:  
+$$drate = \frac{1}{w} + ASMR_{weighted}$$ where $w$ is the number of weeks we observe each node from entry to exit in the absence of death, 1560. 
 
-The new correction represents the likelihood that if a node departs, it also dissolves a edge. 
-$$1-sum(S*D*P)$$ where  
-$S$ is the vector of survival by age category due to aging out  
-$D$ is the vector of age category specific mortality, and   
-$P$ is the vector containing the proportional mean degree in each network by age category    
+The new correction represents the likelihood that if a node departs, it also dissolves a edge.
+$$1-\sum_{a=1}^{6} S_a*D_a*P_a$$ where  
+$a$ = each 5-year age category labeled 1-6, representing ages 15-19...40-44  
+$S$ = the survival probability for a node in a given age category due to aging out per week  
+$D$ = the probability of death for a node in a given age category per week  
+$P$ = mean degree of a given age category relative to the cumulative mean degree  
 
-This results in an estimate for the marriahe/cohab network not too far from the original correction, but a much smaller correction for the casual network. This makes sense given the very low mean degree at the oldest ages.    
-
+Table \@ref(tab:departure-tab) displays two sets of departure correction: the original departure correction (which is the same for both networks), and a second using the new formula. Notice that new estimate for the marriage network that is slightly higher than the original departure correction, this formula produces a significantly smaller departure correction for the casual network. This makes some intuitive sense given the a node departing at age 45 has roughly a 50% change of dissolving a marriage, but less than a 10% chance of dissolving a casual relationship.    
 
 ```{r departure-tab, echo=F, cache=T}
 drates <- cbind(dat[[1]]$nwparam[[1]]$coef.diss$d.rate, dat[[5]]$nwparam[[1]]$coef.diss$d.rate, dat[[5]]$nwparam[[2]]$coef.diss$d.rate)
@@ -442,9 +430,7 @@ kable(drates, col.names = c("Original Mortality Rate", "Updated Marriage Rate", 
   kable_styling(full_width=F)
 ```
 
-  
-**Results**
-You should notice that the mean degree of the casual network was lowered by the implementation of this departure correction. However this doesn't mean that we're not on the right track. Instead, look to the mean relationship duration. Because we are no longer overcorrecting for the number of relationships lost to the age boundary, the endogenous expectation of relationship duration is not too long and the cross-sectional mean duration hits the target. The decrease in mean degree is likely due to these relationships that don't last artifically long. The marriage network has also experienced some good improvements. The overall mean degree is now on target, and although the mean relationship duration is still too low, it has increased by almost half a year. However, we can see by the distribution of mean degree by age in both networks that much of the missing relationships are still in the youngest ages. We will focus on this problem in the next section.  
+The updated departure corrections improved key metrics in each network in different ways. First, the marriage network reached its target mean degree and slightly increased the mean duration of relationships. This appears to be largely due to the slight increase in the prevalence of relationships among nodes in their late-20s and a larger increase in relationships among nodes in their 30s. Once again, because this correction is not age-specific, the largest effect is seen at ages where the mean degree peaks. In the casual network, the mean relationship length has reached its target. Unfortunately, because relationships are now slightly shorter than in previous simulations, without a corresponding increase in the rate of relationship formation, the mean degree is slightly lower than before this correction. While this departure correction has strong theoretical support, it on its own is not sufficient to address all of the observed issues. We now finally turn to the issues relating to the left side of the distribution: the under-formation of ties between the ages of 15-25.  
 
 ```{r scen5-tab, echo=F, cache=T}
 means5 <- cbind(dat[[5]]$meandegs, dat[[5]]$meandurs)
@@ -500,16 +486,19 @@ grid.arrange(m, c, ncol=2)
 
 ## Arrival & Sexual Debut
 
-The failure of these networks to adequately form relationships among the youngest ages is yet another form of a boundary problem. The big-picture problem is that 15-year-olds do not enter the population and bring in existing relationships. This creates a problem for the model because the coefficients by age represent the prevalence of relationships at each those ages, and based on these coefficients and the underlying network the algorithm makes and breaks a certain amount of relationships at each time step. It doesn't however, expect to have to form *all* of the relationships among 15-year olds almost *immediately* up on entry, which needs to happen 1) to meet the expected mean degree, and 2) in the presence of aging when there is a very limited window to hit that age target. This also makes large jumps in the expected mean degree challenging, like in the marriage network between age 18 and 25 or in the casual network between ages 15-20. In this section we test two possible approaches to this problem. The first involves manipulating the number of individuals eligible for relationships based on the sexual debut process, and the second takes a more direct approach to manually calibrate the formation coefficients at certain ages to boost the rate of formation beyond what the ERGM initially estimated.  
+The failure of these networks to adequately form relationships among the youngest ages is yet another form of a boundary problem. The big-picture problem is that when 15-year-olds enter the population, they do not bring in any existing relationships. This creates a problem for the model because the formation coefficients that govern the incidence of relationships at each age 15 are not estimated with the need to form all of the *prevalent* relationships among 15-year olds almost immediately upon entry. Additionally, unlike the diagnostics that occur in the closed system with a static node set, the age of each node is now a time-varying attribute (aging). This makes large jumps in the expected mean degree by age challenging because there is a limited time frame for nodes of a certain age to form sufficient new relationships like in the marriage network between age 18 and 25 or in the casual network between ages 15-20. Essentially, the seemingly straightforward change from a static nodal attribute to a time-varying attribute means we need slightly different network conditions in order to meet the expected age-specific mean degree targets.  
+In this section we test two possible approaches to this problem. The first involves manipulating the number of individuals eligible for relationships based on the sexual debut process, and the second takes a more direct approach to manually calibrate the formation coefficients at certain ages to boost the rate of formation to account for the insufficient incidence rate. In order to evaluate the efficacy of each scenario, we will consider both the effect on the cross-sectional prevalence of relationships by age as in previous sections, and additionally the proportion of individuals who ever form a relationship (sexually debuted) by age while in the simulation.
 
-I am going to contextualize our scenarios and results in two ways. First, in the ability to represent the mean degree distribution from the data (the cross-sectional relationship landscape) and second, in the accuracy of the in-simulation debut rates (i.e. who actually forms a partner at any point in the simulation) - (the longitudinal landscape). Note that the STERGM methods were developed to maintain certain cross-sectional statistics so the longtitudnal correctness isn't the primary goal, but it is important to think about when considering the broader context.  
+### Sexual Debut vs Readiness
 
-### Sexual Debut 
+Representing the sexual debut process is both complex and highly important if we wish to model sexually transmitted diseases in adolescents and young adults. In the U.S., more than 50% of all sexually transmitted bacterial infections such as chlamydia and gonorrhea diagnosed yearly occur among individuals aged 15-24, but not everyone in the age group is sexually active. This concentrates the transmissions into a subset of the population and increases the probability of exposure to an STI for those sexually active more so than at older ages. It is important then, to approximate this process in simulation as faithfully as possible. If too many individuals are able to form sexual partnerships in the model, we may under-represent the risk of exposure for those sexually active and conversely over-represent the risk of exposure if too few are sexually active.  
+Here we take a moment to outline a few key definitions before describing the various possible implementations of this process.  
+**1. Sexual Debut** occurs when an individual first has a sexual intercourse of any kind with a member of the opposite sex (remember, we only represent opposite-sex contacts in this project). The NSFG explicitly asks if an individual has had sexual intercourse with a member of the opposite sex, and if so, what month/year did they first have sex.  
+**2. Readiness** is the state of an individual who has not yet had sexual intercourse (or "debuted"), but feels ready to do so. This state is not captured in our empirical data, but is the parameter we would ideally want to use in our dynamic networks to signal that a particular node is eligible to form a partnership. In the following scenarios we will use the nomenclature of sexual debut to model different ways we can represent readiness in these models.
 
-[parts of this section too wordy / possibly not necessary]  
-Representing the sexual debut process is both complex and highly important if we wish to model sexually transmitted diseases in adolesents and young adults. In the U.S., more than 50% of all sexually transmitted bacterial infections such as chlamydia and gonorrhea diagnosed yearly occur among individuals aged 15-24, but not everyone in the age group are sexually active, which concentrates the transmissions into subset of the population and increases the probability of exposure to an STI for those sexually active moreso than at older ages. It is important then, to approximate this process in simulation as faithfully as possible. If too many individuals are able to form sexual partnerships in the model, we risk under-estimating the risk of exposure for those sexually active and conversely over-estimating the risk of exposure if too few are sexually active.  
+For our baseline model, we assume that sexual debut and readiness are the same metric. Individuals enter the model with a 10.6% probability of debut, based on the proportion of 15 year olds in the NSFG who reported having sexual intercourse with a member for the opposite sex prior to age 15. For the rest of the age distribution, we used the responses to "have you ever had sexual intercourse with a member of the opposite sex" to generate a cross-sectional distribution of sexual debut status. From this data we estimated the weekly probability of debut among those who have not already debuted. The empirical data and the in-simulation distribution of sexual debut from the base model scenario are shown in \@ref(fig:debut-table). Unfortunately, while this approach is straightforward it also creates somewhat of a catch-22. Because an individual in our model cannot form a sexual partnership *until* they have been labeled as "debuted" by the attribute adjustment process described above, there is a lag between receiving the attribute flag of "debuted" and actually forming a partnership. So while can match the distribution of this attribute to the empirical data, the number of individuals who have truly formed a relationship for the first time in our networks is lower than the observed data, and could contribute to the ongoing issues surrounding matching the target mean degree, particularly at younger ages.
 
-The process by which individuals are labled as "sexually debuted" and thus eligible to form relationships in the model is reasonably straightforward. Individuls enter the model with a 10.6% probability of debut, based on the proportion of 15 year olds in the NSFG who reported having sexual intercourse with a member for the opposite sex prior to age 15. For the rest of the age distribtion (15-44), we used the responses to "have you ever had sexual intercourse with a member of the opposite sex" to generate a cross-section distribution of sexual debut status. From this data we estimated the yearly probability of debut among those who had not, and converted that into a weekly probability. The empirical data and the in-simulation distribution of sexual debut from the base model scenario are shown in \@ref(fig:debut-table).  
+*change figure \@ref(fig:debut-table) to also show effective debut in baseline scenario*
 
 ```{r debut-table, echo=FALSE, fig.align='center', out.width="70%", fig.cap="Sexual Debut Status: NSFG vs Simulation"}
 ages <- 15:44
@@ -517,7 +506,7 @@ ages <- 15:44
 # cross-sectional debut status
 data_debut_cs <- c(0.1454219, 0.2878825, 0.4257733, 0.5830055, 0.7019795, 0.7984001, 0.8471828, 0.8459053, 0.8804078, 0.9146240, 0.9414704, 0.9453254, 0.9467009, 0.9639282, 0.9756667, 0.9820388, 0.9733068, 0.9727181, 0.9741881, 0.9809794, 0.9918823, 0.9832634, 0.9825848, 0.9836374, 0.9908677, 0.9896829, 0.9890290, 0.9871198, 0.9744849, 0.9877073)*100
 
-# debut dist from base sim 
+# debut dist from base sim
 sim_debut  <- dat[[1]]$debut*100
 
 debut <- as.data.frame(cbind(ages, data_debut_cs, sim_debut))
@@ -528,17 +517,11 @@ ggplot(debut, aes(x=Age, y=Debut, col=Type)) +
   geom_point()
 ```
 
-The major caveat to this approach is that it does not mechanistically represent the debut process as well as desired . In real life, a person "debuts" by entering into a sexual partnership. This puts the model in a bit of a catch-22 situation: an individual can't debut in real life until they form a sexual partnership, but in order to form a sexual partnership in the model, they must already be "debuted". We can match the distribution of sexually debuted individuals, but it is possible that the number of individiduals who have "debuted" does not equal the number of individuals who have actually formed a relationship at any point in the simulation.
+In our next scenario, we to use the "debuted" nodal attribute as a signal of readiness to form a tie. Unfortunately our survey data do not allow us estimate the average time-to-debut directly (i.e. at what age did you decide you were ready for sex vs at what age did you actually start having sex), and the literature has largely focused more on individual characteristics and within-partnership dynamics that predict sexual debut rather than quantifying the time to readiness or the time from readiness to debut (@Lara2016, @Cavazos-Rehg2009, @Kaestle2002). In the absence of additional information, we instead alter only the probability of having sexually debuted at entry at age 15 such that the rate of relationship formation *in-simulation* matches the proportion of 15 year olds who report having had sexual intercourse. This calibration results in a 90% probability of sexual readiness upon entry into the simulation. We then assume that after age 15 readiness to form relationships increases at the same rate we used earlier for sexual debut. We hope that increasing the number of individuals who are available to form partnerships while maintaining the originally estimated coefficients for the rate of relationship formation will help us better match the total number of relationships expected within the younger population.
 
-What if instead we used the "debut" term to model the idea of "sexual eligibility" rather than explictly debut? The concept is straightforward: in most cases, an individual would decide that they are *ready* to begin having sex some period of time prior to actually forming a sexual partnership (or transitioning a relationship from a non-sexual partnership to a sexual one). It is perhaps this underlying trait that we should model instead, allowing us to model the sexual history of individuals in our model more completely. Unfortunately our survey data don't allow us to answer this question directly (i.e. at what age did you decide you were ready for sex vs at what age did you actually start having sex), and the literature has laregly focused more on individual characteristics and within-partership dynamics that predict sexual debut rather than quantifying the time to readiness or the time from readiness to debut (cite that review paper, others).
+The switch to this readiness metric had some dramatic effects on the casual network and moderate effects on the marriage/cohabitation network. In the marriage network, the overall mean degree has increased to about 9% greater than the target, and although we do see increases in the mean degree at younger ages that almost matches the targets, once again, the majority of the degree increase is seen between ages 30-40. The increase in the number of relationships that begin at earlier ages has increased the mean relationship length by roughly one year, but we still fall far short of the target. In the casual network, the increase in available egos for casual relationships has led to a very large increase both the overall mean degree and in the mean degree in the under-30 population. The mean relationship duration in this network has stayed within 1% of the target, but over-represents the total number of relationship at most ages. This scenario will come the closest to reproducing the actual debut distribution of the data (\@ref(fig:effective-debut-comparison)), but largely at the expense of the casual network's degree distribution.  
 
-In this scenario, we change only the probability of having sexually debuted at entry so that the *effective* debut in simulation matches the proporion of 15 year olds who report having had sexual intercourse. We call this the "eligbility" scenario. All other parameters (i.e. the rate at which debut occurs among the non-debuted) remain the same. As a reminder, in this model setup, the rate of sexual debut does not influence the birth/arrival rate in the model. Eligibilty status however does dictate whether an individual is allowed to form a relationship, and the number of un-debuted persons was jointly estimated in the model, so deviations from the original distribution of eligible individuals will influence the likelihood of tie formation. 
-
-*Results*  
-
-The switch to an "eligibility" metric had some dramatic effects on the casual network and moderate effects on the marriage/cohabitation network. In the marriage network, the overall mean degree has increased to  about 7% greater than the target, and although we do see increases in the mean degree at younger ages that almost matches the targets, once again, the majority of the degree increase is seen between ages 30-40. The increase in the number of relationships that begin at earlier ages has increased the mean relationship length by roughly one year, but we still fall far short of the target. In the casual network, the increase in available egos for casual relationships has led to an incredible increase both the overall mean degree and in the mean degree in the under-30 population. The mean relationship duration in this network has stayed wihtin 1% of the target, which is good, but wildly over-represents the total number of relationship at most ages. This scenario will come the closest to reproducing the actual debut distbution of the data (\@ref(fig:effective-debut-comparison)), but largely at the expense of the casual network's degree distribution.  
-
-```{r scen6-tab, echo=F, cache=T}
+```{r scen6-tab, echo=F, cache=T, out.width="70%"}
 means6 <- cbind(dat[[6]]$meandegs, dat[[6]]$meandurs)
 kable(means6, col.names = c("Mean Degree Target", "Sim", "Pct Off",
                                        "Mean Duration Target", "Sim", "Pct Off"),
@@ -593,9 +576,7 @@ grid.arrange(m, c, ncol=2)
 
 ### Young Age Formation Boost  
 
-In this scenario, we change none of the sexual debut parameters in leiu of adding a nodefactor term for "young persons" in each network and manually modifying 1) the degree of increase in formation, or the "boost", and 2) which ages the boost applies to in each network. This was manually calibrated by trial and error.
-
-There's probably more I can say here.  
+In this scenario, our goal is to increase the rate of relationship formation among certain younger ages to increase the number of prevalent relationships at these ages by reducing the lag between becoming available for a sexual relationships and actually forming one. We revert the likelihood of sexual debut at entry to the baseline parameter and instead add an additional term to the network formation model in order to boost the log-odds of forming a tie among certain ages. I do so using a manual calibration process using several parameters: a formation coefficient to boost certain nodes at specific ages, and the proportion of nodes at these ages that required the boost in order to match the prevalence of relationships in the 15-25 year-old age range. The original plan for this scenario did not include the second set of parameters, we intended only to boost formation at entry to correct for the boundary issues discussed above. However, in order to match the expected degree distribution in these younger ages, we found that additional boosts among nodes who had just aged into the next integer year (i.e. recently turned 17) were necessary at certain ages where the mean degree increased rapidly year-over-year. In the casual network we applied to this additional formation probability to all nodes at age 15 for the full year they are 15, and at age 17 and 18 for the first three months they are 17 and 18. In the marriage network, this additional rate of formation was applied to all nodes at ages 18 and then again for the first three months that nodes are aged 20 and 23. (In chapter three we will apply a similar correction but will include separate formation coefficients at each age for ease of calibration which increases the number of coefficients needed to calibrate, but is more intuitive than applying the same boost to different proportions of those nodes of a certain age).  
 
 ```{r youngboost-tab, echo=F, cache=T}
 means7 <- cbind(dat[[7]]$meandegs, dat[[7]]$meandurs)
@@ -650,7 +631,7 @@ grid.arrange(m, c, ncol=2)
 ```
 
 
-```{r effective-debut-comparison, echo=F, fig.align="center", fig.cap="Percent Debuted In-Sim vs Data, Various Scenarios", out.width="80%"}
+```{r effective-debut-comparison, echo=F, fig.align="center", fig.cap="Percent Debuted In-Sim vs Data, Various Scenarios", out.width="70%"}
 ages <- 15:44
 # calibrated eligibility
 eff_deb_calib <- dat[[6]]$effdebut*100
@@ -678,18 +659,12 @@ ggplot(debut2, aes(x=Age, y=Debut, col=Data)) +
   ylab("Percent Sexually Debuted")
 ```
 
-*Results*  
-
-- yay mean degree marches through age 25 in the marriage network and through age 20 in the casual network!  
-- still have problem with over-boosted middle ages and as a result have too high overall mean degree  
-- but 413 is the mean relationship duration we expect based on an exponential distribution w/ mean 474 with the right tail missing, so I actually think we're doing great here  
-- effective debut better than default run but not as good as "eligibility" aka trade off between cross-sectional correctness (mean degree) and longitudinal in some cases. Need to think through what this means for the concentration of disease at younger ages more.  
-- also effective debut not better than simulation with no debut term or process at all LOL  
+This formation boost had an interesting effect on the networks. First off, we were able to finally match the distribution of relationships at younger ages. However, the increase in incidence at younger ages seemed to have increased the prevalence at older ages, so we still over-represent those relationships and overshoot our network-wide mean degree in both networks. The increase in relationships increased the average relationship duration in the marriage network, although it still falls short of the target by roughly one year. In terms of sexual debut (Figure \@ref(fig:effective-debut-comparison)), the rate of effective debut using the "eligibility" framework came closest to matching the empirical data, but the scenario that boost formation with the default debut framework failed to boost the effective debut enough (although it was an improvement over previous scenarios without any boosting of young-age formation). Interestingly, we ran an additional with all baseline parameters but without a simulation-governed debut process and found that the proportion of nodes who have ever formed a relationship by age in the model was term was almost identical to the model that contained a simulation-governed debut flagging process plus boosted formation at younger ages.
 
 
 ### Summary & Discussion
 
-```{r summary-degs, echo=F}
+```{r summary-degs, echo=F, out.width="70%"}
 degstab <- cbind(dat[[1]]$meandegs[,1:2], dat[[2]]$meandegs[,2], dat[[3]]$meandegs[,2],
                  dat[[4]]$meandegs[,2], dat[[5]]$meandegs[,2], dat[[6]]$meandegs[,2],
                  dat[[7]]$meandegs[,2])
@@ -698,9 +673,11 @@ colnames(degstab) <- c("Target", "Base", "Older Partner Offset", "Increased Age 
 kable(degstab, booktabs=T, caption = "Mean Degree Comparison Summary Table") %>%
   kable_styling(full_width=F) %>%
   column_spec(1:9, width = "1.6cm")
+
+# latex_options = "scale_down" ?
 ```
 
-```{r summary-durs, echo=F}
+```{r summary-durs, echo=F, out.width="70%"}
 durstab <- cbind(dat[[1]]$meandurs[,1:2], dat[[2]]$meandurs[,2], dat[[3]]$meandurs[,2],
                  dat[[4]]$meandurs[,2], dat[[5]]$meandurs[,2], dat[[6]]$meandurs[,2],
                  dat[[7]]$meandurs[,2])
@@ -711,15 +688,6 @@ kable(durstab, booktabs=T, caption = "Mean Relationship Duration Comparison Summ
   column_spec(1:9, width = "1.6cm")
 ```
 
+It is clear that there are no one-size-fits-all corrections that accommodate all population dynamics, and no single adjustment that we explored here is capable of addressing all of the problems introduced by attempting to match age-specific heterogeneity across a wide age range and between relationship types. There are however some key takeaways and recommendations regarding how to implement future adjustments. First takeaway is that while most adjustments influenced many of the key metrics at the same time, we need to focus on three primary issues: network-specific departure correction, boosting the formation at young ages, and making additional adjustments for the duration of very-long relationships. The second takeaway is that sexual debut may not be as large of a problem as originally expected, and it is work exploring what the effective debut profile of the population looks like when there is no specific debut term *and* boosted formation (see Chapter 3 for more on sexual debut and demographic corrections in networks with additional sex-specific complexities). Lastly, it is possible that some of the issues we have fitting these networks is related to the assumption that marriages and casual relationships both have a constant hazard of dissolution over time. Chapter 2 will explore this line of thought and attempt to describe the pattern of relationships lengths over the life-course and under what stratification the constant hazard may or may not be a reasonable assumption.  
 
- - no a one-size-fits-all solution
- - increased age boundary has some upsides but need to think more through that the actual mean degree target is at that point
- - edapprox correction probably not necessary if we're just going to boost some coefs later anyway
- - may be other ways to calculate the departure correction but I think this is on the right track 
- - still concerned about who in the population is sexually active and the under/overestimate of exposure risk
- - simulation with no debut term (shown in \@ref(fig:effective-debut-comparison)) shows that not having a debut term has basically the same results for effective debut as the the young boost scenario, so it's not necessarily even worth having a debut term in the model (yay? oof?)  
- - several of these approachs have clear upsides and downsides but I think boosting the coefs, and then negatively boosting coefs at older ages might be the best way forward 
-
-**future work**
-  * cross-network terms - probably going to do most analysis on the independent networks but will show both and point at where there are holes (hey by the time this gets finished maybe Chad will have already figured this out)  
-  * need to think about race and sex differences in formation and absdiff(age) by sex if we want to use this for applied work  
+In chapter three, we will remove the debut/readiness flagging process entirely and find that when we boost the formation at young ages to match the expected mean degree, we also match the proportion of nodes who have ever formed a relationship.

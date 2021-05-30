@@ -2,7 +2,7 @@
 # UW thesis fields
 title: "Emily's Thesis Title"
 author: "Emily Pollock"
-year: "2021?"
+year: "2021"
 program: "Biological Anthropology"
 chair: "Steven M. Goodreau"
 chairtitle: "Title of my chair"
